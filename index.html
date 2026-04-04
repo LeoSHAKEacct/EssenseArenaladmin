@@ -635,6 +635,39 @@
   }
   .tiny-btn:hover { border-color: #c0392b; color: #c0392b; }
 
+  .weekly-absences {
+    margin: 16px 28px 26px;
+    padding: 14px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(26,46,26,0.04);
+  }
+  .weekly-absences-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 10px;
+  }
+  .weekly-absence-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .absence-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fdeceb;
+    border: 1px solid #f4c4bf;
+    color: #7a2f28;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
   .modal-footer {
     padding: 14px 22px;
     display: flex; gap: 8px; justify-content: flex-end;
@@ -737,6 +770,10 @@
   <div class="calendar-wrapper">
     <div class="calendar-grid" id="calendar-grid"></div>
   </div>
+  <div class="weekly-absences">
+    <div class="weekly-absences-title">Ausencias de la semana</div>
+    <div class="weekly-absence-list" id="weekly-absence-list"></div>
+  </div>
 </div>
 
 <!-- ACTIVITY MODAL -->
@@ -832,11 +869,19 @@
           <select class="form-select" id="off-employee"></select>
         </div>
         <div class="form-group">
-          <label class="form-label">Fecha</label>
-          <input class="form-input" type="date" id="off-date">
+          <label class="form-label">Desde</label>
+          <input class="form-input" type="date" id="off-start">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hasta</label>
+          <input class="form-input" type="date" id="off-end">
         </div>
       </div>
-      <button class="btn-save" type="button" onclick="addDayOffRule()">Agregar día libre</button>
+      <div class="form-group">
+        <label class="form-label">Motivo (opcional)</label>
+        <input class="form-input" type="text" id="off-reason" placeholder="Vacaciones, cita médica, etc.">
+      </div>
+      <button class="btn-save" type="button" onclick="addDayOffRule()">Agregar ausencia</button>
 
       <div class="form-group">
         <label class="form-label">Días libres registrados</label>
@@ -1144,6 +1189,81 @@ function ensureEmployeeAvailabilityNode(name) {
   if (!employeeAvailability[name].dates) employeeAvailability[name].dates = {};
 }
 
+function parseDateOnly(dateStr) {
+  return new Date(`${dateStr}T00:00:00`);
+}
+
+function toDateKey(date) {
+  const d = new Date(date);
+  d.setHours(0,0,0,0);
+  return d.toISOString().split('T')[0];
+}
+
+function listDateKeysInRange(startDate, endDate) {
+  const keys = [];
+  const cur = parseDateOnly(startDate);
+  const end = parseDateOnly(endDate);
+  while (cur <= end) {
+    keys.push(toDateKey(cur));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return keys;
+}
+
+function escapeHtml(value = '') {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function monthShortEs(idx) {
+  return ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][idx] || '';
+}
+
+function formatDateShort(dateStr) {
+  const d = parseDateOnly(dateStr);
+  return `${d.getDate()} ${monthShortEs(d.getMonth())}`;
+}
+
+function formatDateRange(startDate, endDate) {
+  const start = parseDateOnly(startDate);
+  const end = parseDateOnly(endDate);
+  if (startDate === endDate) return `${start.getDate()} ${monthShortEs(start.getMonth())} ${start.getFullYear()}`;
+  if (start.getFullYear() === end.getFullYear()) {
+    return `${formatDateShort(startDate)} - ${formatDateShort(endDate)} ${end.getFullYear()}`;
+  }
+  return `${formatDateShort(startDate)} ${start.getFullYear()} - ${formatDateShort(endDate)} ${end.getFullYear()}`;
+}
+
+function isRangeOverlapping(aStart, aEnd, bStart, bEnd) {
+  return parseDateOnly(aStart) <= parseDateOnly(bEnd) && parseDateOnly(aEnd) >= parseDateOnly(bStart);
+}
+
+function refreshAvailabilityOffDatesFromAbsences() {
+  Object.keys(employeeAvailability).forEach(name => {
+    ensureEmployeeAvailabilityNode(name);
+    Object.keys(employeeAvailability[name].dates || {}).forEach(dateKey => {
+      const rule = employeeAvailability[name].dates[dateKey];
+      if (!rule) return;
+      delete rule.off;
+      const hasAnything = rule.start || rule.end || (rule.blockedTypes && rule.blockedTypes.length);
+      if (!hasAnything) delete employeeAvailability[name].dates[dateKey];
+    });
+  });
+
+  absenceRecords.forEach(record => {
+    ensureEmployeeAvailabilityNode(record.employee);
+    const keys = listDateKeysInRange(record.startDate, record.endDate);
+    keys.forEach(dateKey => {
+      const existing = employeeAvailability[record.employee].dates[dateKey] || {};
+      employeeAvailability[record.employee].dates[dateKey] = { ...existing, off: true };
+    });
+  });
+}
+
 function openAvailabilityModal() {
   if (!isEditor()) {
     alert('Solo editores pueden gestionar días libres.');
@@ -1160,7 +1280,9 @@ function openAvailabilityModal() {
   });
 
   const today = new Date().toISOString().split('T')[0];
-  document.getElementById('off-date').value = today;
+  document.getElementById('off-start').value = today;
+  document.getElementById('off-end').value = today;
+  document.getElementById('off-reason').value = '';
   renderOffList();
   document.getElementById('availability-modal').classList.add('open');
 }
@@ -1176,33 +1298,39 @@ function handleAvailabilityOverlayClick(e) {
 function addDayOffRule() {
   if (!isEditor()) return;
   const employee = document.getElementById('off-employee').value;
-  const dateStr = document.getElementById('off-date').value;
-  if (!employee || !dateStr) {
-    alert('Selecciona empleado y fecha.');
+  const startDate = document.getElementById('off-start').value;
+  const endDate = document.getElementById('off-end').value;
+  const reason = document.getElementById('off-reason').value.trim();
+
+  if (!employee || !startDate || !endDate) {
+    alert('Selecciona empleado y rango de fechas.');
     return;
   }
 
-  ensureEmployeeAvailabilityNode(employee);
-  const existing = employeeAvailability[employee].dates[dateStr] || {};
-  employeeAvailability[employee].dates[dateStr] = { ...existing, off: true };
+  if (parseDateOnly(endDate) < parseDateOnly(startDate)) {
+    alert('La fecha HASTA no puede ser anterior a DESDE.');
+    return;
+  }
+
+  absenceRecords.unshift({
+    id: Date.now() + Math.random(),
+    employee,
+    startDate,
+    endDate,
+    reason,
+    createdAt: new Date().toISOString(),
+  });
+
+  refreshAvailabilityOffDatesFromAbsences();
   saveAvailability();
   scheduleCalendarRender();
   renderOffList();
 }
 
-function removeDayOffRule(employee, dateStr) {
-  ensureEmployeeAvailabilityNode(employee);
-  const existing = employeeAvailability[employee].dates[dateStr];
-  if (!existing) return;
+function removeDayOffRule(recordId) {
+  absenceRecords = absenceRecords.filter(r => String(r.id) !== String(recordId));
 
-  delete existing.off;
-  const hasAnything = existing.start || existing.end || (existing.blockedTypes && existing.blockedTypes.length);
-  if (!hasAnything) {
-    delete employeeAvailability[employee].dates[dateStr];
-  } else {
-    employeeAvailability[employee].dates[dateStr] = existing;
-  }
-
+  refreshAvailabilityOffDatesFromAbsences();
   saveAvailability();
   scheduleCalendarRender();
   renderOffList();
@@ -1210,15 +1338,10 @@ function removeDayOffRule(employee, dateStr) {
 
 function renderOffList() {
   const host = document.getElementById('off-list');
-  const rows = [];
-  Object.keys(employeeAvailability).forEach(name => {
-    const dateMap = employeeAvailability[name]?.dates || {};
-    Object.keys(dateMap).forEach(dateStr => {
-      if (dateMap[dateStr]?.off) rows.push({ name, dateStr });
-    });
+  const rows = [...absenceRecords].sort((a, b) => {
+    if (a.createdAt === b.createdAt) return 0;
+    return a.createdAt > b.createdAt ? -1 : 1;
   });
-
-  rows.sort((a, b) => (a.dateStr < b.dateStr ? -1 : 1));
 
   if (!rows.length) {
     host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin días libres registrados.</td></tr></tbody></table>';
@@ -1228,19 +1351,43 @@ function renderOffList() {
   host.innerHTML = `
     <table>
       <thead>
-        <tr><th>Empleado</th><th>Fecha</th><th>Acción</th></tr>
+        <tr><th>Empleado</th><th>Rango</th><th>Motivo</th><th>Acción</th></tr>
       </thead>
       <tbody>
         ${rows.map(r => `
           <tr>
-            <td>${r.name}</td>
-            <td>${r.dateStr}</td>
-            <td><button class="tiny-btn" onclick="removeDayOffRule('${r.name}','${r.dateStr}')">Quitar</button></td>
+            <td>${escapeHtml(r.employee)}</td>
+            <td>${escapeHtml(formatDateRange(r.startDate, r.endDate))}</td>
+            <td>${escapeHtml(r.reason || '—')}</td>
+            <td><button class="tiny-btn" onclick="removeDayOffRule('${r.id}')">✕</button></td>
           </tr>
         `).join('')}
       </tbody>
     </table>
   `;
+}
+
+function renderWeeklyAbsences(weekStart) {
+  const host = document.getElementById('weekly-absence-list');
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  const weekStartStr = toDateKey(weekStart);
+  const weekEndStr = toDateKey(weekEnd);
+
+  const visible = absenceRecords
+    .filter(r => isRangeOverlapping(r.startDate, r.endDate, weekStartStr, weekEndStr))
+    .sort((a, b) => (a.startDate < b.startDate ? -1 : 1));
+
+  if (!visible.length) {
+    host.innerHTML = '<span style="color:#6b7569;font-size:12px;">Sin ausencias registradas para esta semana.</span>';
+    return;
+  }
+
+  host.innerHTML = visible.map(r => {
+    const label = `${r.employee} · ${formatDateRange(r.startDate, r.endDate)}`;
+    const withReason = r.reason ? `${label} · ${r.reason}` : label;
+    return `<span class="absence-badge">${escapeHtml(withReason)}</span>`;
+  }).join('');
 }
 
 function openAuditModal() {
@@ -1288,6 +1435,7 @@ let activities = [];
 let activityAudit = [];
 let currentUser = null;
 let employeeAvailability = {};
+let absenceRecords = [];
 let editingId = null;
 let pendingCell = null; // { dayIndex, slotId }
 let renderTimer = null;
@@ -1378,7 +1526,10 @@ function saveData() {
 }
 
 function saveAvailability() {
-  localStorage.setItem(AVAILABILITY_KEY, JSON.stringify(employeeAvailability));
+  localStorage.setItem(AVAILABILITY_KEY, JSON.stringify({
+    rules: employeeAvailability,
+    absences: absenceRecords,
+  }));
 }
 
 function saveAudit() {
@@ -1408,6 +1559,50 @@ function normalizeAvailabilityShape(raw) {
   return base;
 }
 
+function extractAbsenceRecordsFromRules(rules) {
+  const records = [];
+  Object.keys(rules || {}).forEach(employee => {
+    const dateMap = rules[employee]?.dates || {};
+    Object.keys(dateMap).forEach(dateKey => {
+      if (!dateMap[dateKey]?.off) return;
+      records.push({
+        id: `legacy-${employee}-${dateKey}`,
+        employee,
+        startDate: dateKey,
+        endDate: dateKey,
+        reason: '',
+        createdAt: `${dateKey}T00:00:00.000Z`,
+      });
+    });
+  });
+  return records;
+}
+
+function normalizeAbsenceRecords(records) {
+  if (!Array.isArray(records)) return [];
+
+  return records
+    .map((r, index) => {
+      const employee = r?.employee;
+      const startDate = r?.startDate;
+      const endDate = r?.endDate || startDate;
+      if (!employee || !startDate || !endDate) return null;
+
+      const normalizedStart = parseDateOnly(startDate) <= parseDateOnly(endDate) ? startDate : endDate;
+      const normalizedEnd = parseDateOnly(startDate) <= parseDateOnly(endDate) ? endDate : startDate;
+
+      return {
+        id: r.id || `${Date.now()}-${index}`,
+        employee,
+        startDate: normalizedStart,
+        endDate: normalizedEnd,
+        reason: r.reason || '',
+        createdAt: r.createdAt || `${normalizedStart}T00:00:00.000Z`,
+      };
+    })
+    .filter(Boolean);
+}
+
 function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -1421,12 +1616,26 @@ function loadAvailability() {
   try {
     const raw = localStorage.getItem(AVAILABILITY_KEY);
     if (raw) {
-      employeeAvailability = normalizeAvailabilityShape(JSON.parse(raw));
+      const parsed = JSON.parse(raw);
+
+      if (parsed && parsed.rules) {
+        employeeAvailability = normalizeAvailabilityShape(parsed.rules);
+        const fromPayload = normalizeAbsenceRecords(parsed.absences);
+        absenceRecords = fromPayload.length ? fromPayload : extractAbsenceRecordsFromRules(employeeAvailability);
+      } else {
+        // Backward compatibility: previous versions stored only rules.
+        employeeAvailability = normalizeAvailabilityShape(parsed);
+        absenceRecords = extractAbsenceRecordsFromRules(employeeAvailability);
+      }
+
+      absenceRecords = normalizeAbsenceRecords(absenceRecords);
+      refreshAvailabilityOffDatesFromAbsences();
       return;
     }
   } catch(e) {}
 
   employeeAvailability = cloneDefaultAvailability();
+  absenceRecords = [];
   saveAvailability();
 }
 
@@ -1684,6 +1893,7 @@ function renderCalendar() {
   });
 
   grid.replaceChildren(fragment);
+  renderWeeklyAbsences(weekStart);
 }
 
 function makePill(act) {
