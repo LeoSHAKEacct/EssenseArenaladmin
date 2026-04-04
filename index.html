@@ -273,6 +273,22 @@
     transition: background 0.2s;
   }
   .btn-today:hover { background: var(--moss); }
+  .btn-add-activity {
+    background: var(--forest);
+    border: none;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mist);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-add-activity:hover { background: var(--moss); }
 
   /* ── CALENDAR GRID ─────────────────────────────────── */
   .calendar-wrapper {
@@ -709,6 +725,7 @@
       <button class="nav-btn" onclick="changeWeek(-1)">‹</button>
       <button class="btn-today" onclick="goToday()">Hoy</button>
       <button class="nav-btn" onclick="changeWeek(1)">›</button>
+      <button class="btn-add-activity" onclick="openQuickAddModal()" title="Nueva actividad" aria-label="Nueva actividad">+</button>
     </div>
   </div>
 
@@ -775,8 +792,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Supervisor</label>
-          <select class="form-select" id="f-supervisor">
+          <label class="form-label">BY</label>
+          <select class="form-select" id="f-by" aria-label="By">
             <option value="">— ninguno —</option>
           </select>
         </div>
@@ -970,9 +987,9 @@ function updateStaffDropdowns(preserveSelection = false) {
   const staffList = qualified.length ? qualified : allNames;
 
   const staffSel = document.getElementById('f-staff');
-  const supSel   = document.getElementById('f-supervisor');
+  const bySel   = document.getElementById('f-by');
   const prevStaff = preserveSelection ? staffSel.value : '';
-  const prevSup   = preserveSelection ? supSel.value   : '';
+  const prevBy   = preserveSelection ? bySel.value   : '';
 
   // Guía / Terapeuta — filtered by service type
   staffSel.innerHTML = '<option value="">— sin asignar —</option>';
@@ -983,14 +1000,14 @@ function updateStaffDropdowns(preserveSelection = false) {
   });
   if (prevStaff && staffList.includes(prevStaff)) staffSel.value = prevStaff;
 
-  // Supervisor — always shows the full team
-  supSel.innerHTML = '<option value="">— ninguno —</option>';
+  // BY — always shows the full team
+  bySel.innerHTML = '<option value="">— ninguno —</option>';
   allNames.forEach(name => {
     const o = document.createElement('option');
     o.value = name; o.textContent = name;
-    supSel.appendChild(o);
+    bySel.appendChild(o);
   });
-  if (prevSup) supSel.value = prevSup;
+  if (prevBy) bySel.value = prevBy;
 }
 
 function timeToMinutes(value) {
@@ -1474,7 +1491,7 @@ function getSeedData() {
   const seeds = [];
   let id = 1;
   const add = (section, dow, slot, type, time, client, staff, weekly=true) => {
-    seeds.push({ id: id++, section, dow, slot, type, time, duration: 60, client, staff, supervisor:'', notes:'', weekly });
+    seeds.push({ id: id++, section, dow, slot, type, time, duration: 60, client, staff, by:'', notes:'', weekly });
   };
 
   // Hotel activities
@@ -1568,6 +1585,27 @@ function formatWeekLabel(start) {
 function changeWeek(delta) { weekOffset += delta; scheduleCalendarRender(); }
 function goToday() { weekOffset = 0; scheduleCalendarRender(); }
 
+function openQuickAddModal() {
+  const weekStart = getWeekStart(weekOffset);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+
+  let dayIndex = 0;
+  if (today >= weekStart && today <= weekEnd) {
+    dayIndex = today.getDay();
+  }
+
+  const date = new Date(weekStart);
+  date.setDate(date.getDate() + dayIndex);
+  const dateStr = date.toISOString().split('T')[0];
+  const defaultSlot = TIME_SLOTS[0]?.id || 'morning';
+
+  openModal(null, dayIndex, defaultSlot, dateStr);
+}
+
 // ── RENDER CALENDAR ─────────────────────────────────────
 function renderCalendar() {
   const weekStart = getWeekStart(weekOffset);
@@ -1599,24 +1637,10 @@ function renderCalendar() {
   for (let d = 0; d < 7; d++) {
     const date = new Date(weekStart);
     date.setDate(date.getDate() + d);
-    const dateStr = date.toISOString().split('T')[0];
     const isToday = date.getTime() === today.getTime();
     const div = document.createElement('div');
     div.className = 'col-header' + (isToday ? ' today-col' : '');
     div.innerHTML = `<span class="day-name">${DAYS_SHORT[d]}</span><span class="day-num">${date.getDate()}</span>`;
-
-    const restricted = getRestrictedEmployeesForDate(dateStr);
-    if (restricted.length) {
-      const badge = document.createElement('span');
-      badge.className = 'day-restriction';
-      badge.textContent = `⚠ ${restricted.length}`;
-
-      const details = restricted
-        .map(name => `${name}: ${describeRestriction(getEmployeeAvailabilityRule(name, dateStr))}`)
-        .join(' | ');
-      badge.title = details;
-      div.appendChild(badge);
-    }
 
     fragment.appendChild(div);
   }
@@ -1669,7 +1693,7 @@ function makePill(act) {
   pill.className = `activity-pill color-${type.color}`;
   pill.dataset.activityId = String(act.id);
 
-  const staffLine = [act.staff, act.supervisor].filter(Boolean).join(', ');
+  const staffLine = [act.staff, (act.by || act.supervisor)].filter(Boolean).join(', ');
   pill.innerHTML = `
     <span class="pill-time">${act.time || ''}${act.weekly ? ' 🔁' : ''}<span class="pill-location ${getSectionClass(act.section)}">${getSectionLabel(act.section)}</span></span>
     <span class="pill-name">${type.emoji} ${type.name}${act.client ? ' · ' + act.client : ''}</span>
@@ -1726,7 +1750,7 @@ function openModal(act, dayIndex, slotId, dateStr) {
   document.getElementById('f-section').value    = act?.section    || 'hotel';
   document.getElementById('f-client').value     = act?.client     || '';
   document.getElementById('f-staff').value      = act?.staff      || '';
-  document.getElementById('f-supervisor').value = act?.supervisor || '';
+  document.getElementById('f-by').value         = act?.by || act?.supervisor || '';
   document.getElementById('f-notes').value      = act?.notes      || '';
   document.getElementById('f-weekly').checked   = act ? !!act.weekly : false;
 
@@ -1756,7 +1780,7 @@ function saveActivity() {
     section:    document.getElementById('f-section').value,
     client:     document.getElementById('f-client').value.trim(),
     staff:      document.getElementById('f-staff').value,
-    supervisor: document.getElementById('f-supervisor').value,
+    by:         document.getElementById('f-by').value,
     notes:      document.getElementById('f-notes').value.trim(),
     weekly:     document.getElementById('f-weekly').checked,
   };
