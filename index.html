@@ -737,7 +737,12 @@
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Hora inicio</label>
-          <input class="form-input" type="time" id="f-time" value="07:00" step="900">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <select class="form-select" id="f-time-hour" style="max-width:110px;"></select>
+            <span style="font-family:'DM Mono', monospace;color:var(--mid);">:</span>
+            <select class="form-select" id="f-time-minute" style="max-width:110px;"></select>
+          </div>
+          <input type="hidden" id="f-time" value="07:00">
         </div>
         <div class="form-group">
           <label class="form-label">Duración</label>
@@ -1286,6 +1291,50 @@ function isQuarterHourTime(value) {
   return [0, 15, 30, 45].includes(minutes);
 }
 
+function syncTimePickerValue() {
+  const hour = document.getElementById('f-time-hour').value;
+  const minute = document.getElementById('f-time-minute').value;
+  document.getElementById('f-time').value = `${hour}:${minute}`;
+}
+
+function setTimePickerValue(timeValue = '07:00') {
+  const [hRaw, mRaw] = (timeValue || '07:00').split(':');
+  const hour = String(Number(hRaw || '7')).padStart(2, '0');
+  const minute = String(Number(mRaw || '0')).padStart(2, '0');
+
+  document.getElementById('f-time-hour').value = hour;
+
+  // Hardcoded minute options per requirement: [0, 15, 30, 45]
+  const allowedMinutes = ['00', '15', '30', '45'];
+  document.getElementById('f-time-minute').value = allowedMinutes.includes(minute) ? minute : '00';
+  syncTimePickerValue();
+}
+
+function initTimePicker() {
+  const hourSelect = document.getElementById('f-time-hour');
+  const minuteSelect = document.getElementById('f-time-minute');
+
+  hourSelect.innerHTML = '';
+  for (let h = 0; h < 24; h++) {
+    const hh = String(h).padStart(2, '0');
+    const option = document.createElement('option');
+    option.value = hh;
+    option.textContent = hh;
+    hourSelect.appendChild(option);
+  }
+
+  minuteSelect.innerHTML = '';
+  [0, 15, 30, 45].forEach(min => {
+    const mm = String(min).padStart(2, '0');
+    const option = document.createElement('option');
+    option.value = mm;
+    option.textContent = mm;
+    minuteSelect.appendChild(option);
+  });
+
+  setTimePickerValue('07:00');
+}
+
 function scheduleCalendarRender(mode = 'defer') {
   const nextMode = mode === 'debounce' ? 'debounce' : 'defer';
   const nextDelay = nextMode === 'debounce' ? 120 : 16;
@@ -1672,14 +1721,14 @@ function openModal(act, dayIndex, slotId, dateStr) {
   buildTypeGrid();
   updateStaffDropdowns(false);
 
-  document.getElementById('f-time').value       = act?.time       || '07:00';
+  setTimePickerValue(act?.time || '07:00');
   document.getElementById('f-duration').value   = act?.duration   || '60';
   document.getElementById('f-section').value    = act?.section    || 'hotel';
   document.getElementById('f-client').value     = act?.client     || '';
   document.getElementById('f-staff').value      = act?.staff      || '';
   document.getElementById('f-supervisor').value = act?.supervisor || '';
   document.getElementById('f-notes').value      = act?.notes      || '';
-  document.getElementById('f-weekly').checked   = act ? !!act.weekly : true;
+  document.getElementById('f-weekly').checked   = act ? !!act.weekly : false;
 
   refreshAssignmentWarning();
 
@@ -1782,10 +1831,12 @@ function handleCalendarInteraction(event) {
 // focus pwd on load
 window.addEventListener('load', () => {
   document.getElementById('email-input').focus();
+  initTimePicker();
   document.querySelector('.calendar-wrapper').addEventListener('click', handleCalendarInteraction);
 
   document.getElementById('f-staff').addEventListener('change', refreshAssignmentWarning);
-  document.getElementById('f-time').addEventListener('input', refreshAssignmentWarning);
+  document.getElementById('f-time-hour').addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
+  document.getElementById('f-time-minute').addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
   document.getElementById('f-weekly').addEventListener('change', refreshAssignmentWarning);
   document.getElementById('email-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
   document.getElementById('pwd-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
