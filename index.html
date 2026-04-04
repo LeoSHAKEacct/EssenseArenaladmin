@@ -182,6 +182,21 @@
   .header-actions {
     display: flex; align-items: center; gap: 10px;
   }
+  .user-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+    background: rgba(184,207,168,0.12);
+    border: 1px solid rgba(184,207,168,0.2);
+    border-radius: 999px;
+    padding: 5px 9px;
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .btn-ghost {
     background: transparent;
     border: 1px solid rgba(184,207,168,0.25);
@@ -196,39 +211,6 @@
     transition: all 0.2s;
   }
   .btn-ghost:hover { border-color: var(--sage); color: var(--mist); }
-
-  /* ── NAV TABS ──────────────────────────────────────── */
-  .tab-bar {
-    background: var(--parchment);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: stretch;
-    padding: 0 28px;
-    gap: 0;
-  }
-  .tab {
-    padding: 14px 20px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mid);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    position: relative; top: 1px;
-    white-space: nowrap;
-  }
-  .tab:hover { color: var(--charcoal); }
-  .tab.active {
-    color: var(--forest);
-    border-bottom-color: var(--moss);
-    font-weight: 400;
-  }
-  .tab-dot {
-    display: inline-block; width: 6px; height: 6px;
-    border-radius: 50%; margin-right: 7px;
-    vertical-align: middle; position: relative; top: -1px;
-  }
 
   /* ── WEEK NAV ──────────────────────────────────────── */
   .week-nav {
@@ -245,6 +227,28 @@
     letter-spacing: 0.04em;
   }
   .week-btns { display: flex; gap: 6px; align-items: center; }
+  .calendar-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 28px 0;
+    color: var(--mid);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .calendar-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .calendar-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
   .nav-btn {
     background: white;
     border: 1px solid var(--border);
@@ -312,6 +316,21 @@
     color: var(--mist);
     display: block;
     line-height: 1.1;
+  }
+  .col-header .day-restriction {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(196,149,106,0.25);
+    border: 1px solid rgba(196,149,106,0.45);
+    color: var(--clay);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
   .col-header.today-col .day-num {
     color: var(--clay);
@@ -384,6 +403,29 @@
     opacity: 0.75;
     letter-spacing: 0.05em;
   }
+  .activity-pill .pill-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 6px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+  }
+  .activity-pill .pill-location.location-hotel {
+    background: rgba(122,158,107,0.18);
+    border-color: rgba(122,158,107,0.35);
+    color: var(--forest);
+  }
+  .activity-pill .pill-location.location-finca {
+    background: rgba(195,124,72,0.18);
+    border-color: rgba(195,124,72,0.35);
+    color: #7c4b24;
+  }
   .activity-pill .pill-name {
     font-weight: 500;
     display: block;
@@ -421,7 +463,14 @@
   .color-meditation { background: #f0ecf8; color: #4a3060; }
   .color-kayak   { background: #e0f5f5; color: #0d4a4a; }
   .color-cooking { background: #fdf5e4; color: #6b4010; }
-  .color-other   { background: #f0f0ee; color: #3a3a38; }
+  .color-other         { background: #f0f0ee; color: #3a3a38; }
+  .color-beauty        { background: #fce4ef; color: #6b1040; }
+  .color-temazcal      { background: #fae6d4; color: #7a3010; }
+  .color-soundbath     { background: #eee8f8; color: #4a2870; }
+  .color-foresttherapy { background: #e0f0e4; color: #1a4a20; }
+  .color-welcome       { background: #f5f0e8; color: #5a4830; }
+  .color-detox         { background: #e0f4f0; color: #0d4a3a; }
+  .color-therapy       { background: #e8e4f5; color: #2a1a5a; }
 
   /* ── MODAL ─────────────────────────────────────────── */
   .modal-overlay {
@@ -503,7 +552,7 @@
   /* activity type picker */
   .type-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 6px;
   }
   .type-chip {
@@ -519,6 +568,56 @@
   }
   .type-chip:hover { transform: translateY(-1px); }
   .type-chip.selected { border-color: var(--forest) !important; box-shadow: 0 0 0 2px rgba(26,46,26,0.2); }
+
+  .assignment-warning {
+    border: 1px solid rgba(192,57,43,0.35);
+    background: rgba(192,57,43,0.08);
+    color: #7f1d1d;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.35;
+    display: none;
+  }
+  .assignment-warning.show { display: block; }
+
+  .mini-table {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 240px;
+    overflow: auto;
+    background: #fff;
+  }
+  .mini-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .mini-table th,
+  .mini-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: top;
+  }
+  .mini-table th {
+    position: sticky;
+    top: 0;
+    background: var(--cream);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+  .tiny-btn {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 7px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .tiny-btn:hover { border-color: #c0392b; color: #c0392b; }
 
   .modal-footer {
     padding: 14px 22px;
@@ -563,8 +662,9 @@
   /* ── RESPONSIVE ──────────────────────────────── */
   @media (max-width: 600px) {
     .calendar-wrapper { padding: 12px; }
+    .calendar-legend { padding: 10px 14px 0; }
     header { padding: 0 14px; }
-    .tab-bar, .week-nav { padding: 0 14px; }
+    .week-nav { padding: 0 14px; }
   }
 </style>
 </head>
@@ -579,10 +679,12 @@
       <p>Panel de Administración</p>
     </div>
     <div class="login-form">
+      <label class="login-label">Email</label>
+      <input class="login-input" type="email" id="email-input" placeholder="correo@dominio.com" autocomplete="email" style="font-size:13px;letter-spacing:0.04em;text-align:left;">
       <label class="login-label">Código de acceso</label>
       <input class="login-input" type="password" id="pwd-input" maxlength="6" placeholder="···" autocomplete="off">
       <button class="login-btn" onclick="tryLogin()">Ingresar</button>
-      <div class="login-error" id="login-error">Código incorrecto</div>
+      <div class="login-error" id="login-error">Email o código incorrecto</div>
     </div>
   </div>
 </div>
@@ -594,18 +696,12 @@
       Essense Arenal <span>Admin</span>
     </div>
     <div class="header-actions">
+      <span class="user-pill" id="user-pill"></span>
+      <button class="btn-ghost" id="btn-availability" onclick="openAvailabilityModal()" style="display:none">Disponibilidad</button>
+      <button class="btn-ghost" onclick="openAuditModal()">Dashboard</button>
       <button class="btn-ghost" onclick="logout()">Salir</button>
     </div>
   </header>
-
-  <div class="tab-bar">
-    <div class="tab active" data-section="hotel" onclick="switchSection('hotel')">
-      <span class="tab-dot" style="background:var(--hotel-color)"></span>Hotel
-    </div>
-    <div class="tab" data-section="finca" onclick="switchSection('finca')">
-      <span class="tab-dot" style="background:var(--finca-color)"></span>Finca
-    </div>
-  </div>
 
   <div class="week-nav">
     <div class="week-label" id="week-label"></div>
@@ -614,6 +710,11 @@
       <button class="btn-today" onclick="goToday()">Hoy</button>
       <button class="nav-btn" onclick="changeWeek(1)">›</button>
     </div>
+  </div>
+
+  <div class="calendar-legend" aria-label="Leyenda de ubicaciones">
+    <span class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:var(--hotel-color)"></span>Hotel</span>
+    <span class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:var(--finca-color)"></span>Finca</span>
   </div>
 
   <div class="calendar-wrapper">
@@ -636,7 +737,7 @@
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Hora inicio</label>
-          <input class="form-input" type="time" id="f-time" value="07:00">
+          <input class="form-input" type="time" id="f-time" value="07:00" step="900">
         </div>
         <div class="form-group">
           <label class="form-label">Duración</label>
@@ -651,6 +752,13 @@
         </div>
       </div>
       <div class="form-group">
+        <label class="form-label">Ubicación</label>
+        <select class="form-select" id="f-section">
+          <option value="hotel">Hotel</option>
+          <option value="finca">Finca</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label class="form-label">Cliente / grupo</label>
         <input class="form-input" type="text" id="f-client" placeholder="Nombre del cliente o grupo">
       </div>
@@ -659,29 +767,16 @@
           <label class="form-label">Guía / Terapeuta</label>
           <select class="form-select" id="f-staff">
             <option value="">— sin asignar —</option>
-            <option>Daniela</option>
-            <option>Carlos</option>
-            <option>Mariela</option>
-            <option>Andrés</option>
-            <option>Sofia</option>
-            <option>Luis</option>
-            <option>Valentina</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">Supervisor</label>
           <select class="form-select" id="f-supervisor">
             <option value="">— ninguno —</option>
-            <option>Daniela</option>
-            <option>Carlos</option>
-            <option>Mariela</option>
-            <option>Andrés</option>
-            <option>Sofia</option>
-            <option>Luis</option>
-            <option>Valentina</option>
           </select>
         </div>
       </div>
+      <div class="assignment-warning" id="assignment-warning"></div>
       <div class="form-group">
         <label class="form-label">Notas</label>
         <input class="form-input" type="text" id="f-notes" placeholder="Observaciones opcionales">
@@ -701,10 +796,63 @@
   </div>
 </div>
 
+<!-- AVAILABILITY EDITOR MODAL -->
+<div class="modal-overlay" id="availability-modal" onclick="handleAvailabilityOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Editor de disponibilidad</div>
+      <button class="modal-close" onclick="closeAvailabilityModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Empleado</label>
+          <select class="form-select" id="off-employee"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input class="form-input" type="date" id="off-date">
+        </div>
+      </div>
+      <button class="btn-save" type="button" onclick="addDayOffRule()">Agregar día libre</button>
+
+      <div class="form-group">
+        <label class="form-label">Días libres registrados</label>
+        <div class="mini-table" id="off-list"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAvailabilityModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVITY DASHBOARD MODAL -->
+<div class="modal-overlay" id="audit-modal" onclick="handleAuditOverlayClick(event)">
+  <div class="modal" style="max-width:780px;">
+    <div class="modal-header">
+      <div class="modal-title">Dashboard de actividad</div>
+      <button class="modal-close" onclick="closeAuditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Últimas acciones (agregar / eliminar / editar)</label>
+        <div class="mini-table" id="audit-list"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAuditModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── CONFIG ──────────────────────────────────────────────
 const PASSWORD = '777';
 const STORAGE_KEY = 'essense_arenal_v2';
+const AVAILABILITY_KEY = 'essense_arenal_availability_v1';
+const AUDIT_KEY = 'essense_arenal_audit_v1';
+const EDITOR_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 const DAYS_ES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const DAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 
@@ -716,28 +864,485 @@ const TIME_SLOTS = [
 ];
 
 const ACTIVITY_TYPES = [
-  { id: 'yoga',        name: 'Yoga',          color: 'yoga',      emoji: '🧘' },
-  { id: 'massage',     name: 'Masaje',        color: 'massage',   emoji: '💆' },
-  { id: 'cacao',       name: 'Tour Cacao',    color: 'cacao',     emoji: '🍫' },
-  { id: 'bird',        name: 'Bird Watching', color: 'bird',      emoji: '🦜' },
-  { id: 'night',       name: 'Tour Nocturno', color: 'night',     emoji: '🌙' },
-  { id: 'meditation',  name: 'Meditación',    color: 'meditation',emoji: '✨' },
-  { id: 'kayak',       name: 'Kayak',         color: 'kayak',     emoji: '🛶' },
-  { id: 'cooking',     name: 'Cocina',        color: 'cooking',   emoji: '🍃' },
-  { id: 'other',       name: 'Otro',          color: 'other',     emoji: '📋' },
+  { id: 'yoga',          name: 'Yoga',           color: 'yoga',         emoji: '🧘' },
+  { id: 'massage',       name: 'Masaje',         color: 'massage',      emoji: '💆' },
+  { id: 'beauty',        name: 'Belleza',        color: 'beauty',       emoji: '🌸' },
+  { id: 'soundbath',     name: 'Baño de Sonido', color: 'soundbath',    emoji: '🎵' },
+  { id: 'temazcal',      name: 'Temazcal',       color: 'temazcal',     emoji: '🔥' },
+  { id: 'foresttherapy', name: 'Forest Therapy', color: 'foresttherapy',emoji: '🌿' },
+  { id: 'meditation',    name: 'Meditación',     color: 'meditation',   emoji: '✨' },
+  { id: 'therapy',       name: 'Terapia (NLP)',  color: 'therapy',      emoji: '🧠' },
+  { id: 'welcome',       name: 'Bienvenida',     color: 'welcome',      emoji: '👋' },
+  { id: 'detox',         name: 'Detox Iónico',   color: 'detox',        emoji: '🦶' },
+  { id: 'cacao',         name: 'Tour Cacao',     color: 'cacao',        emoji: '🍫' },
+  { id: 'bird',          name: 'Bird Watching',  color: 'bird',         emoji: '🦜' },
+  { id: 'night',         name: 'Tour Nocturno',  color: 'night',        emoji: '🌙' },
+  { id: 'kayak',         name: 'Kayak',          color: 'kayak',        emoji: '🛶' },
+  { id: 'cooking',       name: 'Cocina',         color: 'cooking',      emoji: '🍃' },
+  { id: 'other',         name: 'Otro',           color: 'other',        emoji: '📋' },
 ];
 
+// ── EMPLOYEE PERMISSIONS ────────────────────────────────
+// Maps each staff member to the ACTIVITY_TYPES ids they are authorised to perform.
+// The Guía / Terapeuta dropdown is filtered to only these people when a type is chosen.
+// In-category exceptions (e.g. "not Thai massage") are noted as comments for reference.
+const EMPLOYEES = {
+  // All massages + beauty treatments  (NOT Thai massage, NOT Reiki)
+  'Daniela':   ['massage', 'beauty'],
+  // All massages incl. Essence Special & Couple Experience  (NOT Thai, NOT Reiki)
+  'Fabián':    ['massage'],
+  // All massages (NOT lymphatic drainage) + yoga + sound bath + temazcal
+  'Alejandro': ['massage', 'yoga', 'soundbath', 'temazcal'],
+  // All tours + forest therapy + yoga + meditation
+  'Aurelio':   ['cacao', 'bird', 'night', 'kayak', 'cooking', 'foresttherapy', 'yoga', 'meditation'],
+  // Welcome introduction + ionic foot detox + temazcal
+  'Jairo':     ['welcome', 'detox', 'temazcal'],
+  // Temazcal only
+  'Fernando':  ['temazcal'],
+  // NLP + timeline therapy
+  'Nico':      ['therapy'],
+};
+
+// ── EMPLOYEE AVAILABILITY ───────────────────────────────
+// Weekly rules are keyed by day index (0=Dom ... 6=Sáb).
+// Date rules override/extend weekly rules for a specific day (YYYY-MM-DD).
+// Rule shape: { off?: boolean, start?: 'HH:MM', end?: 'HH:MM', blockedTypes?: string[] }
+const DEFAULT_EMPLOYEE_AVAILABILITY = {
+  'Daniela': {
+    weekly: {
+      1: { off: true }, // Monday off
+    },
+    dates: {},
+  },
+  'Fabián': {
+    weekly: {
+      2: { start: '14:00' }, // Tuesday available after 14:00
+    },
+    dates: {},
+  },
+  'Alejandro': {
+    weekly: {
+      3: { end: '12:00' }, // Wednesday available until 12:00
+    },
+    dates: {},
+  },
+  'Aurelio': {
+    weekly: {},
+    dates: {
+      '2026-04-04': { blockedTypes: ['bird'] }, // today: no birdwatching
+    },
+  },
+  'Jairo': {
+    weekly: {
+      5: { off: true }, // Friday off
+    },
+    dates: {},
+  },
+  'Fernando': {
+    weekly: {
+      6: { start: '16:00' }, // Saturday available after 16:00
+    },
+    dates: {},
+  },
+  'Nico': {
+    weekly: {
+      0: { blockedTypes: ['therapy'] }, // Sunday: no therapy
+    },
+    dates: {},
+  },
+};
+
+// ── STAFF DROPDOWN FILTER ───────────────────────────────
+// Rebuild both dropdowns whenever the selected activity type changes.
+// preserveSelection=true  → keep the current pick if it's still valid (chip click)
+// preserveSelection=false → clear and let the caller set values   (openModal)
+function updateStaffDropdowns(preserveSelection = false) {
+  const allNames  = Object.keys(EMPLOYEES);
+  const qualified = (selectedType === 'other')
+    ? allNames
+    : allNames.filter(name => EMPLOYEES[name].includes(selectedType));
+  // If nothing qualifies, fall back to everyone
+  const staffList = qualified.length ? qualified : allNames;
+
+  const staffSel = document.getElementById('f-staff');
+  const supSel   = document.getElementById('f-supervisor');
+  const prevStaff = preserveSelection ? staffSel.value : '';
+  const prevSup   = preserveSelection ? supSel.value   : '';
+
+  // Guía / Terapeuta — filtered by service type
+  staffSel.innerHTML = '<option value="">— sin asignar —</option>';
+  staffList.forEach(name => {
+    const o = document.createElement('option');
+    o.value = name; o.textContent = name;
+    staffSel.appendChild(o);
+  });
+  if (prevStaff && staffList.includes(prevStaff)) staffSel.value = prevStaff;
+
+  // Supervisor — always shows the full team
+  supSel.innerHTML = '<option value="">— ninguno —</option>';
+  allNames.forEach(name => {
+    const o = document.createElement('option');
+    o.value = name; o.textContent = name;
+    supSel.appendChild(o);
+  });
+  if (prevSup) supSel.value = prevSup;
+}
+
+function timeToMinutes(value) {
+  if (!/^\d{2}:\d{2}$/.test(value || '')) return null;
+  const [h, m] = value.split(':').map(Number);
+  return (h * 60) + m;
+}
+
+function getTypeNameById(typeId) {
+  return ACTIVITY_TYPES.find(t => t.id === typeId)?.name || typeId;
+}
+
+function getEmployeeAvailabilityRule(employeeName, dateStr) {
+  const cfg = employeeAvailability[employeeName];
+  if (!cfg || !dateStr) return null;
+
+  const dayIndex = new Date(`${dateStr}T00:00:00`).getDay();
+  const weeklyRule = cfg.weekly?.[dayIndex] || {};
+  const dateRule = cfg.dates?.[dateStr] || {};
+
+  const blocked = [...(weeklyRule.blockedTypes || []), ...(dateRule.blockedTypes || [])];
+  const merged = {
+    off: Boolean(weeklyRule.off || dateRule.off),
+    start: dateRule.start || weeklyRule.start || '',
+    end: dateRule.end || weeklyRule.end || '',
+    blockedTypes: Array.from(new Set(blocked)),
+  };
+
+  if (!merged.off && !merged.start && !merged.end && !merged.blockedTypes.length) return null;
+  return merged;
+}
+
+function hasAnyRestriction(rule) {
+  return Boolean(rule && (rule.off || rule.start || rule.end || (rule.blockedTypes && rule.blockedTypes.length)));
+}
+
+function describeRestriction(rule) {
+  if (!rule) return '';
+  const parts = [];
+  if (rule.off) parts.push('día libre');
+  if (rule.start) parts.push(`disponible desde ${rule.start}`);
+  if (rule.end) parts.push(`disponible hasta ${rule.end}`);
+  if (rule.blockedTypes?.length) {
+    const names = rule.blockedTypes.map(getTypeNameById).join(', ');
+    parts.push(`sin ${names}`);
+  }
+  return parts.join(' · ');
+}
+
+function validateAssignmentAvailability(employeeName, dateStr, timeValue, typeId) {
+  if (!employeeName || !dateStr) return { ok: true, reason: '' };
+  const rule = getEmployeeAvailabilityRule(employeeName, dateStr);
+  if (!hasAnyRestriction(rule)) return { ok: true, reason: '' };
+
+  if (rule.off) {
+    return { ok: false, reason: `${employeeName} tiene día libre.` };
+  }
+
+  const target = timeToMinutes(timeValue);
+  if (target !== null && rule.start) {
+    const startMin = timeToMinutes(rule.start);
+    if (startMin !== null && target < startMin) {
+      return { ok: false, reason: `${employeeName} está disponible solo después de ${rule.start}.` };
+    }
+  }
+
+  if (target !== null && rule.end) {
+    const endMin = timeToMinutes(rule.end);
+    if (endMin !== null && target > endMin) {
+      return { ok: false, reason: `${employeeName} está disponible solo hasta ${rule.end}.` };
+    }
+  }
+
+  if (rule.blockedTypes?.includes(typeId)) {
+    return { ok: false, reason: `${employeeName} no está disponible para ${getTypeNameById(typeId)} ese día.` };
+  }
+
+  return { ok: true, reason: '' };
+}
+
+function resolveModalDateStr() {
+  if (pendingCell?.dateStr) return pendingCell.dateStr;
+
+  if (editingId !== null) {
+    const editing = activities.find(a => a.id === editingId);
+    if (editing?.date) return editing.date;
+    if (typeof editing?.dow === 'number') {
+      const weekStart = getWeekStart(weekOffset);
+      const d = new Date(weekStart);
+      d.setDate(d.getDate() + editing.dow);
+      return d.toISOString().split('T')[0];
+    }
+  }
+
+  const fallback = getWeekStart(weekOffset);
+  return fallback.toISOString().split('T')[0];
+}
+
+function refreshAssignmentWarning() {
+  const warningEl = document.getElementById('assignment-warning');
+  const staff = document.getElementById('f-staff').value;
+
+  if (!staff) {
+    warningEl.classList.remove('show');
+    warningEl.textContent = '';
+    return;
+  }
+
+  const dateStr = resolveModalDateStr();
+  const timeValue = document.getElementById('f-time').value;
+  const check = validateAssignmentAvailability(staff, dateStr, timeValue, selectedType);
+
+  if (!check.ok) {
+    warningEl.textContent = `⚠ ${check.reason}`;
+    warningEl.classList.add('show');
+    return;
+  }
+
+  warningEl.classList.remove('show');
+  warningEl.textContent = '';
+}
+
+function getRestrictedEmployeesForDate(dateStr) {
+  return Object.keys(employeeAvailability).filter(name => {
+    const rule = getEmployeeAvailabilityRule(name, dateStr);
+    return hasAnyRestriction(rule);
+  });
+}
+
+function ensureEmployeeAvailabilityNode(name) {
+  if (!employeeAvailability[name]) {
+    employeeAvailability[name] = { weekly: {}, dates: {} };
+  }
+  if (!employeeAvailability[name].weekly) employeeAvailability[name].weekly = {};
+  if (!employeeAvailability[name].dates) employeeAvailability[name].dates = {};
+}
+
+function openAvailabilityModal() {
+  if (!isEditor()) {
+    alert('Solo editores pueden gestionar días libres.');
+    return;
+  }
+
+  const select = document.getElementById('off-employee');
+  select.innerHTML = '';
+  Object.keys(EMPLOYEES).forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('off-date').value = today;
+  renderOffList();
+  document.getElementById('availability-modal').classList.add('open');
+}
+
+function closeAvailabilityModal() {
+  document.getElementById('availability-modal').classList.remove('open');
+}
+
+function handleAvailabilityOverlayClick(e) {
+  if (e.target === document.getElementById('availability-modal')) closeAvailabilityModal();
+}
+
+function addDayOffRule() {
+  if (!isEditor()) return;
+  const employee = document.getElementById('off-employee').value;
+  const dateStr = document.getElementById('off-date').value;
+  if (!employee || !dateStr) {
+    alert('Selecciona empleado y fecha.');
+    return;
+  }
+
+  ensureEmployeeAvailabilityNode(employee);
+  const existing = employeeAvailability[employee].dates[dateStr] || {};
+  employeeAvailability[employee].dates[dateStr] = { ...existing, off: true };
+  saveAvailability();
+  scheduleCalendarRender();
+  renderOffList();
+}
+
+function removeDayOffRule(employee, dateStr) {
+  ensureEmployeeAvailabilityNode(employee);
+  const existing = employeeAvailability[employee].dates[dateStr];
+  if (!existing) return;
+
+  delete existing.off;
+  const hasAnything = existing.start || existing.end || (existing.blockedTypes && existing.blockedTypes.length);
+  if (!hasAnything) {
+    delete employeeAvailability[employee].dates[dateStr];
+  } else {
+    employeeAvailability[employee].dates[dateStr] = existing;
+  }
+
+  saveAvailability();
+  scheduleCalendarRender();
+  renderOffList();
+}
+
+function renderOffList() {
+  const host = document.getElementById('off-list');
+  const rows = [];
+  Object.keys(employeeAvailability).forEach(name => {
+    const dateMap = employeeAvailability[name]?.dates || {};
+    Object.keys(dateMap).forEach(dateStr => {
+      if (dateMap[dateStr]?.off) rows.push({ name, dateStr });
+    });
+  });
+
+  rows.sort((a, b) => (a.dateStr < b.dateStr ? -1 : 1));
+
+  if (!rows.length) {
+    host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin días libres registrados.</td></tr></tbody></table>';
+    return;
+  }
+
+  host.innerHTML = `
+    <table>
+      <thead>
+        <tr><th>Empleado</th><th>Fecha</th><th>Acción</th></tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => `
+          <tr>
+            <td>${r.name}</td>
+            <td>${r.dateStr}</td>
+            <td><button class="tiny-btn" onclick="removeDayOffRule('${r.name}','${r.dateStr}')">Quitar</button></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function openAuditModal() {
+  renderAuditList();
+  document.getElementById('audit-modal').classList.add('open');
+}
+
+function closeAuditModal() {
+  document.getElementById('audit-modal').classList.remove('open');
+}
+
+function handleAuditOverlayClick(e) {
+  if (e.target === document.getElementById('audit-modal')) closeAuditModal();
+}
+
+function renderAuditList() {
+  const host = document.getElementById('audit-list');
+  if (!activityAudit.length) {
+    host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin movimientos aún.</td></tr></tbody></table>';
+    return;
+  }
+
+  host.innerHTML = `
+    <table>
+      <thead>
+        <tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr>
+      </thead>
+      <tbody>
+        ${activityAudit.map(log => `
+          <tr>
+            <td>${fmtAuditDate(log.at)}</td>
+            <td>${log.user || ''}</td>
+            <td>${log.action || ''}</td>
+            <td>${log.detail || ''}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
 // ── STATE ───────────────────────────────────────────────
-let currentSection = 'hotel';
 let weekOffset = 0;
 let activities = [];
+let activityAudit = [];
+let currentUser = null;
+let employeeAvailability = {};
 let editingId = null;
 let pendingCell = null; // { dayIndex, slotId }
+let renderTimer = null;
+let pendingRenderMode = 'defer';
+
+function getSectionLabel(section) {
+  return section === 'finca' ? 'Finca' : 'Hotel';
+}
+
+function getSectionClass(section) {
+  return section === 'finca' ? 'location-finca' : 'location-hotel';
+}
+
+function isQuarterHourTime(value) {
+  if (!/^\d{2}:\d{2}$/.test(value)) return false;
+  const minutes = Number(value.split(':')[1]);
+  return [0, 15, 30, 45].includes(minutes);
+}
+
+function scheduleCalendarRender(mode = 'defer') {
+  const nextMode = mode === 'debounce' ? 'debounce' : 'defer';
+  const nextDelay = nextMode === 'debounce' ? 120 : 16;
+
+  if (renderTimer && pendingRenderMode === 'debounce' && nextMode === 'defer') {
+    clearTimeout(renderTimer);
+    renderTimer = null;
+  }
+
+  if (renderTimer && pendingRenderMode === nextMode) {
+    clearTimeout(renderTimer);
+  }
+
+  pendingRenderMode = nextMode;
+  renderTimer = window.setTimeout(() => {
+    renderTimer = null;
+    pendingRenderMode = 'defer';
+    renderCalendar();
+  }, nextDelay);
+}
 
 // ── PERSISTENCE ─────────────────────────────────────────
 function saveData() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
 }
+
+function saveAvailability() {
+  localStorage.setItem(AVAILABILITY_KEY, JSON.stringify(employeeAvailability));
+}
+
+function saveAudit() {
+  localStorage.setItem(AUDIT_KEY, JSON.stringify(activityAudit));
+}
+
+function cloneDefaultAvailability() {
+  return JSON.parse(JSON.stringify(DEFAULT_EMPLOYEE_AVAILABILITY));
+}
+
+function normalizeAvailabilityShape(raw) {
+  const base = cloneDefaultAvailability();
+  Object.keys(EMPLOYEES).forEach(name => {
+    if (!base[name]) base[name] = { weekly: {}, dates: {} };
+    if (!base[name].weekly) base[name].weekly = {};
+    if (!base[name].dates) base[name].dates = {};
+  });
+
+  if (!raw || typeof raw !== 'object') return base;
+
+  Object.keys(raw).forEach(name => {
+    if (!base[name]) base[name] = { weekly: {}, dates: {} };
+    base[name].weekly = raw[name]?.weekly || base[name].weekly || {};
+    base[name].dates = raw[name]?.dates || base[name].dates || {};
+  });
+
+  return base;
+}
+
 function loadData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -745,6 +1350,74 @@ function loadData() {
   } catch(e) {}
   activities = getSeedData();
   saveData();
+}
+
+function loadAvailability() {
+  try {
+    const raw = localStorage.getItem(AVAILABILITY_KEY);
+    if (raw) {
+      employeeAvailability = normalizeAvailabilityShape(JSON.parse(raw));
+      return;
+    }
+  } catch(e) {}
+
+  employeeAvailability = cloneDefaultAvailability();
+  saveAvailability();
+}
+
+function loadAudit() {
+  try {
+    const raw = localStorage.getItem(AUDIT_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      activityAudit = Array.isArray(parsed) ? parsed : [];
+      return;
+    }
+  } catch(e) {}
+  activityAudit = [];
+  saveAudit();
+}
+
+function getCurrentUserEmail() {
+  return currentUser?.email || 'desconocido';
+}
+
+function isEditor() {
+  return Boolean(currentUser?.editor);
+}
+
+function updateAuthUI() {
+  const userPill = document.getElementById('user-pill');
+  const editorBadge = isEditor() ? 'Editor' : 'Staff';
+  userPill.textContent = `${editorBadge} · ${getCurrentUserEmail()}`;
+  document.getElementById('btn-availability').style.display = isEditor() ? 'inline-flex' : 'none';
+}
+
+function formatActivityForLog(act) {
+  const typeName = getTypeNameById(act.type || 'other');
+  return `${typeName}${act.client ? ` · ${act.client}` : ''}${act.time ? ` (${act.time})` : ''}`;
+}
+
+function logAudit(action, activity, detail = '') {
+  const record = {
+    id: Date.now() + Math.random(),
+    at: new Date().toISOString(),
+    action,
+    user: getCurrentUserEmail(),
+    detail: detail || formatActivityForLog(activity || {}),
+  };
+  activityAudit.unshift(record);
+  if (activityAudit.length > 400) activityAudit = activityAudit.slice(0, 400);
+  saveAudit();
+}
+
+function fmtAuditDate(iso) {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString('es-CR', { hour12: false });
+  } catch (_) {
+    return iso || '';
+  }
 }
 
 function getSeedData() {
@@ -756,52 +1429,70 @@ function getSeedData() {
   };
 
   // Hotel activities
-  add('hotel',1,'morning','yoga','07:00','Grupo Hotel','Daniela');
-  add('hotel',3,'morning','yoga','07:00','Grupo Hotel','Daniela');
-  add('hotel',5,'morning','yoga','07:00','Grupo Hotel','Daniela');
-  add('hotel',1,'midday','massage','10:00','Reserva privada','Sofia');
-  add('hotel',2,'midday','massage','10:00','Reserva privada','Sofia');
-  add('hotel',4,'midday','massage','11:00','Reserva privada','Sofia');
-  add('hotel',2,'afternoon','meditation','14:00','Grupo Retiro','Daniela');
-  add('hotel',4,'afternoon','meditation','14:00','Grupo Retiro','Daniela');
-  add('hotel',1,'evening','cacao','17:00','Tour Cacao','Carlos');
-  add('hotel',3,'evening','cacao','17:00','Tour Cacao','Carlos');
-  add('hotel',5,'evening','cacao','17:00','Tour Cacao','Carlos');
+  add('hotel',1,'morning','yoga','07:00','Grupo Hotel','Alejandro');
+  add('hotel',3,'morning','yoga','07:00','Grupo Hotel','Aurelio');
+  add('hotel',5,'morning','yoga','07:00','Grupo Hotel','Alejandro');
+  add('hotel',1,'midday','massage','10:00','Reserva privada','Daniela');
+  add('hotel',2,'midday','massage','10:00','Reserva privada','Fabián');
+  add('hotel',4,'midday','massage','11:00','Reserva privada','Alejandro');
+  add('hotel',2,'afternoon','meditation','14:00','Grupo Retiro','Aurelio');
+  add('hotel',4,'afternoon','meditation','14:00','Grupo Retiro','Aurelio');
+  add('hotel',1,'evening','cacao','17:00','Tour Cacao','Aurelio');
+  add('hotel',3,'evening','cacao','17:00','Tour Cacao','Aurelio');
+  add('hotel',5,'evening','cacao','17:00','Tour Cacao','Aurelio');
 
   // Finca activities
-  add('finca',1,'morning','bird','06:00','Grupo Finca','Luis');
-  add('finca',3,'morning','bird','06:00','Grupo Finca','Luis');
-  add('finca',6,'morning','bird','06:00','Tour Sábado','Luis');
-  add('finca',0,'morning','bird','06:00','Tour Domingo','Luis');
-  add('finca',2,'afternoon','kayak','14:00','Actividad Finca','Andrés');
-  add('finca',4,'afternoon','kayak','14:00','Actividad Finca','Andrés');
-  add('finca',1,'evening','night','18:30','Tour Nocturno','Carlos');
-  add('finca',4,'evening','night','18:30','Tour Nocturno','Carlos');
-  add('finca',5,'afternoon','cooking','15:00','Cocina Finca','Mariela');
+  add('finca',1,'morning','bird','06:00','Grupo Finca','Aurelio');
+  add('finca',3,'morning','bird','06:00','Grupo Finca','Aurelio');
+  add('finca',6,'morning','bird','06:00','Tour Sábado','Aurelio');
+  add('finca',0,'morning','bird','06:00','Tour Domingo','Aurelio');
+  add('finca',2,'afternoon','kayak','14:00','Actividad Finca','Aurelio');
+  add('finca',4,'afternoon','kayak','14:00','Actividad Finca','Aurelio');
+  add('finca',1,'evening','night','18:30','Tour Nocturno','Aurelio');
+  add('finca',4,'evening','night','18:30','Tour Nocturno','Aurelio');
+  add('finca',5,'afternoon','temazcal','15:00','Temazcal Finca','Jairo');
+  add('finca',3,'afternoon','foresttherapy','14:00','Forest Therapy','Aurelio');
 
   return seeds;
 }
 
 // ── LOGIN ───────────────────────────────────────────────
 function tryLogin() {
-  const v = document.getElementById('pwd-input').value.trim();
-  if (v === PASSWORD) {
+  const email = document.getElementById('email-input').value.trim().toLowerCase();
+  const pin = document.getElementById('pwd-input').value.trim();
+  const looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if (looksLikeEmail && pin === PASSWORD) {
+    currentUser = {
+      email,
+      editor: EDITOR_EMAILS.includes(email),
+    };
+
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
+
     loadData();
-    renderCalendar();
+    loadAvailability();
+    loadAudit();
+    updateAuthUI();
+    scheduleCalendarRender();
   } else {
     document.getElementById('login-error').classList.add('show');
     document.getElementById('pwd-input').value = '';
   }
 }
 function logout() {
+  currentUser = null;
   document.getElementById('login-screen').classList.remove('hidden');
   document.getElementById('app').classList.add('hidden');
+  document.getElementById('email-input').value = '';
   document.getElementById('pwd-input').value = '';
   document.getElementById('login-error').classList.remove('show');
 }
 
+document.getElementById('email-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryLogin();
+});
 document.getElementById('pwd-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') tryLogin();
 });
@@ -825,13 +1516,8 @@ function formatWeekLabel(start) {
   return `${start.getDate()} ${months[start.getMonth()]} – ${end.getDate()} ${months[end.getMonth()]} ${start.getFullYear()}`;
 }
 
-function changeWeek(delta) { weekOffset += delta; renderCalendar(); }
-function goToday() { weekOffset = 0; renderCalendar(); }
-function switchSection(s) {
-  currentSection = s;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.section === s));
-  renderCalendar();
-}
+function changeWeek(delta) { weekOffset += delta; scheduleCalendarRender(); }
+function goToday() { weekOffset = 0; scheduleCalendarRender(); }
 
 // ── RENDER CALENDAR ─────────────────────────────────────
 function renderCalendar() {
@@ -839,23 +1525,51 @@ function renderCalendar() {
   document.getElementById('week-label').textContent = formatWeekLabel(weekStart);
 
   const grid = document.getElementById('calendar-grid');
-  grid.innerHTML = '';
+  const fragment = document.createDocumentFragment();
 
   const today = new Date(); today.setHours(0,0,0,0);
+  const activityMap = new Map();
+
+  activities.forEach(activity => {
+    const scopeKey = activity.weekly ? `weekly:${activity.dow}` : `date:${activity.date}`;
+    const key = `${scopeKey}|${activity.slot}`;
+    const bucket = activityMap.get(key);
+
+    if (bucket) {
+      bucket.push(activity);
+    } else {
+      activityMap.set(key, [activity]);
+    }
+  });
 
   // Header row
   const timeHeader = document.createElement('div');
   timeHeader.className = 'col-header time-header';
-  grid.appendChild(timeHeader);
+  fragment.appendChild(timeHeader);
 
   for (let d = 0; d < 7; d++) {
     const date = new Date(weekStart);
     date.setDate(date.getDate() + d);
+    const dateStr = date.toISOString().split('T')[0];
     const isToday = date.getTime() === today.getTime();
     const div = document.createElement('div');
     div.className = 'col-header' + (isToday ? ' today-col' : '');
     div.innerHTML = `<span class="day-name">${DAYS_SHORT[d]}</span><span class="day-num">${date.getDate()}</span>`;
-    grid.appendChild(div);
+
+    const restricted = getRestrictedEmployeesForDate(dateStr);
+    if (restricted.length) {
+      const badge = document.createElement('span');
+      badge.className = 'day-restriction';
+      badge.textContent = `⚠ ${restricted.length}`;
+
+      const details = restricted
+        .map(name => `${name}: ${describeRestriction(getEmployeeAvailabilityRule(name, dateStr))}`)
+        .join(' | ');
+      badge.title = details;
+      div.appendChild(badge);
+    }
+
+    fragment.appendChild(div);
   }
 
   // Time slot rows
@@ -863,7 +1577,7 @@ function renderCalendar() {
     const timeLabel = document.createElement('div');
     timeLabel.className = 'time-label';
     timeLabel.innerHTML = `<span>${slot.label}</span>`;
-    grid.appendChild(timeLabel);
+    fragment.appendChild(timeLabel);
 
     for (let d = 0; d < 7; d++) {
       const date = new Date(weekStart);
@@ -873,15 +1587,14 @@ function renderCalendar() {
       const cell = document.createElement('div');
       cell.className = 'day-cell';
 
-      // Get activities for this cell
-      const cellActivities = activities.filter(a => {
-        if (a.section !== currentSection) return false;
-        if (a.slot !== slot.id) return false;
-        if (a.weekly) return a.dow === d;
-        return a.date === dateStr;
+      const weeklyActivities = activityMap.get(`weekly:${d}|${slot.id}`) || [];
+      const datedActivities = activityMap.get(`date:${dateStr}|${slot.id}`) || [];
+
+      weeklyActivities.forEach(act => {
+        cell.appendChild(makePill(act));
       });
 
-      cellActivities.forEach(act => {
+      datedActivities.forEach(act => {
         cell.appendChild(makePill(act));
       });
 
@@ -889,35 +1602,41 @@ function renderCalendar() {
       addBtn.className = 'add-btn';
       addBtn.textContent = '+';
       addBtn.title = 'Agregar actividad';
-      addBtn.onclick = (e) => { e.stopPropagation(); openModal(null, d, slot.id, dateStr); };
+      addBtn.dataset.dayIndex = String(d);
+      addBtn.dataset.slotId = slot.id;
+      addBtn.dataset.dateStr = dateStr;
       cell.appendChild(addBtn);
 
-      grid.appendChild(cell);
+      fragment.appendChild(cell);
     }
   });
+
+  grid.replaceChildren(fragment);
 }
 
 function makePill(act) {
   const type = ACTIVITY_TYPES.find(t => t.id === act.type) || ACTIVITY_TYPES[8];
   const pill = document.createElement('div');
   pill.className = `activity-pill color-${type.color}`;
+  pill.dataset.activityId = String(act.id);
 
   const staffLine = [act.staff, act.supervisor].filter(Boolean).join(', ');
   pill.innerHTML = `
-    <span class="pill-time">${act.time || ''}${act.weekly ? ' 🔁' : ''}</span>
+    <span class="pill-time">${act.time || ''}${act.weekly ? ' 🔁' : ''}<span class="pill-location ${getSectionClass(act.section)}">${getSectionLabel(act.section)}</span></span>
     <span class="pill-name">${type.emoji} ${type.name}${act.client ? ' · ' + act.client : ''}</span>
     ${staffLine ? `<span class="pill-staff">${staffLine}</span>` : ''}
-    <button class="pill-del" title="Eliminar" onclick="quickDelete(event, ${act.id})">✕</button>
+    <button class="pill-del" title="Eliminar" data-activity-id="${act.id}">✕</button>
   `;
-  pill.addEventListener('click', () => openModal(act));
   return pill;
 }
 
-function quickDelete(e, id) {
-  e.stopPropagation();
+function quickDelete(id) {
   if (!confirm('¿Eliminar esta actividad?')) return;
+  const removed = activities.find(a => a.id === id);
   activities = activities.filter(a => a.id !== id);
-  saveData(); renderCalendar();
+  if (removed) logAudit('eliminar', removed);
+  saveData();
+  scheduleCalendarRender();
 }
 
 // ── MODAL ───────────────────────────────────────────────
@@ -935,6 +1654,8 @@ function buildTypeGrid() {
       selectedType = t.id;
       document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
       chip.classList.add('selected');
+      updateStaffDropdowns(true);
+      refreshAssignmentWarning();
     };
     grid.appendChild(chip);
   });
@@ -949,14 +1670,18 @@ function openModal(act, dayIndex, slotId, dateStr) {
 
   selectedType = act ? act.type : 'yoga';
   buildTypeGrid();
+  updateStaffDropdowns(false);
 
   document.getElementById('f-time').value       = act?.time       || '07:00';
   document.getElementById('f-duration').value   = act?.duration   || '60';
+  document.getElementById('f-section').value    = act?.section    || 'hotel';
   document.getElementById('f-client').value     = act?.client     || '';
   document.getElementById('f-staff').value      = act?.staff      || '';
   document.getElementById('f-supervisor').value = act?.supervisor || '';
   document.getElementById('f-notes').value      = act?.notes      || '';
   document.getElementById('f-weekly').checked   = act ? !!act.weekly : true;
+
+  refreshAssignmentWarning();
 
   document.getElementById('modal-overlay').classList.add('open');
 }
@@ -969,22 +1694,37 @@ function handleOverlayClick(e) {
 }
 
 function saveActivity() {
+  const timeValue = document.getElementById('f-time').value;
+  if (!isQuarterHourTime(timeValue)) {
+    alert('La hora debe usar intervalos de 15 minutos: 00, 15, 30 o 45.');
+    return;
+  }
+
   const act = {
     type:       selectedType,
-    time:       document.getElementById('f-time').value,
+    time:       timeValue,
     duration:   parseInt(document.getElementById('f-duration').value),
+    section:    document.getElementById('f-section').value,
     client:     document.getElementById('f-client').value.trim(),
     staff:      document.getElementById('f-staff').value,
     supervisor: document.getElementById('f-supervisor').value,
     notes:      document.getElementById('f-notes').value.trim(),
     weekly:     document.getElementById('f-weekly').checked,
-    section:    currentSection,
   };
+
+  const validationDate = resolveModalDateStr();
+  const availabilityCheck = validateAssignmentAvailability(act.staff, validationDate, act.time, act.type);
+  if (!availabilityCheck.ok) {
+    const proceed = confirm(`Aviso de disponibilidad:\n\n${availabilityCheck.reason}\n\n¿Deseas guardar de todas formas?`);
+    if (!proceed) return;
+  }
 
   if (editingId !== null) {
     const idx = activities.findIndex(a => a.id === editingId);
     if (idx > -1) {
+      const before = { ...activities[idx] };
       Object.assign(activities[idx], act);
+      logAudit('editar', activities[idx], `${formatActivityForLog(before)} → ${formatActivityForLog(activities[idx])}`);
     }
   } else {
     act.id  = Date.now();
@@ -992,21 +1732,63 @@ function saveActivity() {
     act.slot = pendingCell.slotId;
     act.date = pendingCell.dateStr;
     activities.push(act);
+    logAudit('agregar', act);
   }
 
-  saveData(); closeModal(); renderCalendar();
+  saveData();
+  closeModal();
+  scheduleCalendarRender();
 }
 
 function deleteActivity() {
   if (!confirm('¿Eliminar esta actividad permanentemente?')) return;
+  const removed = activities.find(a => a.id === editingId);
   activities = activities.filter(a => a.id !== editingId);
-  saveData(); closeModal(); renderCalendar();
+  if (removed) logAudit('eliminar', removed);
+  saveData();
+  closeModal();
+  scheduleCalendarRender();
+}
+
+function handleCalendarInteraction(event) {
+  const deleteButton = event.target.closest('.pill-del');
+  if (deleteButton) {
+    event.stopPropagation();
+    const activityId = Number(deleteButton.dataset.activityId);
+    window.setTimeout(() => quickDelete(activityId), 0);
+    return;
+  }
+
+  const addButton = event.target.closest('.add-btn');
+  if (addButton) {
+    event.stopPropagation();
+    const dayIndex = Number(addButton.dataset.dayIndex);
+    const slotId = addButton.dataset.slotId;
+    const dateStr = addButton.dataset.dateStr;
+    window.setTimeout(() => openModal(null, dayIndex, slotId, dateStr), 0);
+    return;
+  }
+
+  const pill = event.target.closest('.activity-pill');
+  if (pill) {
+    const activityId = Number(pill.dataset.activityId);
+    const activity = activities.find(item => item.id === activityId);
+    if (!activity) return;
+    window.setTimeout(() => openModal(activity), 0);
+  }
 }
 
 // ── INIT ────────────────────────────────────────────────
 // focus pwd on load
 window.addEventListener('load', () => {
-  document.getElementById('pwd-input').focus();
+  document.getElementById('email-input').focus();
+  document.querySelector('.calendar-wrapper').addEventListener('click', handleCalendarInteraction);
+
+  document.getElementById('f-staff').addEventListener('change', refreshAssignmentWarning);
+  document.getElementById('f-time').addEventListener('input', refreshAssignmentWarning);
+  document.getElementById('f-weekly').addEventListener('change', refreshAssignmentWarning);
+  document.getElementById('email-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
+  document.getElementById('pwd-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
 });
 </script>
 </body>
