@@ -1264,6 +1264,26 @@ function refreshAvailabilityOffDatesFromAbsences() {
   });
 }
 
+function scheduleOffReasonRecalc() {
+  if (offReasonDebounceTimer) clearTimeout(offReasonDebounceTimer);
+  offReasonDebounceTimer = window.setTimeout(() => {
+    offReasonDebounceTimer = null;
+    // Debounced to avoid expensive list recalculations on every keystroke.
+    if (document.getElementById('availability-modal').classList.contains('open')) {
+      renderOffList();
+    }
+  }, 300);
+}
+
+function handleOffReasonInput(event) {
+  const nextValue = event.target.value;
+  // Defer state updates so typing is not blocked by synchronous work.
+  window.setTimeout(() => {
+    offReasonDraft = nextValue;
+    scheduleOffReasonRecalc();
+  }, 0);
+}
+
 function openAvailabilityModal() {
   if (!isEditor()) {
     alert('Solo editores pueden gestionar días libres.');
@@ -1283,6 +1303,7 @@ function openAvailabilityModal() {
   document.getElementById('off-start').value = today;
   document.getElementById('off-end').value = today;
   document.getElementById('off-reason').value = '';
+  offReasonDraft = '';
   renderOffList();
   document.getElementById('availability-modal').classList.add('open');
 }
@@ -1300,7 +1321,8 @@ function addDayOffRule() {
   const employee = document.getElementById('off-employee').value;
   const startDate = document.getElementById('off-start').value;
   const endDate = document.getElementById('off-end').value;
-  const reason = document.getElementById('off-reason').value.trim();
+  const reasonInput = document.getElementById('off-reason').value;
+  const reason = (offReasonDraft || reasonInput).trim();
 
   if (!employee || !startDate || !endDate) {
     alert('Selecciona empleado y rango de fechas.');
@@ -1436,6 +1458,8 @@ let activityAudit = [];
 let currentUser = null;
 let employeeAvailability = {};
 let absenceRecords = [];
+let offReasonDraft = '';
+let offReasonDebounceTimer = null;
 let editingId = null;
 let pendingCell = null; // { dayIndex, slotId }
 let renderTimer = null;
@@ -2071,6 +2095,7 @@ window.addEventListener('load', () => {
   document.getElementById('f-time-hour').addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
   document.getElementById('f-time-minute').addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
   document.getElementById('f-weekly').addEventListener('change', refreshAssignmentWarning);
+  document.getElementById('off-reason').addEventListener('input', handleOffReasonInput);
   document.getElementById('email-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
   document.getElementById('pwd-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
 });
