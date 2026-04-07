@@ -1,2104 +1,1369 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Essence Arenal — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Essense Arenal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --forest: #1a2e1a;
-    --moss: #3d5c2e;
-    --sage: #7a9e6b;
-    --mist: #b8cfa8;
-    --cream: #f5f0e8;
-    --parchment: #ede5d4;
-    --warm-white: #faf8f4;
-    --clay: #c4956a;
-    --terra: #8b5e3c;
-    --charcoal: #2c2c2c;
-    --mid: #6b7569;
-    --light: #a8b5a0;
-    --border: #ddd8cc;
+:root {
+  --forest: #1a2e1a; --moss: #2d4a2d; --fern: #4a7c59; --sage: #7aaa86;
+  --mist: #c8dbc8; --cream: #f5f0e8; --sand: #e8dcc8; --gold: #c8a96e;
+  --clay: #8b6b4a; --white: #faf8f4;
+  --bg: #0f0e0c; --surface: #1a1815; --surface2: #221f1b; --surface3: #2c2822;
+  --border: #3a342c; --border-light: #4a4238;
+  --text: #e8ddd0; --text-muted: #8a7d6e; --text-dim: #5a5048;
+  --admin-gold: #c9a96e; --admin-gold-light: #e2c48a;
+  --green-bg: #1a2e22; --blue-bg: #1a2235; --orange-bg: #2e1e10;
+  --purple-bg: #251a30; --teal-bg: #0f2525; --rose-bg: #2e1515;
+  --radius: 10px; --radius-sm: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--cream); min-height: 100vh; overflow-x: hidden; }
 
-    --hotel-color: #4a7c59;
-    --finca-color: #8b5e3c;
+/* ── BG ── */
+.bg-layer { position: fixed; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(74,124,89,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(45,74,45,0.3) 0%, transparent 50%),
+    linear-gradient(160deg, #0f1f0f 0%, #1a2e1a 40%, #2d4a2d 100%); }
+.bg-layer::before { content:''; position:absolute; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='%234a7c59' opacity='0.15'/%3E%3C/svg%3E");
+  background-size: 60px 60px; }
+.content { position: relative; z-index: 1; }
 
-    --yoga: #7a9e6b;
-    --massage: #c4956a;
-    --cacao: #8b5e3c;
-    --bird: #4a7c8c;
-    --night: #3d3d6e;
-    --meditation: #9b8ea8;
-    --kayak: #4a8c8c;
-    --cooking: #b8834a;
-    --other: #6b7569;
-  }
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ══════════════════════════════════════
+   SCREENS
+══════════════════════════════════════ */
+.screen { display: none; }
+.screen.active { display: block; }
 
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--warm-white);
-    color: var(--charcoal);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ── LANDING (guest login) ── */
+#screen-landing {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;
+}
+.login-card {
+  background: rgba(15,31,15,0.88); border: 1px solid rgba(122,170,134,0.25);
+  border-radius: 3px; padding: 3.5rem; width: 100%; max-width: 440px;
+  backdrop-filter: blur(20px); box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  animation: fadeUp .8s ease both;
+}
+.login-logo { text-align: center; margin-bottom: 2.5rem; }
+.login-logo .leaf { font-size: 2rem; margin-bottom: .5rem; display: block; }
+.login-logo h1 { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; letter-spacing:.15em; color:var(--cream); }
+.login-logo p { font-size:.65rem; letter-spacing:.35em; color:var(--sage); text-transform:uppercase; margin-top:.3rem; }
+.field-group { margin-bottom: 1.2rem; }
+.field-group label { display:block; font-size:.6rem; letter-spacing:.35em; text-transform:uppercase; color:var(--sage); margin-bottom:.5rem; }
+.field-group input, .field-group select, .field-group textarea {
+  width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(122,170,134,0.2);
+  border-radius:2px; padding:.85rem 1rem; color:var(--cream);
+  font-family:'Jost',sans-serif; font-size:.95rem; font-weight:300; letter-spacing:.05em;
+  transition:all .3s; outline:none;
+}
+.field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+  border-color:var(--sage); background:rgba(122,170,134,0.06); box-shadow:0 0 0 3px rgba(122,170,134,0.08);
+}
+.field-group input::placeholder, .field-group textarea::placeholder { color:rgba(200,219,200,0.3); }
+.field-group select option { background:#1a2e1a; color:var(--cream); }
+.btn-primary {
+  width:100%; background:linear-gradient(135deg,var(--fern) 0%,var(--moss) 100%);
+  border:none; border-radius:2px; padding:.95rem; color:var(--cream);
+  font-family:'Jost',sans-serif; font-size:.7rem; font-weight:400;
+  letter-spacing:.4em; text-transform:uppercase; cursor:pointer; transition:all .3s;
+}
+.btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 25px rgba(74,124,89,0.4); }
+.error-msg { background:rgba(180,60,60,0.15); border:1px solid rgba(180,60,60,0.3); border-radius:2px; padding:.7rem 1rem; font-size:.75rem; color:#e8a0a0; margin-bottom:1rem; display:none; }
+.error-msg.show { display:block; animation:shake .3s ease; }
+.divider { display:flex; align-items:center; gap:1rem; margin:1.5rem 0; }
+.divider::before,.divider::after { content:''; flex:1; height:1px; background:linear-gradient(to right,transparent,rgba(122,170,134,0.3),transparent); }
+.divider span { font-size:.6rem; letter-spacing:.3em; color:var(--fern); text-transform:uppercase; }
 
-  /* ── LOGIN ─────────────────────────────────────────── */
-  #login-screen {
-    position: fixed; inset: 0;
-    background: var(--forest);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 1000;
-    flex-direction: column;
-    gap: 0;
-  }
-  #login-screen.hidden { display: none; }
+/* Staff entry link */
+.staff-entry { text-align:center; margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(122,170,134,0.1); }
+.staff-entry a { font-size:.6rem; letter-spacing:.25em; color:rgba(122,170,134,0.4); text-transform:uppercase; text-decoration:none; cursor:pointer; transition:color .3s; }
+.staff-entry a:hover { color:var(--sage); }
 
-  .login-bg {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 30% 50%, #2d4a1e 0%, #1a2e1a 60%);
-    overflow: hidden;
-  }
-  .login-bg::before {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233d5c2e' fill-opacity='0.15'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.6;
-  }
+/* ── STAFF LOGIN ── */
+#screen-staff-login { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+.staff-card {
+  background: rgba(10,15,10,0.92); border:1px solid rgba(201,169,110,0.2);
+  border-radius:3px; padding:3rem; width:100%; max-width:400px;
+  backdrop-filter:blur(20px); animation:fadeUp .6s ease both;
+}
+.staff-card .login-logo h1 { color:var(--admin-gold); }
+.staff-card .login-logo p { color:var(--text-muted); font-family:'DM Sans',sans-serif; }
+.staff-card .field-group label { color:var(--admin-gold); opacity:.7; font-family:'DM Sans',sans-serif; }
+.staff-card .field-group input { background:rgba(255,255,255,0.03); border-color:var(--border); color:var(--text); font-family:'DM Sans',sans-serif; }
+.staff-card .field-group input:focus { border-color:var(--admin-gold); box-shadow:0 0 0 3px rgba(201,169,110,0.08); }
+.btn-gold { background:var(--admin-gold); color:#0f0e0c; border:none; border-radius:var(--radius-sm); padding:.85rem 1rem; font-family:'DM Sans',sans-serif; font-size:.75rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
+.btn-gold:hover { background:var(--admin-gold-light); }
+.back-link { display:block; text-align:center; margin-top:1.5rem; font-size:.65rem; letter-spacing:.2em; color:rgba(122,170,134,0.4); text-transform:uppercase; cursor:pointer; }
+.back-link:hover { color:var(--sage); }
 
-  .login-box {
-    position: relative; z-index: 1;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 32px;
-    animation: fadeUp 0.8s ease both;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* ══════════════════════════════════════
+   GUEST PORTAL
+══════════════════════════════════════ */
+#screen-guest { display:none; }
+.portal-header {
+  padding:1.5rem 2.5rem; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(122,170,134,0.15); background:rgba(10,20,10,0.6);
+  backdrop-filter:blur(20px); position:sticky; top:0; z-index:100;
+}
+.portal-header-brand { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:300; letter-spacing:.12em; color:var(--cream); }
+.portal-header-brand span { color:var(--sage); }
+.room-badge { display:flex; align-items:center; gap:.5rem; background:rgba(122,170,134,0.1); border:1px solid rgba(122,170,134,0.25); border-radius:50px; padding:.4rem 1rem; font-size:.65rem; letter-spacing:.25em; text-transform:uppercase; color:var(--sage); }
+.room-badge .dot { width:6px; height:6px; background:var(--fern); border-radius:50%; animation:pulse 2s infinite; }
+.logout-btn { background:none; border:1px solid rgba(122,170,134,0.2); border-radius:2px; padding:.4rem 1rem; color:var(--sage); font-family:'Jost',sans-serif; font-size:.6rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
+.logout-btn:hover { background:rgba(122,170,134,0.1); }
+.portal-nav { display:flex; border-bottom:1px solid rgba(122,170,134,0.12); padding:0 2.5rem; overflow-x:auto; }
+.nav-tab { padding:1.1rem 1.8rem; font-size:.62rem; letter-spacing:.3em; text-transform:uppercase; color:rgba(200,219,200,0.5); background:none; border:none; cursor:pointer; border-bottom:2px solid transparent; transition:all .3s; white-space:nowrap; font-family:'Jost',sans-serif; }
+.nav-tab.active { color:var(--cream); border-bottom-color:var(--gold); }
+.portal-section { display:none; padding:2.5rem; animation:fadeUp .5s ease; }
+.portal-section.active { display:block; }
+.section-header { margin-bottom:2.5rem; }
+.section-header h2 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; color:var(--cream); letter-spacing:.05em; }
+.section-header h2 em { color:var(--sage); font-style:italic; }
+.section-header p { color:rgba(200,219,200,0.6); font-size:.85rem; font-weight:300; margin-top:.4rem; letter-spacing:.05em; }
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem; }
+.service-card { background:rgba(15,31,15,0.7); border:1px solid rgba(122,170,134,0.18); border-radius:2px; overflow:hidden; transition:all .4s; cursor:pointer; }
+.service-card:hover { border-color:rgba(122,170,134,0.4); transform:translateY(-3px); box-shadow:0 20px 40px rgba(0,0,0,0.4); }
+.card-visual { height:120px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:rgba(0,0,0,0.2); }
+.card-body { padding:1.2rem; }
+.card-name { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; color:var(--cream); margin-bottom:.3rem; }
+.card-sub { font-size:.65rem; letter-spacing:.15em; text-transform:uppercase; color:var(--sage); margin-bottom:.5rem; }
+.card-desc { font-size:.8rem; color:rgba(200,219,200,0.6); line-height:1.6; font-weight:300; margin-bottom:1rem; }
+.card-price { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--gold); }
+.book-btn { background:transparent; border:1px solid rgba(122,170,134,0.35); border-radius:2px; padding:.55rem 1.2rem; color:var(--sage); font-family:'Jost',sans-serif; font-size:.62rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; margin-top:.8rem; }
+.book-btn:hover { background:rgba(122,170,134,0.1); border-color:var(--sage); }
 
-  .login-logo {
-    text-align: center;
-  }
-  .login-logo h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 48px;
-    font-weight: 300;
-    color: var(--mist);
-    letter-spacing: 0.08em;
-    line-height: 1;
-  }
-  .login-logo p {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--sage);
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    margin-top: 6px;
-  }
+/* Booking modal */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:300; align-items:center; justify-content:center; backdrop-filter:blur(6px); }
+.modal-overlay.open { display:flex; }
+.booking-modal { background:#0f1f0f; border:1px solid rgba(122,170,134,0.25); border-radius:3px; width:480px; max-width:95vw; max-height:90vh; overflow-y:auto; padding:2.5rem; position:relative; animation:fadeUp .4s ease; }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; color:var(--cream); margin-bottom:.3rem; }
+.modal-sub { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--sage); margin-bottom:1.8rem; }
+.modal-close { position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; color:rgba(122,170,134,0.5); font-size:1.5rem; cursor:pointer; }
+.modal-close:hover { color:var(--sage); }
+.modal-actions { display:flex; justify-content:flex-end; gap:.8rem; margin-top:1.8rem; }
+.btn-ghost { background:none; border:1px solid rgba(122,170,134,0.2); border-radius:2px; padding:.65rem 1.2rem; color:var(--sage); font-family:'Jost',sans-serif; font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
+.btn-ghost:hover { background:rgba(122,170,134,0.08); }
+.btn-confirm { background:linear-gradient(135deg,var(--fern),var(--moss)); border:none; border-radius:2px; padding:.65rem 1.5rem; color:var(--cream); font-family:'Jost',sans-serif; font-size:.65rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
+.btn-confirm:hover { transform:translateY(-1px); }
+.toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); background:#0f2e18; border:1px solid rgba(122,170,134,0.4); border-radius:3px; padding:.9rem 1.8rem; font-size:.8rem; color:var(--sage); z-index:500; display:none; animation:fadeUp .4s ease; }
+.toast.show { display:block; }
 
-  .login-form {
-    display: flex; flex-direction: column; gap: 14px; align-items: center; width: 240px;
-  }
-  .login-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--light);
-    text-transform: uppercase;
-    align-self: flex-start;
-  }
-  .login-input {
-    width: 100%;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(184,207,168,0.25);
-    border-radius: 4px;
-    padding: 12px 16px;
-    color: var(--mist);
-    font-family: 'DM Mono', monospace;
-    font-size: 18px;
-    letter-spacing: 0.3em;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  .login-input:focus {
-    border-color: rgba(184,207,168,0.6);
-    background: rgba(255,255,255,0.1);
-  }
-  .login-btn {
-    width: 100%;
-    background: var(--sage);
-    color: var(--forest);
-    border: none;
-    border-radius: 4px;
-    padding: 12px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-  }
-  .login-btn:hover { background: var(--mist); }
-  .login-btn:active { transform: scale(0.98); }
-  .login-error {
-    font-size: 12px; color: #e07070; display: none;
-    font-family: 'DM Mono', monospace; letter-spacing: 0.05em;
-  }
-  .login-error.show { display: block; }
+/* Bookings list */
+.booking-item { background:rgba(15,31,15,0.6); border:1px solid rgba(122,170,134,0.15); border-radius:2px; padding:1.2rem; margin-bottom:1rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+.booking-info .bi-name { font-family:'Cormorant Garamond',serif; font-size:1.1rem; color:var(--cream); }
+.booking-info .bi-detail { font-size:.7rem; color:rgba(200,219,200,0.5); letter-spacing:.1em; margin-top:.2rem; }
+.status-badge { font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; padding:.3rem .8rem; border-radius:50px; }
+.status-pending { background:rgba(200,150,50,0.15); color:#d4a96e; border:1px solid rgba(200,150,50,0.3); }
+.status-approved { background:rgba(74,124,89,0.15); color:#7aaa86; border:1px solid rgba(74,124,89,0.3); }
+.status-declined { background:rgba(180,60,60,0.12); color:#c08080; border:1px solid rgba(180,60,60,0.25); }
 
-  /* ── APP SHELL ─────────────────────────────────────── */
-  #app { display: flex; flex-direction: column; min-height: 100vh; }
-  #app.hidden { display: none; }
+/* ══════════════════════════════════════
+   ADMIN PANEL
+══════════════════════════════════════ */
+#screen-admin { display:none; font-family:'DM Sans',sans-serif; background:var(--bg); min-height:100vh; }
+.app-header { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; }
+.app-logo { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--admin-gold); letter-spacing:1px; }
+.app-logo span { color:var(--text-muted); font-size:12px; font-family:'DM Sans',sans-serif; font-weight:300; margin-left:8px; }
+.header-right { display:flex; align-items:center; gap:10px; }
+.role-pill { font-size:10px; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:50px; }
+.role-administrator { background:rgba(201,169,110,0.15); color:var(--admin-gold); border:1px solid rgba(201,169,110,0.3); }
+.role-receptionist { background:rgba(107,141,176,0.15); color:#8ab0d4; border:1px solid rgba(107,141,176,0.3); }
+.role-guide,.role-therapist { background:rgba(107,158,122,0.15); color:#8fcc9f; border:1px solid rgba(107,158,122,0.3); }
+.abtn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface2); color:var(--text); font-size:12px; font-family:'DM Sans',sans-serif; font-weight:500; cursor:pointer; transition:all .15s; }
+.abtn:hover { border-color:var(--border-light); background:var(--surface3); }
+.abtn-gold { background:var(--admin-gold); color:#0f0e0c; border-color:var(--admin-gold); font-weight:600; }
+.abtn-gold:hover { background:var(--admin-gold-light); }
+.abtn-red { background:rgba(180,60,60,0.15); color:#e8a0a0; border-color:rgba(180,60,60,0.3); }
+.abtn-red:hover { background:rgba(180,60,60,0.25); }
+.abtn-green { background:rgba(74,124,89,0.2); color:#8fcc9f; border-color:rgba(74,124,89,0.4); }
+.abtn-green:hover { background:rgba(74,124,89,0.3); }
 
-  header {
-    background: var(--forest);
-    padding: 0 28px;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
-    position: sticky; top: 0; z-index: 100;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
+/* Admin tabs */
+.admin-tabs { display:flex; gap:2px; padding:0 28px; background:var(--surface); border-bottom:1px solid var(--border); }
+.admin-tab { padding:10px 18px; font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; margin-bottom:-1px; font-family:'DM Sans',sans-serif; }
+.admin-tab.active { color:var(--admin-gold); border-bottom-color:var(--admin-gold); }
+.admin-section { display:none; }
+.admin-section.active { display:block; }
 
-  .header-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 300;
-    color: var(--mist);
-    letter-spacing: 0.06em;
-    display: flex; align-items: baseline; gap: 10px;
-  }
-  .header-logo span {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    color: var(--sage);
-    text-transform: uppercase;
-  }
+/* Inbox */
+.inbox-wrap { padding:24px 28px; }
+.inbox-title { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; color:var(--admin-gold); margin-bottom:6px; }
+.inbox-sub { font-size:12px; color:var(--text-muted); margin-bottom:24px; }
+.inbox-empty { text-align:center; padding:60px 20px; color:var(--text-dim); font-size:13px; }
+.request-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; margin-bottom:12px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; transition:border-color .2s; }
+.request-card:hover { border-color:var(--border-light); }
+.request-card.pending { border-left:3px solid #c9a96e; }
+.request-card.approved { border-left:3px solid #6b9e7a; }
+.request-card.declined { border-left:3px solid #b07a7a; }
+.rc-info .rc-name { font-size:15px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.rc-info .rc-detail { font-size:12px; color:var(--text-muted); margin-bottom:2px; }
+.rc-info .rc-time { font-size:11px; color:var(--text-dim); margin-top:4px; }
+.rc-actions { display:flex; flex-direction:column; gap:6px; align-items:flex-end; min-width:120px; }
+.rc-status { font-size:10px; letter-spacing:1px; text-transform:uppercase; padding:3px 10px; border-radius:50px; }
+.rc-status.pending { background:rgba(201,169,110,0.15); color:var(--admin-gold); border:1px solid rgba(201,169,110,0.3); }
+.rc-status.approved { background:rgba(107,158,122,0.15); color:#8fcc9f; border:1px solid rgba(107,158,122,0.3); }
+.rc-status.declined { background:rgba(176,122,122,0.12); color:#d49a9a; border:1px solid rgba(176,122,122,0.3); }
+.rc-handled { font-size:10px; color:var(--text-dim); text-align:right; margin-top:4px; }
+.pending-dot { display:inline-block; width:8px; height:8px; background:var(--admin-gold); border-radius:50%; margin-left:6px; animation:pulse 1.5s infinite; }
 
-  .header-actions {
-    display: flex; align-items: center; gap: 10px;
-  }
-  .user-pill {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--mist);
-    background: rgba(184,207,168,0.12);
-    border: 1px solid rgba(184,207,168,0.2);
-    border-radius: 999px;
-    padding: 5px 9px;
-    max-width: 260px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .btn-ghost {
-    background: transparent;
-    border: 1px solid rgba(184,207,168,0.25);
-    color: var(--light);
-    border-radius: 4px;
-    padding: 6px 12px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-ghost:hover { border-color: var(--sage); color: var(--mist); }
+/* Calendar (admin) */
+.cal-wrap { padding:16px 28px 40px; overflow-x:auto; }
+.week-bar { display:flex; align-items:center; justify-content:space-between; padding:12px 28px; background:var(--surface); border-bottom:1px solid var(--border); }
+.week-label { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:300; color:var(--text); }
+.week-nav { display:flex; gap:6px; }
+.week-nav button { background:var(--surface2); border:1px solid var(--border); color:var(--text); width:32px; height:32px; border-radius:var(--radius-sm); cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; transition:all .15s; }
+.week-nav button:hover { background:var(--surface3); }
+.cal-tabs { display:flex; gap:2px; padding:0 28px; background:var(--surface); border-bottom:1px solid var(--border); }
+.cal-tab { padding:10px 18px; font-size:11px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; margin-bottom:-1px; font-family:'DM Sans',sans-serif; }
+.cal-tab.active { color:var(--admin-gold); border-bottom-color:var(--admin-gold); }
+.calendar-grid { display:grid; grid-template-columns:80px repeat(7,1fr); gap:1px; background:var(--border); border-radius:var(--radius); overflow:hidden; min-width:900px; }
+.cal-header { background:var(--surface2); padding:10px 8px; text-align:center; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); font-family:'DM Sans',sans-serif; }
+.cal-header strong { display:block; font-size:18px; font-weight:300; font-family:'Cormorant Garamond',serif; color:var(--text); letter-spacing:0; margin-top:2px; }
+.cal-header.today strong { color:var(--admin-gold); }
+.time-cell { background:var(--surface2); padding:14px 8px; text-align:right; font-size:11px; color:var(--text-dim); font-weight:500; }
+.slot-cell { background:var(--surface); padding:6px; min-height:85px; position:relative; transition:background .15s; }
+.slot-cell:hover { background:var(--surface2); }
+.add-btn-inline { position:absolute; bottom:4px; right:4px; width:20px; height:20px; background:var(--surface3); border:1px solid var(--border-light); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--text-dim); cursor:pointer; opacity:0; transition:opacity .15s; }
+.slot-cell:hover .add-btn-inline { opacity:1; }
+.activity-pill { border-radius:var(--radius-sm); padding:5px 8px; margin-bottom:4px; font-size:11px; font-weight:500; cursor:pointer; position:relative; transition:opacity .15s; line-height:1.35; border:1px solid transparent; }
+.activity-pill:hover { opacity:.85; }
+.pill-name { font-weight:600; display:block; }
+.pill-detail { opacity:.7; font-size:10px; display:block; }
+.pill-guest { font-size:9px; opacity:.6; display:block; color:#d4a96e; }
+.pill-delete { position:absolute; top:3px; right:4px; font-size:12px; opacity:0; transition:opacity .15s; cursor:pointer; }
+.activity-pill:hover .pill-delete { opacity:.8; }
+.color-green  { background:#1a2e22; color:#8fcc9f; border-color:#2a4e36; }
+.color-blue   { background:#1a2235; color:#8ab0d4; border-color:#1e3550; }
+.color-orange { background:#2e1e10; color:#d4a070; border-color:#4e2e10; }
+.color-purple { background:#251a30; color:#c49ad8; border-color:#3e2055; }
+.color-teal   { background:#0f2525; color:#7ababa; border-color:#153535; }
+.color-rose   { background:#2e1515; color:#d49a9a; border-color:#4e2020; }
+.color-gold   { background:#1e1508; color:#e2c48a; border-color:#4e380a; }
+.color-from-guest { background:#1e150a; color:#d4c070; border-color:#4e3e10; }
 
-  /* ── WEEK NAV ──────────────────────────────────────── */
-  .week-nav {
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 28px;
-  }
-  .week-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 400;
-    color: var(--forest);
-    letter-spacing: 0.04em;
-  }
-  .week-btns { display: flex; gap: 6px; align-items: center; }
-  .calendar-legend {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 28px 0;
-    color: var(--mid);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .calendar-legend-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .calendar-legend-swatch {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  .nav-btn {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 15px; color: var(--mid);
-    transition: all 0.15s;
-  }
-  .nav-btn:hover { border-color: var(--sage); color: var(--forest); }
-  .btn-today {
-    background: var(--forest);
-    border: none;
-    border-radius: 4px;
-    padding: 0 14px; height: 32px;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--mist);
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-today:hover { background: var(--moss); }
-  .btn-add-activity {
-    background: #E8837A;
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
-    line-height: 1;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .btn-add-activity:hover { background: #d97269; }
+/* Admin modal */
+.amodal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.amodal-overlay.open { display:flex; }
+.amodal { background:var(--surface); border:1px solid var(--border); border-radius:14px; width:500px; max-width:95vw; max-height:90vh; overflow-y:auto; padding:28px; position:relative; }
+.amodal-title { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--admin-gold); margin-bottom:4px; }
+.amodal-sub { font-size:12px; color:var(--text-muted); margin-bottom:22px; }
+.amodal-close { position:absolute; top:18px; right:18px; background:none; border:none; color:var(--text-muted); font-size:22px; cursor:pointer; }
+.aform-group { margin-bottom:14px; }
+.aform-label { font-size:11px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:5px; display:block; font-weight:500; font-family:'DM Sans',sans-serif; }
+.aform-control { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; outline:none; transition:border-color .2s; }
+.aform-control:focus { border-color:var(--admin-gold); opacity:.7; }
+.aform-control option { background:var(--surface2); }
+.aform-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.aform-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:22px; }
+.type-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:4px; }
+.type-chip { padding:8px 5px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface2); cursor:pointer; text-align:center; font-size:11px; transition:all .15s; line-height:1.3; font-family:'DM Sans',sans-serif; color:var(--text-muted); }
+.type-chip:hover { border-color:var(--border-light); }
+.type-chip.selected { border-color:var(--admin-gold); background:var(--surface3); color:var(--text); }
+.type-chip .chip-icon { font-size:17px; display:block; margin-bottom:3px; }
 
-  /* ── CALENDAR GRID ─────────────────────────────────── */
-  .calendar-wrapper {
-    flex: 1;
-    padding: 24px 28px;
-    overflow-x: auto;
-  }
+/* Staff management */
+.staff-wrap { padding:24px 28px; }
+.staff-table { width:100%; border-collapse:collapse; }
+.staff-table th { text-align:left; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); padding:10px 14px; border-bottom:1px solid var(--border); font-weight:500; }
+.staff-table td { padding:14px; border-bottom:1px solid rgba(58,52,44,0.5); font-size:13px; color:var(--text); }
+.staff-table tr:hover td { background:var(--surface2); }
 
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: 80px repeat(7, 1fr);
-    min-width: 760px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    background: white;
-    box-shadow: 0 2px 16px rgba(26,46,26,0.06);
-  }
+/* Spinner */
+.spinner { display:inline-block; width:16px; height:16px; border:2px solid var(--border); border-top-color:var(--admin-gold); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:6px; }
 
-  .col-header {
-    background: var(--forest);
-    color: var(--mist);
-    padding: 12px 8px;
-    text-align: center;
-    border-right: 1px solid rgba(255,255,255,0.08);
-  }
-  .col-header:last-child { border-right: none; }
-  .col-header.time-header { background: var(--forest); }
-  .col-header .day-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--sage);
-    display: block;
-  }
-  .col-header .day-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 300;
-    color: var(--mist);
-    display: block;
-    line-height: 1.1;
-  }
-  .col-header .day-restriction {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 6px;
-    padding: 1px 7px;
-    border-radius: 999px;
-    background: rgba(196,149,106,0.25);
-    border: 1px solid rgba(196,149,106,0.45);
-    color: var(--clay);
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .col-header.today-col .day-num {
-    color: var(--clay);
-  }
-
-  .time-slot-row {
-    display: contents;
-  }
-  .time-label {
-    background: var(--parchment);
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    padding: 10px 6px 10px 10px;
-    display: flex; align-items: flex-start;
-  }
-  .time-label span {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    color: var(--mid);
-    white-space: nowrap;
-  }
-
-  .day-cell {
-    border-top: 1px solid var(--border);
-    border-right: 1px solid var(--border);
-    padding: 6px;
-    min-height: 90px;
-    position: relative;
-    transition: background 0.15s;
-  }
-  .day-cell:last-child { border-right: none; }
-  .day-cell:hover { background: rgba(122,158,107,0.04); }
-
-  .add-btn {
-    position: absolute; bottom: 5px; right: 5px;
-    width: 22px; height: 22px;
-    background: #E8837A;
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 14px;
-    line-height: 1;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.15s, background 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .day-cell:hover .add-btn { opacity: 1; }
-  .add-btn:hover { background: #d97269; color: white; }
-
-  /* ── ACTIVITY PILLS ────────────────────────────────── */
-  .activity-pill {
-    border-radius: 4px;
-    padding: 4px 7px;
-    margin-bottom: 4px;
-    font-size: 11px;
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.1s, box-shadow 0.1s;
-    border-left: 3px solid rgba(0,0,0,0.2);
-  }
-  .activity-pill:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  }
-  .activity-pill .pill-time {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    opacity: 0.75;
-    letter-spacing: 0.05em;
-  }
-  .activity-pill .pill-location {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    margin-left: 6px;
-    padding: 1px 5px;
-    border-radius: 999px;
-    font-size: 8px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border: 1px solid transparent;
-  }
-  .activity-pill .pill-location.location-hotel {
-    background: rgba(122,158,107,0.18);
-    border-color: rgba(122,158,107,0.35);
-    color: var(--forest);
-  }
-  .activity-pill .pill-location.location-finca {
-    background: rgba(195,124,72,0.18);
-    border-color: rgba(195,124,72,0.35);
-    color: #7c4b24;
-  }
-  .activity-pill .pill-name {
-    font-weight: 500;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .activity-pill .pill-staff {
-    font-size: 9px;
-    opacity: 0.7;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .pill-del {
-    position: absolute; top: 3px; right: 3px;
-    width: 14px; height: 14px;
-    background: rgba(0,0,0,0.2);
-    border: none; border-radius: 50%;
-    color: white; font-size: 9px;
-    cursor: pointer; opacity: 0;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-    transition: opacity 0.15s;
-  }
-  .activity-pill:hover .pill-del { opacity: 1; }
-  .pill-del:hover { background: rgba(180,40,40,0.6); }
-
-  /* activity colors */
-  .color-yoga    { background: #e8f5e2; color: #2d5a1e; }
-  .color-massage { background: #fdf0e4; color: #6b3a10; }
-  .color-cacao   { background: #f0e8dc; color: #5a3010; }
-  .color-bird    { background: #e0f0f5; color: #0d4a5a; }
-  .color-night   { background: #e8e8f5; color: #2a2a5a; }
-  .color-meditation { background: #f0ecf8; color: #4a3060; }
-  .color-kayak   { background: #e0f5f5; color: #0d4a4a; }
-  .color-cooking { background: #fdf5e4; color: #6b4010; }
-  .color-other         { background: #f0f0ee; color: #3a3a38; }
-  .color-beauty        { background: #fce4ef; color: #6b1040; }
-  .color-temazcal      { background: #fae6d4; color: #7a3010; }
-  .color-soundbath     { background: #eee8f8; color: #4a2870; }
-  .color-foresttherapy { background: #e0f0e4; color: #1a4a20; }
-  .color-welcome       { background: #f5f0e8; color: #5a4830; }
-  .color-detox         { background: #e0f4f0; color: #0d4a3a; }
-  .color-therapy       { background: #e8e4f5; color: #2a1a5a; }
-
-  /* ── MODAL ─────────────────────────────────────────── */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(26,46,26,0.55);
-    backdrop-filter: blur(4px);
-    z-index: 200;
-    display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .modal-overlay.open {
-    opacity: 1; pointer-events: all;
-  }
-  .modal {
-    background: var(--warm-white);
-    border-radius: 10px;
-    width: 100%; max-width: 460px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.2);
-    overflow: hidden;
-    transform: translateY(16px);
-    transition: transform 0.25s;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-
-  .modal-header {
-    background: var(--forest);
-    padding: 18px 22px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .modal-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 300;
-    color: var(--mist);
-    letter-spacing: 0.04em;
-  }
-  .modal-close {
-    background: none; border: none;
-    color: var(--light); font-size: 20px;
-    cursor: pointer; line-height: 1;
-    transition: color 0.15s;
-  }
-  .modal-close:hover { color: var(--mist); }
-
-  .modal-body {
-    padding: 22px;
-    display: flex; flex-direction: column; gap: 14px;
-    max-height: 70vh; overflow-y: auto;
-  }
-
-  .form-row { display: flex; gap: 12px; }
-  .form-group { display: flex; flex-direction: column; gap: 5px; flex: 1; }
-  .form-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mid);
-  }
-  .form-input, .form-select {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 10px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px;
-    color: var(--charcoal);
-    background: white;
-    outline: none;
-    transition: border-color 0.15s;
-    width: 100%;
-  }
-  .form-input:focus, .form-select:focus {
-    border-color: var(--sage);
-  }
-
-  /* activity type picker */
-  .type-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-  .type-chip {
-    padding: 8px 6px;
-    border-radius: 5px;
-    border: 2px solid transparent;
-    cursor: pointer;
-    text-align: center;
-    font-size: 11px;
-    font-weight: 500;
-    transition: all 0.15s;
-    line-height: 1.3;
-  }
-  .type-chip:hover { transform: translateY(-1px); }
-  .type-chip.selected { border-color: var(--forest) !important; box-shadow: 0 0 0 2px rgba(26,46,26,0.2); }
-
-  .assignment-warning {
-    border: 1px solid rgba(192,57,43,0.35);
-    background: rgba(192,57,43,0.08);
-    color: #7f1d1d;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 12px;
-    line-height: 1.35;
-    display: none;
-  }
-  .assignment-warning.show { display: block; }
-
-  .mini-table {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    max-height: 240px;
-    overflow: auto;
-    background: #fff;
-  }
-  .mini-table table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-  }
-  .mini-table th,
-  .mini-table td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-    vertical-align: top;
-  }
-  .mini-table th {
-    position: sticky;
-    top: 0;
-    background: var(--cream);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--mid);
-  }
-  .tiny-btn {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 7px;
-    font-size: 11px;
-    cursor: pointer;
-  }
-  .tiny-btn:hover { border-color: #c0392b; color: #c0392b; }
-
-  .weekly-absences {
-    margin: 16px 28px 26px;
-    padding: 14px;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(26,46,26,0.04);
-  }
-  .weekly-absences-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--mid);
-    margin-bottom: 10px;
-  }
-  .weekly-absence-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .absence-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #fdeceb;
-    border: 1px solid #f4c4bf;
-    color: #7a2f28;
-    border-radius: 999px;
-    padding: 5px 10px;
-    font-size: 12px;
-  }
-
-  .modal-footer {
-    padding: 14px 22px;
-    display: flex; gap: 8px; justify-content: flex-end;
-    border-top: 1px solid var(--border);
-    background: var(--cream);
-  }
-  .btn-cancel {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 9px 18px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px; color: var(--mid);
-    cursor: pointer; transition: all 0.15s;
-  }
-  .btn-cancel:hover { border-color: var(--mid); color: var(--charcoal); }
-  .btn-save {
-    background: var(--forest);
-    border: none;
-    border-radius: 4px;
-    padding: 9px 22px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px; color: var(--mist);
-    cursor: pointer; font-weight: 500;
-    transition: background 0.15s;
-  }
-  .btn-save:hover { background: var(--moss); }
-  .btn-delete-act {
-    background: #c0392b;
-    border: none;
-    border-radius: 4px;
-    padding: 9px 18px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 13px; color: white;
-    cursor: pointer;
-    transition: background 0.15s;
-    margin-right: auto;
-  }
-  .btn-delete-act:hover { background: #a93226; }
-
-  /* ── RESPONSIVE ──────────────────────────────── */
-  @media (max-width: 600px) {
-    .calendar-wrapper { padding: 12px; }
-    .calendar-legend { padding: 10px 14px 0; }
-    header { padding: 0 14px; }
-    .week-nav { padding: 0 14px; }
-  }
+/* Cloudbeds badge */
+.cb-badge { font-size:9px; letter-spacing:1px; text-transform:uppercase; padding:2px 7px; border-radius:50px; background:rgba(107,141,176,0.15); color:#8ab0d4; border:1px solid rgba(107,141,176,0.3); margin-left:6px; }
 </style>
 </head>
 <body>
+<div class="bg-layer"></div>
+<div class="content">
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-bg"></div>
-  <div class="login-box">
-    <div class="login-logo">
-      <h1>Essence Arenal</h1>
-      <p>Panel de Administración</p>
-    </div>
-    <div class="login-form">
-      <label class="login-label">Email</label>
-      <input class="login-input" type="email" id="email-input" placeholder="correo@dominio.com" autocomplete="email" style="font-size:13px;letter-spacing:0.04em;text-align:left;">
-      <label class="login-label">Código de acceso</label>
-      <input class="login-input" type="password" id="pwd-input" maxlength="6" placeholder="···" autocomplete="off">
-      <button class="login-btn" onclick="tryLogin()">Ingresar</button>
-      <div class="login-error" id="login-error">Email o código incorrecto</div>
+<!-- ══ SCREEN: GUEST LANDING ══ -->
+<div id="screen-landing" class="screen active">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="leaf">🌿</span>
+        <h1>Essense Arenal</h1>
+        <p>Hotel · Spa · Bio Farm</p>
+      </div>
+      <p style="text-align:center;font-size:.8rem;color:rgba(200,219,200,0.5);margin-bottom:1.5rem;font-weight:300;">Guest Portal · Please enter your details</p>
+      <div id="guest-error" class="error-msg">Room number and name required</div>
+      <div class="field-group"><label>Room Number</label><input type="text" id="guest-room" placeholder="e.g. 12"></div>
+      <div class="field-group"><label>Your Name</label><input type="text" id="guest-name" placeholder="First name"></div>
+      <button class="btn-primary" onclick="guestLogin()">Enter · Bienvenido</button>
+      <div class="staff-entry">
+        <a onclick="showStaffLogin()">⚿ Staff access</a>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- APP -->
-<div id="app" class="hidden">
-  <header>
-    <div class="header-logo">
-      Essence Arenal <span>Admin</span>
+<!-- ══ SCREEN: STAFF LOGIN ══ -->
+<div id="screen-staff-login" class="screen">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
+    <div class="staff-card">
+      <div class="login-logo">
+        <span class="leaf" style="font-size:1.6rem;">⚿</span>
+        <h1 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;letter-spacing:.15em;color:var(--admin-gold);">Staff Access</h1>
+        <p style="font-size:.6rem;letter-spacing:.3em;color:var(--text-muted);text-transform:uppercase;font-family:'DM Sans',sans-serif;margin-top:.3rem;">Essense Arenal · Internal</p>
+      </div>
+      <div style="height:1.5rem;"></div>
+      <div id="staff-error" class="error-msg">Email or access code incorrect</div>
+      <div class="field-group"><label style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--admin-gold);opacity:.7;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;display:block;">Email</label>
+        <input type="email" id="staff-email" placeholder="your@email.com" style="width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:2px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:all .3s;">
+      </div>
+      <div class="field-group"><label style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--admin-gold);opacity:.7;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;display:block;">Access Code</label>
+        <input type="password" id="staff-code" placeholder="••••" style="width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:2px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:1.2rem;letter-spacing:6px;outline:none;transition:all .3s;" onkeydown="if(event.key==='Enter')staffLogin()">
+      </div>
+      <button class="btn-gold" onclick="staffLogin()">Sign In</button>
+      <span class="back-link" onclick="showScreen('screen-landing')">← Back to guest portal</span>
     </div>
-    <div class="header-actions">
-      <span class="user-pill" id="user-pill"></span>
-      <button class="btn-ghost" id="btn-availability" onclick="openAvailabilityModal()" style="display:none">Disponibilidad</button>
-      <button class="btn-ghost" onclick="openAuditModal()">Dashboard</button>
-      <button class="btn-ghost" onclick="logout()">Salir</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN: GUEST PORTAL ══ -->
+<div id="screen-guest" class="screen">
+  <header class="portal-header">
+    <div class="portal-header-brand">Essense <span>Arenal</span></div>
+    <div class="room-badge"><div class="dot"></div><span id="room-display">Room —</span></div>
+    <button class="logout-btn" onclick="guestLogout()">← Exit</button>
+  </header>
+  <nav class="portal-nav">
+    <button class="nav-tab active" onclick="showGuestTab('spa')">🌺 Spa &amp; Massage</button>
+    <button class="nav-tab" onclick="showGuestTab('room')">🍃 Room Service</button>
+    <button class="nav-tab" onclick="showGuestTab('tours')">🌋 Tours</button>
+    <button class="nav-tab" onclick="showGuestTab('bookings')">📋 My Bookings</button>
+  </nav>
+
+  <!-- SPA -->
+  <div id="guest-spa" class="portal-section active">
+    <div class="section-header">
+      <h2>Spa &amp; <em>Wellness</em></h2>
+      <p>Nestled in the rainforest · Choose your experience</p>
+    </div>
+    <div class="cards-grid" id="spa-cards"></div>
+  </div>
+
+  <!-- ROOM SERVICE -->
+  <div id="guest-room" class="portal-section">
+    <div class="section-header">
+      <h2>Room <em>Service</em></h2>
+      <p>Organic, fresh, delivered to your door · Powered by our Bio Farm</p>
+    </div>
+    <div class="cards-grid" id="room-cards"></div>
+  </div>
+
+  <!-- TOURS -->
+  <div id="guest-tours" class="portal-section">
+    <div class="section-header">
+      <h2>Experiences &amp; <em>Tours</em></h2>
+      <p>Explore the magic of Arenal · Book your adventure</p>
+    </div>
+    <div class="cards-grid" id="tour-cards"></div>
+  </div>
+
+  <!-- MY BOOKINGS -->
+  <div id="guest-bookings" class="portal-section">
+    <div class="section-header">
+      <h2>My <em>Bookings</em></h2>
+      <p>All your requests · We'll confirm shortly</p>
+    </div>
+    <div id="my-bookings-list"><div style="text-align:center;padding:60px 20px;color:rgba(200,219,200,0.3);font-size:.9rem;">No bookings yet — explore the menu above ✦</div></div>
+  </div>
+</div>
+
+<!-- Booking modal -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="booking-modal">
+    <button class="modal-close" onclick="closeBookingModal()">×</button>
+    <div class="modal-title" id="bm-title">Book Session</div>
+    <div class="modal-sub" id="bm-sub">Spa &amp; Wellness</div>
+    <div class="field-group"><label>Preferred Date</label><input type="date" id="bm-date"></div>
+    <div class="field-group"><label>Preferred Time</label>
+      <select id="bm-time">
+        <option value="07:00">7:00 am</option><option value="09:00">9:00 am</option>
+        <option value="10:00">10:00 am</option><option value="11:00">11:00 am</option>
+        <option value="14:00">2:00 pm</option><option value="15:00">3:00 pm</option>
+        <option value="16:00">4:00 pm</option><option value="17:00">5:00 pm</option>
+        <option value="18:00">6:00 pm</option>
+      </select>
+    </div>
+    <div class="field-group"><label>Special requests / notes</label><textarea id="bm-notes" rows="3" placeholder="Allergies, preferences, anything we should know…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeBookingModal()">Cancel</button>
+      <button class="btn-confirm" onclick="submitBooking()">Confirm Request</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ══ SCREEN: ADMIN PANEL ══ -->
+<div id="screen-admin" class="screen">
+  <header class="app-header">
+    <div class="app-logo">Essense <span>Arenal · Admin</span></div>
+    <div class="header-right">
+      <span id="admin-role-pill" class="role-pill role-administrator"></span>
+      <span id="admin-name-display" style="font-size:12px;color:var(--text-muted);"></span>
+      <button class="abtn" onclick="adminLogout()">Exit</button>
     </div>
   </header>
 
-  <div class="week-nav">
-    <div class="week-label" id="week-label"></div>
-    <div class="week-btns">
-      <button class="btn-add-activity" onclick="openQuickAddModal()" title="Nueva actividad" aria-label="Nueva actividad">+</button>
-      <button class="nav-btn" onclick="changeWeek(-1)">‹</button>
-      <button class="btn-today" onclick="goToday()">Hoy</button>
-      <button class="nav-btn" onclick="changeWeek(1)">›</button>
+  <!-- Admin tabs -->
+  <div class="admin-tabs">
+    <div class="admin-tab active" id="atab-inbox" onclick="switchAdminTab('inbox')">
+      📬 Requests<span id="pending-dot" class="pending-dot" style="display:none;"></span>
+    </div>
+    <div class="admin-tab" id="atab-calendar" onclick="switchAdminTab('calendar')">📅 Calendar</div>
+    <div class="admin-tab" id="atab-staff" id="atab-staff" onclick="switchAdminTab('staff')">👥 Staff</div>
+  </div>
+
+  <!-- INBOX -->
+  <div id="asec-inbox" class="admin-section active">
+    <div class="inbox-wrap">
+      <div class="inbox-title">Guest Requests</div>
+      <div class="inbox-sub">Approve or decline — approved bookings sync to Cloudbeds and appear on the calendar</div>
+      <div style="display:flex;gap:8px;margin-bottom:20px;">
+        <button class="abtn" onclick="filterInbox('all')" id="filter-all" style="border-color:var(--admin-gold);color:var(--admin-gold);">All</button>
+        <button class="abtn" onclick="filterInbox('pending')" id="filter-pending">⏳ Pending</button>
+        <button class="abtn" onclick="filterInbox('approved')" id="filter-approved">✓ Approved</button>
+        <button class="abtn" onclick="filterInbox('declined')" id="filter-declined">✗ Declined</button>
+      </div>
+      <div id="inbox-list"><div class="inbox-empty"><span class="spinner"></span> Loading requests…</div></div>
     </div>
   </div>
 
-  <div class="calendar-legend" aria-label="Leyenda de ubicaciones">
-    <span class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:var(--hotel-color)"></span>Hotel</span>
-    <span class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:var(--finca-color)"></span>Finca</span>
+  <!-- CALENDAR -->
+  <div id="asec-calendar" class="admin-section">
+    <div class="week-bar">
+      <div class="week-label" id="admin-week-label">—</div>
+      <div class="week-nav">
+        <button onclick="adminShiftWeek(-1)">‹</button>
+        <button onclick="adminShiftWeek(0)" style="font-size:11px;padding:0 8px;width:auto;">Hoy</button>
+        <button onclick="adminShiftWeek(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-tabs">
+      <div class="cal-tab active" id="ctab-hotel" onclick="switchCalTab('hotel')">🏨 Hotel</div>
+      <div class="cal-tab" id="ctab-finca" onclick="switchCalTab('finca')">🌿 Finca</div>
+    </div>
+    <div class="cal-wrap">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <button class="abtn abtn-gold" onclick="openAddActivityModal(null,null,null)">＋ Add activity</button>
+      </div>
+      <div class="calendar-grid" id="admin-cal-grid"></div>
+    </div>
   </div>
 
-  <div class="calendar-wrapper">
-    <div class="calendar-grid" id="calendar-grid"></div>
-  </div>
-  <div class="weekly-absences">
-    <div class="weekly-absences-title">Ausencias de la semana</div>
-    <div class="weekly-absence-list" id="weekly-absence-list"></div>
+  <!-- STAFF -->
+  <div id="asec-staff" class="admin-section">
+    <div class="staff-wrap">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div>
+          <div class="inbox-title">Staff Management</div>
+          <div class="inbox-sub">Manage roles · Only administrators can add staff</div>
+        </div>
+        <button class="abtn abtn-gold" id="add-staff-btn" onclick="openAddStaffModal()">＋ Add staff</button>
+      </div>
+      <div id="staff-list"><div class="inbox-empty"><span class="spinner"></span> Loading…</div></div>
+    </div>
   </div>
 </div>
 
-<!-- ACTIVITY MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modal-title">Nueva actividad</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <div class="form-label">Tipo de actividad</div>
-        <div class="type-grid" id="type-grid"></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Hora inicio</label>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <select class="form-select" id="f-time-hour" style="max-width:110px;"></select>
-            <span style="font-family:'DM Mono', monospace;color:var(--mid);">:</span>
-            <select class="form-select" id="f-time-minute" style="max-width:110px;"></select>
-          </div>
-          <input type="hidden" id="f-time" value="07:00">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Duración</label>
-          <select class="form-select" id="f-duration">
-            <option value="60">1 hora</option>
-            <option value="90">1.5 horas</option>
-            <option value="120">2 horas</option>
-            <option value="180">3 horas</option>
-            <option value="240">4 horas</option>
-            <option value="30">30 min</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ubicación</label>
-        <select class="form-select" id="f-section">
-          <option value="hotel">Hotel</option>
-          <option value="finca">Finca</option>
+<!-- ADMIN: Add/Edit Activity Modal -->
+<div class="amodal-overlay" id="amodal-activity">
+  <div class="amodal">
+    <div class="amodal-title" id="amodal-act-title">New Activity</div>
+    <div class="amodal-sub" id="amodal-act-sub">—</div>
+    <button class="amodal-close" onclick="closeAModal('amodal-activity')">×</button>
+    <div class="aform-group"><label class="aform-label">Activity type</label><div class="type-grid" id="admin-type-grid"></div></div>
+    <div class="aform-row">
+      <div class="aform-group"><label class="aform-label">Start time</label>
+        <select class="aform-control" id="af-time">
+          <option value="6">6:00 am</option><option value="7">7:00 am</option><option value="8">8:00 am</option>
+          <option value="9">9:00 am</option><option value="10">10:00 am</option><option value="11">11:00 am</option>
+          <option value="12">12:00 pm</option><option value="13">1:00 pm</option><option value="14">2:00 pm</option>
+          <option value="15">3:00 pm</option><option value="16">4:00 pm</option><option value="17">5:00 pm</option>
+          <option value="18">6:00 pm</option><option value="19">7:00 pm</option><option value="20">8:00 pm</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Cliente / grupo</label>
-        <input class="form-input" type="text" id="f-client" placeholder="Nombre del cliente o grupo">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Guía / Terapeuta</label>
-          <select class="form-select" id="f-staff">
-            <option value="">— sin asignar —</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">BY</label>
-          <select class="form-select" id="f-by" aria-label="By">
-            <option value="">— ninguno —</option>
-          </select>
-        </div>
-      </div>
-      <div class="assignment-warning" id="assignment-warning"></div>
-      <div class="form-group">
-        <label class="form-label">Notas</label>
-        <input class="form-input" type="text" id="f-notes" placeholder="Observaciones opcionales">
-      </div>
-      <div class="form-group">
-        <label class="form-label">
-          <input type="checkbox" id="f-weekly" style="margin-right:6px;">
-          Repetir cada semana (actividad fija)
-        </label>
+      <div class="aform-group"><label class="aform-label">Duration</label>
+        <select class="aform-control" id="af-duration">
+          <option value="30">30 min</option><option value="60">1 hour</option><option value="90">1.5 hours</option>
+          <option value="120">2 hours</option><option value="180">3 hours</option>
+        </select>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-delete-act" id="btn-delete" style="display:none" onclick="deleteActivity()">Eliminar</button>
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-save" onclick="saveActivity()">Guardar</button>
+    <div class="aform-row">
+      <div class="aform-group"><label class="aform-label">Location</label>
+        <select class="aform-control" id="af-tab"><option value="hotel">Hotel</option><option value="finca">Finca</option></select>
+      </div>
+      <div class="aform-group"><label class="aform-label">Repeat weekly</label>
+        <select class="aform-control" id="af-repeat"><option value="false">No</option><option value="true">Yes</option></select>
+      </div>
+    </div>
+    <div class="aform-group"><label class="aform-label">Client / Group</label><input class="aform-control" type="text" id="af-client" placeholder="Client name or group"></div>
+    <div class="aform-row">
+      <div class="aform-group"><label class="aform-label">Guide / Therapist</label>
+        <select class="aform-control" id="af-therapist"><option value="">— unassigned —</option></select>
+      </div>
+      <div class="aform-group"><label class="aform-label">Supervisor</label>
+        <select class="aform-control" id="af-supervisor"><option value="">— none —</option></select>
+      </div>
+    </div>
+    <div class="aform-group"><label class="aform-label">Notes</label><input class="aform-control" type="text" id="af-notes" placeholder="Additional notes…"></div>
+    <div class="aform-actions">
+      <button class="abtn abtn-red" id="af-delete-btn" style="display:none;" onclick="deleteActivity()">Delete</button>
+      <button class="abtn" onclick="closeAModal('amodal-activity')">Cancel</button>
+      <button class="abtn abtn-gold" onclick="saveActivity()">Save</button>
     </div>
   </div>
 </div>
 
-<!-- AVAILABILITY EDITOR MODAL -->
-<div class="modal-overlay" id="availability-modal" onclick="handleAvailabilityOverlayClick(event)">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Editor de disponibilidad</div>
-      <button class="modal-close" onclick="closeAvailabilityModal()">✕</button>
+<!-- ADMIN: Add Staff Modal -->
+<div class="amodal-overlay" id="amodal-staff">
+  <div class="amodal">
+    <div class="amodal-title">Add Staff Member</div>
+    <div class="amodal-sub">They will use their email + access code to log in</div>
+    <button class="amodal-close" onclick="closeAModal('amodal-staff')">×</button>
+    <div class="aform-group"><label class="aform-label">Full name</label><input class="aform-control" type="text" id="ns-name" placeholder="Name"></div>
+    <div class="aform-group"><label class="aform-label">Email</label><input class="aform-control" type="email" id="ns-email" placeholder="email@essensearenal.com"></div>
+    <div class="aform-group"><label class="aform-label">Access code</label><input class="aform-control" type="text" id="ns-code" placeholder="e.g. 1234"></div>
+    <div class="aform-group"><label class="aform-label">Role</label>
+      <select class="aform-control" id="ns-role">
+        <option value="receptionist">Receptionist</option>
+        <option value="guide">Guide</option>
+        <option value="therapist">Therapist</option>
+        <option value="administrator">Administrator</option>
+      </select>
     </div>
-    <div class="modal-body">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Empleado</label>
-          <select class="form-select" id="off-employee"></select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Desde</label>
-          <input class="form-input" type="date" id="off-start">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Hasta</label>
-          <input class="form-input" type="date" id="off-end">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Motivo (opcional)</label>
-        <input class="form-input" type="text" id="off-reason" placeholder="Vacaciones, cita médica, etc.">
-      </div>
-      <button class="btn-save" type="button" onclick="addDayOffRule()">Agregar ausencia</button>
-
-      <div class="form-group">
-        <label class="form-label">Días libres registrados</label>
-        <div class="mini-table" id="off-list"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeAvailabilityModal()">Cerrar</button>
-    </div>
-  </div>
-</div>
-
-<!-- ACTIVITY DASHBOARD MODAL -->
-<div class="modal-overlay" id="audit-modal" onclick="handleAuditOverlayClick(event)">
-  <div class="modal" style="max-width:780px;">
-    <div class="modal-header">
-      <div class="modal-title">Dashboard de actividad</div>
-      <button class="modal-close" onclick="closeAuditModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Últimas acciones (agregar / eliminar / editar)</label>
-        <div class="mini-table" id="audit-list"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-cancel" onclick="closeAuditModal()">Cerrar</button>
+    <div class="aform-actions">
+      <button class="abtn" onclick="closeAModal('amodal-staff')">Cancel</button>
+      <button class="abtn abtn-gold" onclick="saveStaff()">Add Staff</button>
     </div>
   </div>
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────
-const PASSWORD = '777';
-const STORAGE_KEY = 'essense_arenal_v2';
-const AVAILABILITY_KEY = 'essense_arenal_availability_v1';
-const AUDIT_KEY = 'essense_arenal_audit_v1';
-const EDITOR_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
-const DAYS_ES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-const DAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+// ══════════════════════════════════════════════
+//  SUPABASE CONFIG
+// ══════════════════════════════════════════════
+const SUPA_URL = 'https://xvndnvhjwlwyrvibbedt.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2bmRudmhqd2x3eXJ2aWJiZWR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5NTUsImV4cCI6MjA5MTA3NTk1NX0.tWjefeS7wfi9GTf03HlIV6o0n-VEkan-IF9OeIqkOKk';
 
-const TIME_SLOTS = [
-  { id: 'morning',   label: '7–9 am',    hour: 7 },
-  { id: 'midday',    label: '10–12 pm',  hour: 10 },
-  { id: 'afternoon', label: '2–5 pm',    hour: 14 },
-  { id: 'evening',   label: '5–8 pm',    hour: 17 },
-];
-
-const ACTIVITY_TYPES = [
-  { id: 'yoga',          name: 'Yoga',           color: 'yoga',         emoji: '🧘' },
-  { id: 'massage',       name: 'Masaje',         color: 'massage',      emoji: '💆' },
-  { id: 'beauty',        name: 'Belleza',        color: 'beauty',       emoji: '🌸' },
-  { id: 'soundbath',     name: 'Baño de Sonido', color: 'soundbath',    emoji: '🎵' },
-  { id: 'temazcal',      name: 'Temazcal',       color: 'temazcal',     emoji: '🔥' },
-  { id: 'foresttherapy', name: 'Forest Therapy', color: 'foresttherapy',emoji: '🌿' },
-  { id: 'meditation',    name: 'Meditación',     color: 'meditation',   emoji: '✨' },
-  { id: 'therapy',       name: 'Terapia (NLP)',  color: 'therapy',      emoji: '🧠' },
-  { id: 'welcome',       name: 'Bienvenida',     color: 'welcome',      emoji: '👋' },
-  { id: 'detox',         name: 'Detox Iónico',   color: 'detox',        emoji: '🦶' },
-  { id: 'cacao',         name: 'Tour Cacao',     color: 'cacao',        emoji: '🍫' },
-  { id: 'bird',          name: 'Bird Watching',  color: 'bird',         emoji: '🦜' },
-  { id: 'night',         name: 'Tour Nocturno',  color: 'night',        emoji: '🌙' },
-  { id: 'cooking',       name: 'Cocina',         color: 'cooking',      emoji: '🍃' },
-  { id: 'other',         name: 'Otro',           color: 'other',        emoji: '📋' },
-];
-
-// ── EMPLOYEE PERMISSIONS ────────────────────────────────
-// Maps each staff member to the ACTIVITY_TYPES ids they are authorised to perform.
-// The Guía / Terapeuta dropdown is filtered to only these people when a type is chosen.
-// In-category exceptions (e.g. "not Thai massage") are noted as comments for reference.
-const EMPLOYEES = {
-  // All massages + beauty treatments  (NOT Thai massage, NOT Reiki)
-  'Daniela':   ['massage', 'beauty'],
-  // All massages incl. Essence Special & Couple Experience  (NOT Thai, NOT Reiki)
-  'Fabián':    ['massage'],
-  // All massages (NOT lymphatic drainage) + yoga + sound bath + temazcal
-  'Alejandro': ['massage', 'yoga', 'soundbath', 'temazcal'],
-  // All tours + forest therapy + yoga + meditation
-  'Aurelio':   ['cacao', 'bird', 'night', 'kayak', 'cooking', 'foresttherapy', 'yoga', 'meditation'],
-  // Welcome introduction + ionic foot detox + temazcal
-  'Jairo':     ['welcome', 'detox', 'temazcal'],
-  // Temazcal only
-  'Fernando':  ['temazcal'],
-  // NLP + timeline therapy
-  'Nico':      ['therapy'],
+const HEADERS = {
+  'apikey': SUPA_KEY,
+  'Authorization': `Bearer ${SUPA_KEY}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
 };
 
-// ── EMPLOYEE AVAILABILITY ───────────────────────────────
-// Weekly rules are keyed by day index (0=Dom ... 6=Sáb).
-// Date rules override/extend weekly rules for a specific day (YYYY-MM-DD).
-// Rule shape: { off?: boolean, start?: 'HH:MM', end?: 'HH:MM', blockedTypes?: string[] }
-const DEFAULT_EMPLOYEE_AVAILABILITY = {
-  'Daniela': {
-    weekly: {
-      1: { off: true }, // Monday off
-    },
-    dates: {},
-  },
-  'Fabián': {
-    weekly: {
-      2: { start: '14:00' }, // Tuesday available after 14:00
-    },
-    dates: {},
-  },
-  'Alejandro': {
-    weekly: {
-      3: { end: '12:00' }, // Wednesday available until 12:00
-    },
-    dates: {},
-  },
-  'Aurelio': {
-    weekly: {},
-    dates: {
-      '2026-04-04': { blockedTypes: ['bird'] }, // today: no birdwatching
-    },
-  },
-  'Jairo': {
-    weekly: {
-      5: { off: true }, // Friday off
-    },
-    dates: {},
-  },
-  'Fernando': {
-    weekly: {
-      6: { start: '16:00' }, // Saturday available after 16:00
-    },
-    dates: {},
-  },
-  'Nico': {
-    weekly: {
-      0: { blockedTypes: ['therapy'] }, // Sunday: no therapy
-    },
-    dates: {},
-  },
-};
-
-// ── STAFF DROPDOWN FILTER ───────────────────────────────
-// Rebuild both dropdowns whenever the selected activity type changes.
-// preserveSelection=true  → keep the current pick if it's still valid (chip click)
-// preserveSelection=false → clear and let the caller set values   (openModal)
-function updateStaffDropdowns(preserveSelection = false) {
-  const allNames  = Object.keys(EMPLOYEES);
-  const qualified = (selectedType === 'other')
-    ? allNames
-    : allNames.filter(name => EMPLOYEES[name].includes(selectedType));
-  // If nothing qualifies, fall back to everyone
-  const staffList = qualified.length ? qualified : allNames;
-
-  const staffSel = document.getElementById('f-staff');
-  const bySel   = document.getElementById('f-by');
-  const prevStaff = preserveSelection ? staffSel.value : '';
-  const prevBy   = preserveSelection ? bySel.value   : '';
-
-  // Guía / Terapeuta — filtered by service type
-  staffSel.innerHTML = '<option value="">— sin asignar —</option>';
-  staffList.forEach(name => {
-    const o = document.createElement('option');
-    o.value = name; o.textContent = name;
-    staffSel.appendChild(o);
-  });
-  if (prevStaff && staffList.includes(prevStaff)) staffSel.value = prevStaff;
-
-  // BY — always shows the full team
-  bySel.innerHTML = '<option value="">— ninguno —</option>';
-  allNames.forEach(name => {
-    const o = document.createElement('option');
-    o.value = name; o.textContent = name;
-    bySel.appendChild(o);
-  });
-  if (prevBy) bySel.value = prevBy;
+async function dbGet(table, params = '') {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${params}`, { headers: HEADERS });
+  return r.json();
+}
+async function dbPost(table, body) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}`, { method:'POST', headers: HEADERS, body: JSON.stringify(body) });
+  return r.json();
+}
+async function dbPatch(table, id, body) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, { method:'PATCH', headers: HEADERS, body: JSON.stringify(body) });
+  return r.json();
+}
+async function dbDelete(table, id) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?id=eq.${id}`, { method:'DELETE', headers: HEADERS });
+  return r.ok;
 }
 
-function timeToMinutes(value) {
-  if (!/^\d{2}:\d{2}$/.test(value || '')) return null;
-  const [h, m] = value.split(':').map(Number);
-  return (h * 60) + m;
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let currentUser = null; // { id, name, email, role }
+let guestSession = null; // { room, name }
+let bookingContext = null;
+let editingActivityId = null;
+let selectedActivityType = null;
+let adminWeekOffset = 0;
+let adminCalTab = 'hotel';
+let inboxFilter = 'all';
+let staffList = [];
+let allRequests = [];
+
+// ══════════════════════════════════════════════
+//  SCREEN ROUTING
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) { el.style.display = 'block'; el.classList.add('active'); }
 }
 
-function getTypeNameById(typeId) {
-  return ACTIVITY_TYPES.find(t => t.id === typeId)?.name || typeId;
+// ══════════════════════════════════════════════
+//  GUEST FLOW
+// ══════════════════════════════════════════════
+function guestLogin() {
+  const room = document.getElementById('guest-room').value.trim();
+  const name = document.getElementById('guest-name').value.trim();
+  if (!room || !name) { document.getElementById('guest-error').classList.add('show'); return; }
+  document.getElementById('guest-error').classList.remove('show');
+  guestSession = { room, name };
+  document.getElementById('room-display').textContent = `Room ${room} · ${name}`;
+  showScreen('screen-guest');
+  renderGuestServices();
+  loadMyBookings();
+}
+function guestLogout() {
+  guestSession = null;
+  showScreen('screen-landing');
+}
+function showGuestTab(tab) {
+  document.querySelectorAll('.portal-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const sec = document.getElementById(`guest-${tab}`);
+  if (sec) sec.classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'bookings') loadMyBookings();
 }
 
-function getEmployeeAvailabilityRule(employeeName, dateStr) {
-  const cfg = employeeAvailability[employeeName];
-  if (!cfg || !dateStr) return null;
+// Services data
+const SPA_SERVICES = [
+  { id:'holistic-therapy', name:'Holistic Therapy', sub:'Ancient wisdom', desc:'Restore balance from within with our signature rainforest ritual.', price:'$120', icon:'🌿', duration:90 },
+  { id:'signature-massage', name:'Signature Massage', sub:'Deep restoration', desc:'Deeply restorative bodywork tailored to your body\'s needs.', price:'$95', icon:'🤲', duration:60 },
+  { id:'beauty-treatment', name:'Beauty Treatment', sub:'Facials & body', desc:'Volcanic mud, chocolate and natural botanicals.', price:'$80', icon:'💆', duration:60 },
+  { id:'sound-healing', name:'Sound Healing', sub:'Tibetan bowls', desc:'Vibration therapy for deep nervous system reset.', price:'$75', icon:'🔔', duration:60 },
+  { id:'cacao-ceremony', name:'Cacao Ceremony', sub:'Sacred ritual', desc:'Heart-opening ceremony with ceremonial cacao from our farm.', price:'$65', icon:'🍫', duration:90 },
+  { id:'couples-massage', name:'Couples Massage', sub:'For two', desc:'Side-by-side massage experience in our jungle suite.', price:'$180', icon:'🌸', duration:90 },
+];
+const TOUR_SERVICES = [
+  { id:'volcano-tour', name:'Volcano Tour', sub:'Arenal active', desc:'Guided hike around the Arenal volcano with naturalist guide.', price:'$85', icon:'🌋', duration:180 },
+  { id:'night-tour', name:'Night Tour', sub:'Nocturnal wildlife', desc:'Spot sloths, frogs, and exotic nocturnal creatures.', price:'$65', icon:'🦜', duration:120 },
+  { id:'bird-watching', name:'Bird Watching', sub:'Dawn expedition', desc:'Over 500 species in the area. Dawn departure recommended.', price:'$55', icon:'🐦', duration:120 },
+  { id:'waterfall-hike', name:'Waterfall Hike', sub:'El Salto', desc:'Trek through cloud forest to hidden waterfall. Swimming included.', price:'$70', icon:'💧', duration:180 },
+  { id:'kayak-lake', name:'Kayak on Lake Arenal', sub:'Paddle adventure', desc:'Kayak on one of Costa Rica\'s most beautiful lakes.', price:'$60', icon:'🚣', duration:120 },
+];
+const ROOM_SERVICES = [
+  { id:'breakfast-room', name:'Farm Breakfast', sub:'Delivered to your room', desc:'Fresh eggs, local fruits, handmade bread, organic coffee.', price:'$28', icon:'🍳', duration:0 },
+  { id:'picnic-basket', name:'Picnic Basket', sub:'Bio Farm selection', desc:'Artisan cheeses, cured meats, seasonal fruits, local wine.', price:'$45', icon:'🧺', duration:0 },
+  { id:'smoothie-bowl', name:'Smoothie Bowl', sub:'Superfood blend', desc:'Acai, pitahaya, granola, honey from our own hives.', price:'$18', icon:'🫐', duration:0 },
+];
 
-  const dayIndex = new Date(`${dateStr}T00:00:00`).getDay();
-  const weeklyRule = cfg.weekly?.[dayIndex] || {};
-  const dateRule = cfg.dates?.[dateStr] || {};
+function renderGuestServices() {
+  renderCards('spa-cards', SPA_SERVICES, 'Spa & Wellness');
+  renderCards('tour-cards', TOUR_SERVICES, 'Tours');
+  renderCards('room-cards', ROOM_SERVICES, 'Room Service');
+}
+function renderCards(containerId, services, category) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.innerHTML = services.map(s => `
+    <div class="service-card" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${category}')">
+      <div class="card-visual">${s.icon}</div>
+      <div class="card-body">
+        <div class="card-name">${s.name}</div>
+        <div class="card-sub">${s.sub}</div>
+        <div class="card-desc">${s.desc}</div>
+        <div class="card-price">${s.price}</div>
+        <button class="book-btn">Request Booking</button>
+      </div>
+    </div>`).join('');
+}
 
-  const blocked = [...(weeklyRule.blockedTypes || []), ...(dateRule.blockedTypes || [])];
-  const merged = {
-    off: Boolean(weeklyRule.off || dateRule.off),
-    start: dateRule.start || weeklyRule.start || '',
-    end: dateRule.end || weeklyRule.end || '',
-    blockedTypes: Array.from(new Set(blocked)),
+// Booking modal
+function openBookingModal(service, category) {
+  bookingContext = { service, category };
+  document.getElementById('bm-title').textContent = service.name;
+  document.getElementById('bm-sub').textContent = category;
+  document.getElementById('bm-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('bm-notes').value = '';
+  document.getElementById('booking-modal').classList.add('open');
+}
+function closeBookingModal() { document.getElementById('booking-modal').classList.remove('open'); }
+
+async function submitBooking() {
+  if (!bookingContext || !guestSession) return;
+  const { service, category } = bookingContext;
+  const date = document.getElementById('bm-date').value;
+  const time = document.getElementById('bm-time').value;
+  const notes = document.getElementById('bm-notes').value;
+  const body = {
+    room: guestSession.room,
+    guest_name: guestSession.name,
+    service_type: category,
+    service_name: service.name,
+    requested_date: date || null,
+    requested_time: time,
+    duration_minutes: service.duration || 60,
+    notes: notes,
+    price: parseFloat((service.price || '$0').replace('$','')) || null,
+    status: 'pending'
   };
-
-  if (!merged.off && !merged.start && !merged.end && !merged.blockedTypes.length) return null;
-  return merged;
-}
-
-function hasAnyRestriction(rule) {
-  return Boolean(rule && (rule.off || rule.start || rule.end || (rule.blockedTypes && rule.blockedTypes.length)));
-}
-
-function describeRestriction(rule) {
-  if (!rule) return '';
-  const parts = [];
-  if (rule.off) parts.push('día libre');
-  if (rule.start) parts.push(`disponible desde ${rule.start}`);
-  if (rule.end) parts.push(`disponible hasta ${rule.end}`);
-  if (rule.blockedTypes?.length) {
-    const names = rule.blockedTypes.map(getTypeNameById).join(', ');
-    parts.push(`sin ${names}`);
+  try {
+    await dbPost('booking_requests', body);
+    closeBookingModal();
+    showToast('✓ Request sent! We\'ll confirm shortly.');
+    loadMyBookings();
+  } catch(e) {
+    showToast('Could not send request. Please try again.');
   }
-  return parts.join(' · ');
 }
 
-function validateAssignmentAvailability(employeeName, dateStr, timeValue, typeId) {
-  if (!employeeName || !dateStr) return { ok: true, reason: '' };
-  const rule = getEmployeeAvailabilityRule(employeeName, dateStr);
-  if (!hasAnyRestriction(rule)) return { ok: true, reason: '' };
-
-  if (rule.off) {
-    return { ok: false, reason: `${employeeName} tiene día libre.` };
-  }
-
-  const target = timeToMinutes(timeValue);
-  if (target !== null && rule.start) {
-    const startMin = timeToMinutes(rule.start);
-    if (startMin !== null && target < startMin) {
-      return { ok: false, reason: `${employeeName} está disponible solo después de ${rule.start}.` };
+async function loadMyBookings() {
+  if (!guestSession) return;
+  const list = document.getElementById('my-bookings-list');
+  if (!list) return;
+  try {
+    const data = await dbGet('booking_requests', `room=eq.${encodeURIComponent(guestSession.room)}&guest_name=eq.${encodeURIComponent(guestSession.name)}&order=created_at.desc`);
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:60px 20px;color:rgba(200,219,200,0.3);font-size:.9rem;">No bookings yet — explore the menu above ✦</div>';
+      return;
     }
+    list.innerHTML = data.map(b => `
+      <div class="booking-item">
+        <div class="booking-info">
+          <div class="bi-name">${b.service_name}</div>
+          <div class="bi-detail">${b.service_type} · ${b.requested_date || ''} ${b.requested_time || ''}</div>
+          ${b.notes ? `<div class="bi-detail" style="margin-top:4px;font-style:italic;">"${b.notes}"</div>` : ''}
+          <div class="bi-detail" style="margin-top:6px;font-size:.65rem;opacity:.5;">Submitted ${new Date(b.created_at).toLocaleDateString()}</div>
+        </div>
+        <div><span class="status-badge status-${b.status}">${b.status}</span></div>
+      </div>`).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:rgba(200,219,200,0.3);">Could not load bookings</div>';
   }
-
-  if (target !== null && rule.end) {
-    const endMin = timeToMinutes(rule.end);
-    if (endMin !== null && target > endMin) {
-      return { ok: false, reason: `${employeeName} está disponible solo hasta ${rule.end}.` };
-    }
-  }
-
-  if (rule.blockedTypes?.includes(typeId)) {
-    return { ok: false, reason: `${employeeName} no está disponible para ${getTypeNameById(typeId)} ese día.` };
-  }
-
-  return { ok: true, reason: '' };
 }
 
-function resolveModalDateStr() {
-  if (pendingCell?.dateStr) return pendingCell.dateStr;
-
-  if (editingId !== null) {
-    const editing = activities.find(a => a.id === editingId);
-    if (editing?.date) return editing.date;
-    if (typeof editing?.dow === 'number') {
-      const weekStart = getWeekStart(weekOffset);
-      const d = new Date(weekStart);
-      d.setDate(d.getDate() + editing.dow);
-      return d.toISOString().split('T')[0];
-    }
-  }
-
-  const fallback = getWeekStart(weekOffset);
-  return fallback.toISOString().split('T')[0];
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-function refreshAssignmentWarning() {
-  const warningEl = document.getElementById('assignment-warning');
-  const staff = document.getElementById('f-staff').value;
+// ══════════════════════════════════════════════
+//  STAFF / ADMIN FLOW
+// ══════════════════════════════════════════════
+function showStaffLogin() { showScreen('screen-staff-login'); }
 
-  if (!staff) {
-    warningEl.classList.remove('show');
-    warningEl.textContent = '';
+async function staffLogin() {
+  const email = document.getElementById('staff-email').value.trim();
+  const code = document.getElementById('staff-code').value.trim();
+  const err = document.getElementById('staff-error');
+  if (!email || !code) { err.classList.add('show'); err.textContent = 'Email and code required'; return; }
+  try {
+    const data = await dbGet('staff', `email=eq.${encodeURIComponent(email)}&access_code=eq.${encodeURIComponent(code)}&active=eq.true`);
+    if (!data || data.length === 0) { err.classList.add('show'); err.textContent = 'Email or code incorrect'; return; }
+    currentUser = data[0];
+    err.classList.remove('show');
+    showAdminPanel();
+  } catch(e) {
+    err.classList.add('show'); err.textContent = 'Connection error. Try again.';
+  }
+}
+
+function showAdminPanel() {
+  showScreen('screen-admin');
+  document.getElementById('admin-name-display').textContent = currentUser.name;
+  const pill = document.getElementById('admin-role-pill');
+  pill.textContent = currentUser.role;
+  pill.className = `role-pill role-${currentUser.role}`;
+  // Hide staff tab for non-admins
+  document.getElementById('atab-staff').style.display = currentUser.role === 'administrator' ? '' : 'none';
+  // Guides/therapists: only show calendar
+  if (currentUser.role === 'guide' || currentUser.role === 'therapist') {
+    document.getElementById('atab-inbox').style.display = 'none';
+    switchAdminTab('calendar');
+  }
+  switchAdminTab('inbox');
+  loadStaffList();
+}
+
+function adminLogout() {
+  currentUser = null;
+  document.getElementById('staff-email').value = '';
+  document.getElementById('staff-code').value = '';
+  showScreen('screen-landing');
+}
+
+// ══════════════════════════════════════════════
+//  ADMIN TABS
+// ══════════════════════════════════════════════
+function switchAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  const tabEl = document.getElementById(`atab-${tab}`);
+  const secEl = document.getElementById(`asec-${tab}`);
+  if (tabEl) tabEl.classList.add('active');
+  if (secEl) secEl.classList.add('active');
+  if (tab === 'inbox') loadInbox();
+  if (tab === 'calendar') { renderAdminCalendar(); }
+  if (tab === 'staff') renderStaffTable();
+}
+
+// ══════════════════════════════════════════════
+//  INBOX
+// ══════════════════════════════════════════════
+async function loadInbox() {
+  const list = document.getElementById('inbox-list');
+  list.innerHTML = '<div class="inbox-empty"><span class="spinner"></span> Loading…</div>';
+  try {
+    allRequests = await dbGet('booking_requests', 'order=created_at.desc');
+    renderInbox();
+    const pendingCount = allRequests.filter(r => r.status === 'pending').length;
+    document.getElementById('pending-dot').style.display = pendingCount > 0 ? 'inline-block' : 'none';
+  } catch(e) {
+    list.innerHTML = '<div class="inbox-empty">Could not load requests.</div>';
+  }
+}
+
+function filterInbox(f) {
+  inboxFilter = f;
+  document.querySelectorAll('[id^=filter-]').forEach(b => { b.style.borderColor = ''; b.style.color = ''; });
+  const active = document.getElementById(`filter-${f}`);
+  if (active) { active.style.borderColor = 'var(--admin-gold)'; active.style.color = 'var(--admin-gold)'; }
+  renderInbox();
+}
+
+function renderInbox() {
+  const list = document.getElementById('inbox-list');
+  const filtered = inboxFilter === 'all' ? allRequests : allRequests.filter(r => r.status === inboxFilter);
+  if (!filtered.length) {
+    list.innerHTML = `<div class="inbox-empty">No ${inboxFilter === 'all' ? '' : inboxFilter} requests.</div>`;
     return;
   }
-
-  const dateStr = resolveModalDateStr();
-  const timeValue = document.getElementById('f-time').value;
-  const check = validateAssignmentAvailability(staff, dateStr, timeValue, selectedType);
-
-  if (!check.ok) {
-    warningEl.textContent = `⚠ ${check.reason}`;
-    warningEl.classList.add('show');
-    return;
-  }
-
-  warningEl.classList.remove('show');
-  warningEl.textContent = '';
-}
-
-function getRestrictedEmployeesForDate(dateStr) {
-  return Object.keys(employeeAvailability).filter(name => {
-    const rule = getEmployeeAvailabilityRule(name, dateStr);
-    return hasAnyRestriction(rule);
-  });
-}
-
-function ensureEmployeeAvailabilityNode(name) {
-  if (!employeeAvailability[name]) {
-    employeeAvailability[name] = { weekly: {}, dates: {} };
-  }
-  if (!employeeAvailability[name].weekly) employeeAvailability[name].weekly = {};
-  if (!employeeAvailability[name].dates) employeeAvailability[name].dates = {};
-}
-
-function parseDateOnly(dateStr) {
-  return new Date(`${dateStr}T00:00:00`);
-}
-
-function toDateKey(date) {
-  const d = new Date(date);
-  d.setHours(0,0,0,0);
-  return d.toISOString().split('T')[0];
-}
-
-function listDateKeysInRange(startDate, endDate) {
-  const keys = [];
-  const cur = parseDateOnly(startDate);
-  const end = parseDateOnly(endDate);
-  while (cur <= end) {
-    keys.push(toDateKey(cur));
-    cur.setDate(cur.getDate() + 1);
-  }
-  return keys;
-}
-
-function escapeHtml(value = '') {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
-
-function monthShortEs(idx) {
-  return ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][idx] || '';
-}
-
-function formatDateShort(dateStr) {
-  const d = parseDateOnly(dateStr);
-  return `${d.getDate()} ${monthShortEs(d.getMonth())}`;
-}
-
-function formatDateRange(startDate, endDate) {
-  const start = parseDateOnly(startDate);
-  const end = parseDateOnly(endDate);
-  if (startDate === endDate) return `${start.getDate()} ${monthShortEs(start.getMonth())} ${start.getFullYear()}`;
-  if (start.getFullYear() === end.getFullYear()) {
-    return `${formatDateShort(startDate)} - ${formatDateShort(endDate)} ${end.getFullYear()}`;
-  }
-  return `${formatDateShort(startDate)} ${start.getFullYear()} - ${formatDateShort(endDate)} ${end.getFullYear()}`;
-}
-
-function isRangeOverlapping(aStart, aEnd, bStart, bEnd) {
-  return parseDateOnly(aStart) <= parseDateOnly(bEnd) && parseDateOnly(aEnd) >= parseDateOnly(bStart);
-}
-
-function refreshAvailabilityOffDatesFromAbsences() {
-  Object.keys(employeeAvailability).forEach(name => {
-    ensureEmployeeAvailabilityNode(name);
-    Object.keys(employeeAvailability[name].dates || {}).forEach(dateKey => {
-      const rule = employeeAvailability[name].dates[dateKey];
-      if (!rule) return;
-      delete rule.off;
-      const hasAnything = rule.start || rule.end || (rule.blockedTypes && rule.blockedTypes.length);
-      if (!hasAnything) delete employeeAvailability[name].dates[dateKey];
-    });
-  });
-
-  absenceRecords.forEach(record => {
-    ensureEmployeeAvailabilityNode(record.employee);
-    const keys = listDateKeysInRange(record.startDate, record.endDate);
-    keys.forEach(dateKey => {
-      const existing = employeeAvailability[record.employee].dates[dateKey] || {};
-      employeeAvailability[record.employee].dates[dateKey] = { ...existing, off: true };
-    });
-  });
-}
-
-function scheduleOffReasonRecalc() {
-  if (offReasonDebounceTimer) clearTimeout(offReasonDebounceTimer);
-  offReasonDebounceTimer = window.setTimeout(() => {
-    offReasonDebounceTimer = null;
-    // Debounced to avoid expensive list recalculations on every keystroke.
-    if (document.getElementById('availability-modal').classList.contains('open')) {
-      renderOffList();
-    }
-  }, 300);
-}
-
-function handleOffReasonInput(event) {
-  const nextValue = event.target.value;
-  // Defer state updates so typing is not blocked by synchronous work.
-  window.setTimeout(() => {
-    offReasonDraft = nextValue;
-    scheduleOffReasonRecalc();
-  }, 0);
-}
-
-function openAvailabilityModal() {
-  if (!isEditor()) {
-    alert('Solo editores pueden gestionar días libres.');
-    return;
-  }
-
-  const select = document.getElementById('off-employee');
-  select.innerHTML = '';
-  Object.keys(EMPLOYEES).forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    select.appendChild(opt);
-  });
-
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('off-start').value = today;
-  document.getElementById('off-end').value = today;
-  document.getElementById('off-reason').value = '';
-  offReasonDraft = '';
-  renderOffList();
-  document.getElementById('availability-modal').classList.add('open');
-}
-
-function closeAvailabilityModal() {
-  document.getElementById('availability-modal').classList.remove('open');
-}
-
-function handleAvailabilityOverlayClick(e) {
-  if (e.target === document.getElementById('availability-modal')) closeAvailabilityModal();
-}
-
-function addDayOffRule() {
-  if (!isEditor()) return;
-  const employee = document.getElementById('off-employee').value;
-  const startDate = document.getElementById('off-start').value;
-  const endDate = document.getElementById('off-end').value;
-  const reasonInput = document.getElementById('off-reason').value;
-  const reason = (offReasonDraft || reasonInput).trim();
-
-  if (!employee || !startDate || !endDate) {
-    alert('Selecciona empleado y rango de fechas.');
-    return;
-  }
-
-  if (parseDateOnly(endDate) < parseDateOnly(startDate)) {
-    alert('La fecha HASTA no puede ser anterior a DESDE.');
-    return;
-  }
-
-  absenceRecords.unshift({
-    id: Date.now() + Math.random(),
-    employee,
-    startDate,
-    endDate,
-    reason,
-    createdAt: new Date().toISOString(),
-  });
-
-  refreshAvailabilityOffDatesFromAbsences();
-  saveAvailability();
-  scheduleCalendarRender();
-  renderOffList();
-}
-
-function removeDayOffRule(recordId) {
-  absenceRecords = absenceRecords.filter(r => String(r.id) !== String(recordId));
-
-  refreshAvailabilityOffDatesFromAbsences();
-  saveAvailability();
-  scheduleCalendarRender();
-  renderOffList();
-}
-
-function renderOffList() {
-  const host = document.getElementById('off-list');
-  const rows = [...absenceRecords].sort((a, b) => {
-    if (a.createdAt === b.createdAt) return 0;
-    return a.createdAt > b.createdAt ? -1 : 1;
-  });
-
-  if (!rows.length) {
-    host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin días libres registrados.</td></tr></tbody></table>';
-    return;
-  }
-
-  host.innerHTML = `
-    <table>
-      <thead>
-        <tr><th>Empleado</th><th>Rango</th><th>Motivo</th><th>Acción</th></tr>
-      </thead>
-      <tbody>
-        ${rows.map(r => `
-          <tr>
-            <td>${escapeHtml(r.employee)}</td>
-            <td>${escapeHtml(formatDateRange(r.startDate, r.endDate))}</td>
-            <td>${escapeHtml(r.reason || '—')}</td>
-            <td><button class="tiny-btn" onclick="removeDayOffRule('${r.id}')">✕</button></td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
-}
-
-function renderWeeklyAbsences(weekStart) {
-  const host = document.getElementById('weekly-absence-list');
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-  const weekStartStr = toDateKey(weekStart);
-  const weekEndStr = toDateKey(weekEnd);
-
-  const visible = absenceRecords
-    .filter(r => isRangeOverlapping(r.startDate, r.endDate, weekStartStr, weekEndStr))
-    .sort((a, b) => (a.startDate < b.startDate ? -1 : 1));
-
-  if (!visible.length) {
-    host.innerHTML = '<span style="color:#6b7569;font-size:12px;">Sin ausencias registradas para esta semana.</span>';
-    return;
-  }
-
-  host.innerHTML = visible.map(r => {
-    const label = `${r.employee} · ${formatDateRange(r.startDate, r.endDate)}`;
-    const withReason = r.reason ? `${label} · ${r.reason}` : label;
-    return `<span class="absence-badge">${escapeHtml(withReason)}</span>`;
+  list.innerHTML = filtered.map(r => {
+    const canAct = (currentUser.role === 'administrator' || currentUser.role === 'receptionist') && r.status === 'pending';
+    const cbBadge = r.cloudbeds_synced ? '<span class="cb-badge">✓ Cloudbeds</span>' : '';
+    return `<div class="request-card ${r.status}" id="rc-${r.id}">
+      <div class="rc-info">
+        <div class="rc-name">${r.service_name} ${cbBadge}</div>
+        <div class="rc-detail">🛎 Room ${r.room} · ${r.guest_name}</div>
+        <div class="rc-detail">📅 ${r.requested_date || 'Date TBD'} · ${r.requested_time || ''} · ${r.duration_minutes || 60}min</div>
+        <div class="rc-detail">💰 ${r.price ? '$'+r.price : 'No price'} · ${r.service_type}</div>
+        ${r.notes ? `<div class="rc-detail" style="font-style:italic;margin-top:4px;">"${r.notes}"</div>` : ''}
+        <div class="rc-time">Submitted ${new Date(r.created_at).toLocaleString()}</div>
+      </div>
+      <div class="rc-actions">
+        <span class="rc-status ${r.status}">${r.status}</span>
+        ${canAct ? `
+          <button class="abtn abtn-green" style="font-size:11px;" onclick="handleRequest('${r.id}','approved')">✓ Approve</button>
+          <button class="abtn abtn-red" style="font-size:11px;" onclick="handleRequest('${r.id}','declined')">✗ Decline</button>
+        ` : ''}
+        ${r.handled_at ? `<div class="rc-handled">by ${r.handled_by_name || 'staff'}<br>${new Date(r.handled_at).toLocaleDateString()}</div>` : ''}
+      </div>
+    </div>`;
   }).join('');
 }
 
-function openAuditModal() {
-  renderAuditList();
-  document.getElementById('audit-modal').classList.add('open');
+async function handleRequest(id, newStatus) {
+  const req = allRequests.find(r => r.id === id);
+  if (!req) return;
+  // Update in DB
+  await dbPatch('booking_requests', id, {
+    status: newStatus,
+    handled_by: currentUser.id,
+    handled_at: new Date().toISOString()
+  });
+  // If approved → add to calendar + sync to Cloudbeds
+  if (newStatus === 'approved') {
+    await addApprovedToCalendar(req);
+    await syncToCloudbeds(req, id);
+  }
+  // Refresh
+  await loadInbox();
+  showAdminToast(newStatus === 'approved' ? '✓ Approved & synced to Cloudbeds' : '✗ Request declined');
 }
 
-function closeAuditModal() {
-  document.getElementById('audit-modal').classList.remove('open');
+async function addApprovedToCalendar(req) {
+  // Map service type to activity type id
+  const typeMap = {
+    'Spa & Wellness': 'spa', 'Tours': 'hike', 'Room Service': 'other',
+    'Holistic Therapy': 'meditation', 'Signature Massage': 'massage',
+    'Beauty Treatment': 'spa', 'Sound Healing': 'sound', 'Cacao Ceremony': 'cacao',
+    'Couples Massage': 'massage', 'Volcano Tour': 'hike', 'Night Tour': 'night-tour',
+    'Bird Watching': 'birds', 'Waterfall Hike': 'waterfall', 'Kayak on Lake Arenal': 'hike',
+  };
+  const typeId = typeMap[req.service_name] || typeMap[req.service_type] || 'other';
+  const hour = req.requested_time ? parseInt(req.requested_time.split(':')[0]) : 10;
+  const tab = (req.service_type === 'Tours') ? 'finca' : 'hotel';
+  await dbPost('activities', {
+    tab, day_key: req.requested_date || new Date().toISOString().split('T')[0],
+    hour, duration_minutes: req.duration_minutes || 60,
+    type_id: typeId, client: req.guest_name,
+    notes: `Room ${req.room} · ${req.notes || ''}`.trim(),
+    repeat_weekly: false,
+    booking_request_id: req.id
+  });
 }
 
-function handleAuditOverlayClick(e) {
-  if (e.target === document.getElementById('audit-modal')) closeAuditModal();
+// ══════════════════════════════════════════════
+//  CLOUDBEDS INTEGRATION
+//  OAuth 2.0 Client Credentials flow
+//  Docs: https://hotels.cloudbeds.com/api/v1.2
+// ══════════════════════════════════════════════
+const CB_CLIENT_ID     = 'livel_214159_y3MIBothiKanR6WV9GcfENz0';
+const CB_CLIENT_SECRET = 'S3Xp|DkKEByгTJogbd2iU0n4RI7xPZlC';
+const CB_PROPERTY_ID   = 'YOUR_PROPERTY_ID'; // ← paste your numeric property ID here
+
+let _cbToken = null;
+let _cbTokenExpiry = 0;
+
+async function getCloudbedToken() {
+  if (_cbToken && Date.now() < _cbTokenExpiry) return _cbToken;
+  try {
+    const body = new URLSearchParams({
+      grant_type: 'client_credentials',
+      client_id: CB_CLIENT_ID,
+      client_secret: CB_CLIENT_SECRET,
+    });
+    const resp = await fetch('https://hotels.cloudbeds.com/api/v1.2/access_token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    });
+    if (!resp.ok) throw new Error(`Token fetch failed: ${resp.status}`);
+    const data = await resp.json();
+    _cbToken = data.access_token;
+    _cbTokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
+    return _cbToken;
+  } catch(e) {
+    console.warn('[Cloudbeds] Could not get access token:', e.message);
+    return null;
+  }
 }
 
-function renderAuditList() {
-  const host = document.getElementById('audit-list');
-  if (!activityAudit.length) {
-    host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin movimientos aún.</td></tr></tbody></table>';
+async function syncToCloudbeds(req, requestId) {
+  if (CB_PROPERTY_ID === 'YOUR_PROPERTY_ID') {
+    // Property ID not set yet — mark synced and skip
+    console.warn('[Cloudbeds] Property ID not configured yet.');
+    await dbPatch('booking_requests', requestId, { cloudbeds_synced: false });
     return;
   }
+  try {
+    const token = await getCloudbedToken();
+    if (!token) throw new Error('No token');
 
-  host.innerHTML = `
-    <table>
-      <thead>
-        <tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr>
-      </thead>
-      <tbody>
-        ${activityAudit.map(log => `
-          <tr>
-            <td>${fmtAuditDate(log.at)}</td>
-            <td>${log.user || ''}</td>
-            <td>${log.action || ''}</td>
-            <td>${log.detail || ''}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
-}
+    // 1. Search for guest reservation by room number
+    const searchResp = await fetch(
+      `https://hotels.cloudbeds.com/api/v1.2/getReservations?propertyID=${CB_PROPERTY_ID}&roomID=${encodeURIComponent(req.room)}&status=checked_in`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    const searchData = await searchResp.json();
+    const reservation = searchData?.data?.[0];
 
-// ── STATE ───────────────────────────────────────────────
-let weekOffset = 0;
-let activities = [];
-let activityAudit = [];
-let currentUser = null;
-let employeeAvailability = {};
-let absenceRecords = [];
-let offReasonDraft = '';
-let offReasonDebounceTimer = null;
-let editingId = null;
-let pendingCell = null; // { dayIndex, slotId }
-let renderTimer = null;
-let pendingRenderMode = 'defer';
+    const noteText = [
+      `✅ SERVICE APPROVED`,
+      `Service: ${req.service_name} (${req.service_type})`,
+      `Guest: ${req.guest_name} · Room: ${req.room}`,
+      `Date: ${req.requested_date || 'TBD'} at ${req.requested_time || 'TBD'}`,
+      `Duration: ${req.duration_minutes || 60} min`,
+      `Price: ${req.price ? '$'+req.price : 'N/A'}`,
+      req.notes ? `Notes: ${req.notes}` : '',
+      `Approved by: ${currentUser?.name || 'staff'} on ${new Date().toLocaleString()}`,
+    ].filter(Boolean).join('\n');
 
-function getSectionLabel(section) {
-  return section === 'finca' ? 'Finca' : 'Hotel';
-}
+    // 2. Post a note to the reservation (works even without reservationID as a general property note)
+    const notePayload = {
+      propertyID: CB_PROPERTY_ID,
+      note: noteText,
+      ...(reservation?.reservationID ? { reservationID: reservation.reservationID } : {}),
+    };
+    const noteResp = await fetch('https://hotels.cloudbeds.com/api/v1.2/postNote', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(notePayload),
+    });
 
-function getSectionClass(section) {
-  return section === 'finca' ? 'location-finca' : 'location-hotel';
-}
-
-function isQuarterHourTime(value) {
-  if (!/^\d{2}:\d{2}$/.test(value)) return false;
-  const minutes = Number(value.split(':')[1]);
-  return [0, 15, 30, 45].includes(minutes);
-}
-
-function syncTimePickerValue() {
-  const hour = document.getElementById('f-time-hour').value;
-  const minute = document.getElementById('f-time-minute').value;
-  document.getElementById('f-time').value = `${hour}:${minute}`;
-}
-
-function setTimePickerValue(timeValue = '07:00') {
-  const [hRaw, mRaw] = (timeValue || '07:00').split(':');
-  const hour = String(Number(hRaw || '7')).padStart(2, '0');
-  const minute = String(Number(mRaw || '0')).padStart(2, '0');
-
-  document.getElementById('f-time-hour').value = hour;
-
-  // Hardcoded minute options per requirement: [0, 15, 30, 45]
-  const allowedMinutes = ['00', '15', '30', '45'];
-  document.getElementById('f-time-minute').value = allowedMinutes.includes(minute) ? minute : '00';
-  syncTimePickerValue();
-}
-
-function initTimePicker() {
-  const hourSelect = document.getElementById('f-time-hour');
-  const minuteSelect = document.getElementById('f-time-minute');
-
-  hourSelect.innerHTML = '';
-  for (let h = 0; h < 24; h++) {
-    const hh = String(h).padStart(2, '0');
-    const option = document.createElement('option');
-    option.value = hh;
-    option.textContent = hh;
-    hourSelect.appendChild(option);
-  }
-
-  minuteSelect.innerHTML = '';
-  [0, 15, 30, 45].forEach(min => {
-    const mm = String(min).padStart(2, '0');
-    const option = document.createElement('option');
-    option.value = mm;
-    option.textContent = mm;
-    minuteSelect.appendChild(option);
-  });
-
-  setTimePickerValue('07:00');
-}
-
-function scheduleCalendarRender(mode = 'defer') {
-  const nextMode = mode === 'debounce' ? 'debounce' : 'defer';
-  const nextDelay = nextMode === 'debounce' ? 120 : 16;
-
-  if (renderTimer && pendingRenderMode === 'debounce' && nextMode === 'defer') {
-    clearTimeout(renderTimer);
-    renderTimer = null;
-  }
-
-  if (renderTimer && pendingRenderMode === nextMode) {
-    clearTimeout(renderTimer);
-  }
-
-  pendingRenderMode = nextMode;
-  renderTimer = window.setTimeout(() => {
-    renderTimer = null;
-    pendingRenderMode = 'defer';
-    renderCalendar();
-  }, nextDelay);
-}
-
-// ── PERSISTENCE ─────────────────────────────────────────
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(activities));
-}
-
-function saveAvailability() {
-  localStorage.setItem(AVAILABILITY_KEY, JSON.stringify({
-    rules: employeeAvailability,
-    absences: absenceRecords,
-  }));
-}
-
-function saveAudit() {
-  localStorage.setItem(AUDIT_KEY, JSON.stringify(activityAudit));
-}
-
-function cloneDefaultAvailability() {
-  return JSON.parse(JSON.stringify(DEFAULT_EMPLOYEE_AVAILABILITY));
-}
-
-function normalizeAvailabilityShape(raw) {
-  const base = cloneDefaultAvailability();
-  Object.keys(EMPLOYEES).forEach(name => {
-    if (!base[name]) base[name] = { weekly: {}, dates: {} };
-    if (!base[name].weekly) base[name].weekly = {};
-    if (!base[name].dates) base[name].dates = {};
-  });
-
-  if (!raw || typeof raw !== 'object') return base;
-
-  Object.keys(raw).forEach(name => {
-    if (!base[name]) base[name] = { weekly: {}, dates: {} };
-    base[name].weekly = raw[name]?.weekly || base[name].weekly || {};
-    base[name].dates = raw[name]?.dates || base[name].dates || {};
-  });
-
-  return base;
-}
-
-function extractAbsenceRecordsFromRules(rules) {
-  const records = [];
-  Object.keys(rules || {}).forEach(employee => {
-    const dateMap = rules[employee]?.dates || {};
-    Object.keys(dateMap).forEach(dateKey => {
-      if (!dateMap[dateKey]?.off) return;
-      records.push({
-        id: `legacy-${employee}-${dateKey}`,
-        employee,
-        startDate: dateKey,
-        endDate: dateKey,
-        reason: '',
-        createdAt: `${dateKey}T00:00:00.000Z`,
+    // 3. If we have a reservation, also post a charge/transaction
+    if (reservation?.reservationID && req.price) {
+      await fetch('https://hotels.cloudbeds.com/api/v1.2/postTransaction', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          propertyID: CB_PROPERTY_ID,
+          reservationID: reservation.reservationID,
+          type: 'charge',
+          category: req.service_type,
+          description: req.service_name,
+          amount: req.price,
+          quantity: 1,
+        }),
       });
+    }
+
+    if (noteResp.ok) {
+      await dbPatch('booking_requests', requestId, { cloudbeds_synced: true });
+      console.log('[Cloudbeds] Synced successfully');
+    } else {
+      const err = await noteResp.text();
+      console.warn('[Cloudbeds] Note post failed:', err);
+      await dbPatch('booking_requests', requestId, { cloudbeds_synced: false });
+    }
+  } catch(e) {
+    console.warn('[Cloudbeds] Sync error:', e.message);
+    await dbPatch('booking_requests', requestId, { cloudbeds_synced: false });
+    showAdminToast('⚠ Cloudbeds sync failed — booking approved, check console');
+  }
+}
+
+function showAdminToast(msg) {
+  // Use a simple inline message for admin
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:24px;right:28px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:13px;color:var(--text);z-index:500;font-family:DM Sans,sans-serif;';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ══════════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════════
+const ACTIVITY_TYPES = [
+  { id:'yoga', label:'Yoga', icon:'🧘', color:'green' },
+  { id:'meditation', label:'Meditación', icon:'🪷', color:'purple' },
+  { id:'massage', label:'Masaje', icon:'💆', color:'blue' },
+  { id:'spa', label:'Spa', icon:'🌸', color:'rose' },
+  { id:'cacao', label:'Tour Cacao', icon:'🍫', color:'orange' },
+  { id:'night-tour', label:'Tour Nocturno', icon:'🦜', color:'teal' },
+  { id:'birds', label:'Bird Watching', icon:'🐦', color:'green' },
+  { id:'hike', label:'Caminata', icon:'🥾', color:'orange' },
+  { id:'waterfall', label:'Cataratas', icon:'💧', color:'teal' },
+  { id:'cooking', label:'Clase Cocina', icon:'🍃', color:'gold' },
+  { id:'sound', label:'Sound Healing', icon:'🔔', color:'purple' },
+  { id:'other', label:'Otro', icon:'✦', color:'blue' },
+];
+const DAYS_SHORT = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const MONTHS_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const TIME_SLOTS = [
+  { label:'7 am', hour:7 }, { label:'10 am', hour:10 },
+  { label:'2 pm', hour:14 }, { label:'5 pm', hour:17 },
+];
+
+function getMonday(d) {
+  const dt = new Date(d); const day = dt.getDay();
+  dt.setDate(dt.getDate() + (day === 0 ? -6 : 1 - day)); dt.setHours(0,0,0,0); return dt;
+}
+function toDayKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function getWeekDays(offset) {
+  const monday = getMonday(new Date());
+  monday.setDate(monday.getDate() + offset * 7);
+  return Array.from({length:7}, (_,i) => { const d = new Date(monday); d.setDate(d.getDate()+i); return d; });
+}
+function todayKey() { return toDayKey(new Date()); }
+
+function adminShiftWeek(dir) { if(dir===0) adminWeekOffset=0; else adminWeekOffset+=dir; renderAdminCalendar(); }
+function switchCalTab(tab) {
+  adminCalTab = tab;
+  document.getElementById('ctab-hotel').classList.toggle('active', tab==='hotel');
+  document.getElementById('ctab-finca').classList.toggle('active', tab==='finca');
+  renderAdminCalendar();
+}
+
+async function renderAdminCalendar() {
+  const days = getWeekDays(adminWeekOffset);
+  const first = days[0], last = days[6];
+  document.getElementById('admin-week-label').textContent = `${first.getDate()} de ${MONTHS_ES[first.getMonth()]} — ${last.getDate()} de ${MONTHS_ES[last.getMonth()]}, ${last.getFullYear()}`;
+  const grid = document.getElementById('admin-cal-grid');
+  grid.innerHTML = '<div class="time-cell"></div>' + DAYS_SHORT.map((d,i) => {
+    const day = days[i]; const isToday = toDayKey(day) === todayKey();
+    return `<div class="cal-header${isToday?' today':''}"><span>${d}</span><strong>${day.getDate()}</strong></div>`;
+  }).join('');
+  // Fetch activities for this week
+  const startKey = toDayKey(days[0]), endKey = toDayKey(days[6]);
+  let acts = [];
+  try {
+    const all = await dbGet('activities', `tab=eq.${adminCalTab}&order=hour.asc`);
+    acts = (all || []).filter(a => {
+      if (a.repeat_weekly) {
+        const origDow = new Date(a.day_key).getDay();
+        return days.some(d => d.getDay() === origDow);
+      }
+      return a.day_key >= startKey && a.day_key <= endKey;
+    });
+  } catch(e) {}
+  // Build display map
+  const displayMap = {};
+  acts.forEach(a => {
+    days.forEach(d => {
+      const origDow = new Date(a.day_key).getDay();
+      if (a.repeat_weekly && d.getDay() !== origDow) return;
+      if (!a.repeat_weekly && toDayKey(d) !== a.day_key) return;
+      const key = `${toDayKey(d)}_${a.hour}`;
+      if (!displayMap[key]) displayMap[key] = [];
+      displayMap[key].push(a);
     });
   });
-  return records;
-}
-
-function normalizeAbsenceRecords(records) {
-  if (!Array.isArray(records)) return [];
-
-  return records
-    .map((r, index) => {
-      const employee = r?.employee;
-      const startDate = r?.startDate;
-      const endDate = r?.endDate || startDate;
-      if (!employee || !startDate || !endDate) return null;
-
-      const normalizedStart = parseDateOnly(startDate) <= parseDateOnly(endDate) ? startDate : endDate;
-      const normalizedEnd = parseDateOnly(startDate) <= parseDateOnly(endDate) ? endDate : startDate;
-
-      return {
-        id: r.id || `${Date.now()}-${index}`,
-        employee,
-        startDate: normalizedStart,
-        endDate: normalizedEnd,
-        reason: r.reason || '',
-        createdAt: r.createdAt || `${normalizedStart}T00:00:00.000Z`,
-      };
-    })
-    .filter(Boolean);
-}
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) { activities = JSON.parse(raw); return; }
-  } catch(e) {}
-  activities = getSeedData();
-  saveData();
-}
-
-function loadAvailability() {
-  try {
-    const raw = localStorage.getItem(AVAILABILITY_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-
-      if (parsed && parsed.rules) {
-        employeeAvailability = normalizeAvailabilityShape(parsed.rules);
-        const fromPayload = normalizeAbsenceRecords(parsed.absences);
-        absenceRecords = fromPayload.length ? fromPayload : extractAbsenceRecordsFromRules(employeeAvailability);
-      } else {
-        // Backward compatibility: previous versions stored only rules.
-        employeeAvailability = normalizeAvailabilityShape(parsed);
-        absenceRecords = extractAbsenceRecordsFromRules(employeeAvailability);
-      }
-
-      absenceRecords = normalizeAbsenceRecords(absenceRecords);
-      refreshAvailabilityOffDatesFromAbsences();
-      return;
-    }
-  } catch(e) {}
-
-  employeeAvailability = cloneDefaultAvailability();
-  absenceRecords = [];
-  saveAvailability();
-}
-
-function loadAudit() {
-  try {
-    const raw = localStorage.getItem(AUDIT_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      activityAudit = Array.isArray(parsed) ? parsed : [];
-      return;
-    }
-  } catch(e) {}
-  activityAudit = [];
-  saveAudit();
-}
-
-function getCurrentUserEmail() {
-  return currentUser?.email || 'desconocido';
-}
-
-function isEditor() {
-  return Boolean(currentUser?.editor);
-}
-
-function updateAuthUI() {
-  const userPill = document.getElementById('user-pill');
-  const editorBadge = isEditor() ? 'Editor' : 'Staff';
-  userPill.textContent = `${editorBadge} · ${getCurrentUserEmail()}`;
-  document.getElementById('btn-availability').style.display = isEditor() ? 'inline-flex' : 'none';
-}
-
-function formatActivityForLog(act) {
-  const typeName = getTypeNameById(act.type || 'other');
-  return `${typeName}${act.client ? ` · ${act.client}` : ''}${act.time ? ` (${act.time})` : ''}`;
-}
-
-function logAudit(action, activity, detail = '') {
-  const record = {
-    id: Date.now() + Math.random(),
-    at: new Date().toISOString(),
-    action,
-    user: getCurrentUserEmail(),
-    detail: detail || formatActivityForLog(activity || {}),
-  };
-  activityAudit.unshift(record);
-  if (activityAudit.length > 400) activityAudit = activityAudit.slice(0, 400);
-  saveAudit();
-}
-
-function fmtAuditDate(iso) {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleString('es-CR', { hour12: false });
-  } catch (_) {
-    return iso || '';
-  }
-}
-
-function getSeedData() {
-  // Seed with typical Essence Arenal weekly schedule
-  const seeds = [];
-  let id = 1;
-  const add = (section, dow, slot, type, time, client, staff, weekly=true) => {
-    seeds.push({ id: id++, section, dow, slot, type, time, duration: 60, client, staff, by:'', notes:'', weekly });
-  };
-
-  // Hotel activities
-  add('hotel',1,'morning','yoga','07:00','Grupo Hotel','Alejandro');
-  add('hotel',3,'morning','yoga','07:00','Grupo Hotel','Aurelio');
-  add('hotel',5,'morning','yoga','07:00','Grupo Hotel','Alejandro');
-  add('hotel',1,'midday','massage','10:00','Reserva privada','Daniela');
-  add('hotel',2,'midday','massage','10:00','Reserva privada','Fabián');
-  add('hotel',4,'midday','massage','11:00','Reserva privada','Alejandro');
-  add('hotel',2,'afternoon','meditation','14:00','Grupo Retiro','Aurelio');
-  add('hotel',4,'afternoon','meditation','14:00','Grupo Retiro','Aurelio');
-  add('hotel',1,'evening','cacao','17:00','Tour Cacao','Aurelio');
-  add('hotel',3,'evening','cacao','17:00','Tour Cacao','Aurelio');
-  add('hotel',5,'evening','cacao','17:00','Tour Cacao','Aurelio');
-
-  // Finca activities
-  add('finca',1,'morning','bird','06:00','Grupo Finca','Aurelio');
-  add('finca',3,'morning','bird','06:00','Grupo Finca','Aurelio');
-  add('finca',6,'morning','bird','06:00','Tour Sábado','Aurelio');
-  add('finca',0,'morning','bird','06:00','Tour Domingo','Aurelio');
-  add('finca',2,'afternoon','kayak','14:00','Actividad Finca','Aurelio');
-  add('finca',4,'afternoon','kayak','14:00','Actividad Finca','Aurelio');
-  add('finca',1,'evening','night','18:30','Tour Nocturno','Aurelio');
-  add('finca',4,'evening','night','18:30','Tour Nocturno','Aurelio');
-  add('finca',5,'afternoon','temazcal','15:00','Temazcal Finca','Jairo');
-  add('finca',3,'afternoon','foresttherapy','14:00','Forest Therapy','Aurelio');
-
-  return seeds;
-}
-
-// ── LOGIN ───────────────────────────────────────────────
-function tryLogin() {
-  const email = document.getElementById('email-input').value.trim().toLowerCase();
-  const pin = document.getElementById('pwd-input').value.trim();
-  const looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  if (looksLikeEmail && pin === PASSWORD) {
-    currentUser = {
-      email,
-      editor: EDITOR_EMAILS.includes(email),
-    };
-
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-
-    loadData();
-    loadAvailability();
-    loadAudit();
-    updateAuthUI();
-    scheduleCalendarRender();
-  } else {
-    document.getElementById('login-error').classList.add('show');
-    document.getElementById('pwd-input').value = '';
-  }
-}
-function logout() {
-  currentUser = null;
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('app').classList.add('hidden');
-  document.getElementById('email-input').value = '';
-  document.getElementById('pwd-input').value = '';
-  document.getElementById('login-error').classList.remove('show');
-}
-
-document.getElementById('email-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') tryLogin();
-});
-document.getElementById('pwd-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') tryLogin();
-});
-
-// ── WEEK UTILS ──────────────────────────────────────────
-function getWeekStart(offset = 0) {
-  const d = new Date();
-  d.setHours(0,0,0,0);
-  const day = d.getDay(); // 0=Sun
-  d.setDate(d.getDate() - day + offset * 7);
-  return d;
-}
-
-function formatWeekLabel(start) {
-  const end = new Date(start);
-  end.setDate(end.getDate() + 6);
-  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  if (start.getMonth() === end.getMonth()) {
-    return `${start.getDate()} – ${end.getDate()} ${months[start.getMonth()]} ${start.getFullYear()}`;
-  }
-  return `${start.getDate()} ${months[start.getMonth()]} – ${end.getDate()} ${months[end.getMonth()]} ${start.getFullYear()}`;
-}
-
-function changeWeek(delta) { weekOffset += delta; scheduleCalendarRender(); }
-function goToday() { weekOffset = 0; scheduleCalendarRender(); }
-
-function openQuickAddModal() {
-  const weekStart = getWeekStart(weekOffset);
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-
-  let dayIndex = 0;
-  if (today >= weekStart && today <= weekEnd) {
-    dayIndex = today.getDay();
-  }
-
-  const date = new Date(weekStart);
-  date.setDate(date.getDate() + dayIndex);
-  const dateStr = date.toISOString().split('T')[0];
-  const defaultSlot = TIME_SLOTS[0]?.id || 'morning';
-
-  openModal(null, dayIndex, defaultSlot, dateStr);
-}
-
-// ── RENDER CALENDAR ─────────────────────────────────────
-function renderCalendar() {
-  const weekStart = getWeekStart(weekOffset);
-  document.getElementById('week-label').textContent = formatWeekLabel(weekStart);
-
-  const grid = document.getElementById('calendar-grid');
-  const fragment = document.createDocumentFragment();
-
-  const today = new Date(); today.setHours(0,0,0,0);
-  const activityMap = new Map();
-
-  activities.forEach(activity => {
-    const scopeKey = activity.weekly ? `weekly:${activity.dow}` : `date:${activity.date}`;
-    const key = `${scopeKey}|${activity.slot}`;
-    const bucket = activityMap.get(key);
-
-    if (bucket) {
-      bucket.push(activity);
-    } else {
-      activityMap.set(key, [activity]);
-    }
-  });
-
-  // Header row
-  const timeHeader = document.createElement('div');
-  timeHeader.className = 'col-header time-header';
-  fragment.appendChild(timeHeader);
-
-  for (let d = 0; d < 7; d++) {
-    const date = new Date(weekStart);
-    date.setDate(date.getDate() + d);
-    const isToday = date.getTime() === today.getTime();
-    const div = document.createElement('div');
-    div.className = 'col-header' + (isToday ? ' today-col' : '');
-    div.innerHTML = `<span class="day-name">${DAYS_SHORT[d]}</span><span class="day-num">${date.getDate()}</span>`;
-
-    fragment.appendChild(div);
-  }
-
-  // Time slot rows
   TIME_SLOTS.forEach(slot => {
-    const timeLabel = document.createElement('div');
-    timeLabel.className = 'time-label';
-    timeLabel.innerHTML = `<span>${slot.label}</span>`;
-    fragment.appendChild(timeLabel);
-
-    for (let d = 0; d < 7; d++) {
-      const date = new Date(weekStart);
-      date.setDate(date.getDate() + d);
-      const dateStr = date.toISOString().split('T')[0];
-
-      const cell = document.createElement('div');
-      cell.className = 'day-cell';
-
-      const weeklyActivities = activityMap.get(`weekly:${d}|${slot.id}`) || [];
-      const datedActivities = activityMap.get(`date:${dateStr}|${slot.id}`) || [];
-
-      weeklyActivities.forEach(act => {
-        cell.appendChild(makePill(act));
+    grid.innerHTML += `<div class="time-cell">${slot.label}</div>`;
+    days.forEach(d => {
+      const dayKey = toDayKey(d);
+      const slotActs = displayMap[`${dayKey}_${slot.hour}`] || [];
+      let html = `<div class="slot-cell">`;
+      slotActs.forEach(a => {
+        const type = ACTIVITY_TYPES.find(t => t.id === a.type_id) || ACTIVITY_TYPES[ACTIVITY_TYPES.length-1];
+        const isGuest = !!a.booking_request_id;
+        const colorClass = isGuest ? 'color-from-guest' : `color-${type.color}`;
+        const repeatIcon = a.repeat_weekly ? ' 🔁' : '';
+        const guestIcon = isGuest ? ' 👤' : '';
+        html += `<div class="activity-pill ${colorClass}" onclick="openEditActivityModal('${a.id}')">
+          <span class="pill-name">${type.icon} ${type.label}${repeatIcon}${guestIcon}</span>
+          ${a.client ? `<span class="pill-detail">${a.client}</span>` : ''}
+          ${isGuest ? `<span class="pill-guest">Guest request</span>` : ''}
+          <span class="pill-delete" onclick="event.stopPropagation();confirmDeleteActivity('${a.id}')">×</span>
+        </div>`;
       });
-
-      datedActivities.forEach(act => {
-        cell.appendChild(makePill(act));
-      });
-
-      const addBtn = document.createElement('button');
-      addBtn.className = 'add-btn';
-      addBtn.textContent = '+';
-      addBtn.title = 'Agregar actividad';
-      addBtn.dataset.dayIndex = String(d);
-      addBtn.dataset.slotId = slot.id;
-      addBtn.dataset.dateStr = dateStr;
-      cell.appendChild(addBtn);
-
-      fragment.appendChild(cell);
-    }
-  });
-
-  grid.replaceChildren(fragment);
-  renderWeeklyAbsences(weekStart);
-}
-
-function makePill(act) {
-  const type = ACTIVITY_TYPES.find(t => t.id === act.type) || ACTIVITY_TYPES[8];
-  const pill = document.createElement('div');
-  pill.className = `activity-pill color-${type.color}`;
-  pill.dataset.activityId = String(act.id);
-
-  const staffLine = [act.staff, (act.by || act.supervisor)].filter(Boolean).join(', ');
-  pill.innerHTML = `
-    <span class="pill-time">${act.time || ''}${act.weekly ? ' 🔁' : ''}<span class="pill-location ${getSectionClass(act.section)}">${getSectionLabel(act.section)}</span></span>
-    <span class="pill-name">${type.emoji} ${type.name}${act.client ? ' · ' + act.client : ''}</span>
-    ${staffLine ? `<span class="pill-staff">${staffLine}</span>` : ''}
-    <button class="pill-del" title="Eliminar" data-activity-id="${act.id}">✕</button>
-  `;
-  return pill;
-}
-
-function quickDelete(id) {
-  if (!confirm('¿Eliminar esta actividad?')) return;
-  const removed = activities.find(a => a.id === id);
-  activities = activities.filter(a => a.id !== id);
-  if (removed) logAudit('eliminar', removed);
-  saveData();
-  scheduleCalendarRender();
-}
-
-// ── MODAL ───────────────────────────────────────────────
-let selectedType = 'yoga';
-
-function buildTypeGrid() {
-  const grid = document.getElementById('type-grid');
-  grid.innerHTML = '';
-  ACTIVITY_TYPES.forEach(t => {
-    const chip = document.createElement('div');
-    chip.className = `type-chip color-${t.color}${selectedType === t.id ? ' selected' : ''}`;
-    chip.innerHTML = `${t.emoji}<br>${t.name}`;
-    chip.dataset.id = t.id;
-    chip.onclick = () => {
-      selectedType = t.id;
-      document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
-      chip.classList.add('selected');
-      updateStaffDropdowns(true);
-      refreshAssignmentWarning();
-    };
-    grid.appendChild(chip);
+      html += `<div class="add-btn-inline" onclick="openAddActivityModal('${dayKey}',${slot.hour},'${adminCalTab}')">+</div></div>`;
+      grid.innerHTML += html;
+    });
   });
 }
 
-function openModal(act, dayIndex, slotId, dateStr) {
-  editingId = act ? act.id : null;
-  pendingCell = act ? null : { dayIndex, slotId, dateStr };
-
-  document.getElementById('modal-title').textContent = act ? 'Editar actividad' : 'Nueva actividad';
-  document.getElementById('btn-delete').style.display = act ? 'block' : 'none';
-
-  selectedType = act ? act.type : 'yoga';
-  buildTypeGrid();
-  updateStaffDropdowns(false);
-
-  setTimePickerValue(act?.time || '07:00');
-  document.getElementById('f-duration').value   = act?.duration   || '60';
-  document.getElementById('f-section').value    = act?.section    || 'hotel';
-  document.getElementById('f-client').value     = act?.client     || '';
-  document.getElementById('f-staff').value      = act?.staff      || '';
-  document.getElementById('f-by').value         = act?.by || act?.supervisor || '';
-  document.getElementById('f-notes').value      = act?.notes      || '';
-  document.getElementById('f-weekly').checked   = act ? !!act.weekly : false;
-
-  refreshAssignmentWarning();
-
-  document.getElementById('modal-overlay').classList.add('open');
+// Activity modal
+async function openAddActivityModal(dayKey, hour, tab) {
+  editingActivityId = null;
+  selectedActivityType = ACTIVITY_TYPES[0].id;
+  document.getElementById('amodal-act-title').textContent = 'New Activity';
+  document.getElementById('amodal-act-sub').textContent = dayKey ? `${tab} · ${dayKey} · ${hour}:00` : '';
+  document.getElementById('af-time').value = hour || 7;
+  document.getElementById('af-duration').value = '60';
+  document.getElementById('af-tab').value = tab || adminCalTab;
+  document.getElementById('af-repeat').value = 'false';
+  document.getElementById('af-client').value = '';
+  document.getElementById('af-notes').value = '';
+  document.getElementById('af-delete-btn').style.display = 'none';
+  renderTypeGrid();
+  await populateStaffDropdowns();
+  openAModal('amodal-activity');
 }
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
+async function openEditActivityModal(id) {
+  try {
+    const data = await dbGet('activities', `id=eq.${id}`);
+    if (!data || !data[0]) return;
+    const a = data[0];
+    editingActivityId = id;
+    selectedActivityType = a.type_id;
+    document.getElementById('amodal-act-title').textContent = 'Edit Activity';
+    document.getElementById('amodal-act-sub').textContent = `${a.tab} · ${a.day_key}`;
+    document.getElementById('af-time').value = a.hour;
+    document.getElementById('af-duration').value = a.duration_minutes || 60;
+    document.getElementById('af-tab').value = a.tab;
+    document.getElementById('af-repeat').value = a.repeat_weekly ? 'true' : 'false';
+    document.getElementById('af-client').value = a.client || '';
+    document.getElementById('af-notes').value = a.notes || '';
+    document.getElementById('af-delete-btn').style.display = '';
+    renderTypeGrid();
+    await populateStaffDropdowns(a.therapist_id, a.supervisor_id);
+    openAModal('amodal-activity');
+  } catch(e) {}
 }
 
-function saveActivity() {
-  const timeValue = document.getElementById('f-time').value;
-  if (!isQuarterHourTime(timeValue)) {
-    alert('La hora debe usar intervalos de 15 minutos: 00, 15, 30 o 45.');
-    return;
-  }
+function renderTypeGrid() {
+  const grid = document.getElementById('admin-type-grid');
+  grid.innerHTML = ACTIVITY_TYPES.map(t =>
+    `<div class="type-chip${selectedActivityType===t.id?' selected':''}" onclick="selectActType('${t.id}')">
+      <span class="chip-icon">${t.icon}</span>${t.label}
+    </div>`).join('');
+}
+function selectActType(id) { selectedActivityType = id; renderTypeGrid(); }
 
-  const act = {
-    type:       selectedType,
-    time:       timeValue,
-    duration:   parseInt(document.getElementById('f-duration').value),
-    section:    document.getElementById('f-section').value,
-    client:     document.getElementById('f-client').value.trim(),
-    staff:      document.getElementById('f-staff').value,
-    by:         document.getElementById('f-by').value,
-    notes:      document.getElementById('f-notes').value.trim(),
-    weekly:     document.getElementById('f-weekly').checked,
+async function populateStaffDropdowns(therapistId, supervisorId) {
+  const opts = staffList.map(s => `<option value="${s.id}" ${s.id===therapistId?'selected':''}>${s.name} (${s.role})</option>`).join('');
+  const sOpts = staffList.map(s => `<option value="${s.id}" ${s.id===supervisorId?'selected':''}>${s.name} (${s.role})</option>`).join('');
+  document.getElementById('af-therapist').innerHTML = `<option value="">— unassigned —</option>${opts}`;
+  document.getElementById('af-supervisor').innerHTML = `<option value="">— none —</option>${sOpts}`;
+}
+
+async function saveActivity() {
+  if (!selectedActivityType) { alert('Select an activity type'); return; }
+  const body = {
+    tab: document.getElementById('af-tab').value,
+    hour: parseInt(document.getElementById('af-time').value),
+    duration_minutes: parseInt(document.getElementById('af-duration').value),
+    type_id: selectedActivityType,
+    client: document.getElementById('af-client').value,
+    notes: document.getElementById('af-notes').value,
+    repeat_weekly: document.getElementById('af-repeat').value === 'true',
+    therapist_id: document.getElementById('af-therapist').value || null,
+    supervisor_id: document.getElementById('af-supervisor').value || null,
   };
-
-  const validationDate = resolveModalDateStr();
-  const availabilityCheck = validateAssignmentAvailability(act.staff, validationDate, act.time, act.type);
-  if (!availabilityCheck.ok) {
-    const proceed = confirm(`Aviso de disponibilidad:\n\n${availabilityCheck.reason}\n\n¿Deseas guardar de todas formas?`);
-    if (!proceed) return;
+  if (!editingActivityId) {
+    body.day_key = new Date().toISOString().split('T')[0]; // fallback
   }
-
-  if (editingId !== null) {
-    const idx = activities.findIndex(a => a.id === editingId);
-    if (idx > -1) {
-      const before = { ...activities[idx] };
-      Object.assign(activities[idx], act);
-      logAudit('editar', activities[idx], `${formatActivityForLog(before)} → ${formatActivityForLog(activities[idx])}`);
+  try {
+    if (editingActivityId) {
+      await dbPatch('activities', editingActivityId, body);
+    } else {
+      await dbPost('activities', body);
     }
-  } else {
-    act.id  = Date.now();
-    act.dow = pendingCell.dayIndex;
-    act.slot = pendingCell.slotId;
-    act.date = pendingCell.dateStr;
-    activities.push(act);
-    logAudit('agregar', act);
-  }
-
-  saveData();
-  closeModal();
-  scheduleCalendarRender();
+    closeAModal('amodal-activity');
+    renderAdminCalendar();
+  } catch(e) { alert('Save failed'); }
 }
 
-function deleteActivity() {
-  if (!confirm('¿Eliminar esta actividad permanentemente?')) return;
-  const removed = activities.find(a => a.id === editingId);
-  activities = activities.filter(a => a.id !== editingId);
-  if (removed) logAudit('eliminar', removed);
-  saveData();
-  closeModal();
-  scheduleCalendarRender();
+async function confirmDeleteActivity(id) {
+  if (!confirm('Delete this activity?')) return;
+  await dbDelete('activities', id);
+  renderAdminCalendar();
+}
+async function deleteActivity() {
+  if (!editingActivityId) return;
+  if (!confirm('Delete this activity?')) return;
+  await dbDelete('activities', editingActivityId);
+  closeAModal('amodal-activity');
+  renderAdminCalendar();
 }
 
-function handleCalendarInteraction(event) {
-  const deleteButton = event.target.closest('.pill-del');
-  if (deleteButton) {
-    event.stopPropagation();
-    const activityId = Number(deleteButton.dataset.activityId);
-    window.setTimeout(() => quickDelete(activityId), 0);
-    return;
-  }
-
-  const addButton = event.target.closest('.add-btn');
-  if (addButton) {
-    event.stopPropagation();
-    const dayIndex = Number(addButton.dataset.dayIndex);
-    const slotId = addButton.dataset.slotId;
-    const dateStr = addButton.dataset.dateStr;
-    window.setTimeout(() => openModal(null, dayIndex, slotId, dateStr), 0);
-    return;
-  }
-
-  const pill = event.target.closest('.activity-pill');
-  if (pill) {
-    const activityId = Number(pill.dataset.activityId);
-    const activity = activities.find(item => item.id === activityId);
-    if (!activity) return;
-    window.setTimeout(() => openModal(activity), 0);
-  }
+// ══════════════════════════════════════════════
+//  STAFF MANAGEMENT
+// ══════════════════════════════════════════════
+async function loadStaffList() {
+  try {
+    staffList = await dbGet('staff', 'order=name.asc') || [];
+  } catch(e) { staffList = []; }
 }
 
-// ── INIT ────────────────────────────────────────────────
-// focus pwd on load
-window.addEventListener('load', () => {
-  document.getElementById('email-input').focus();
-  initTimePicker();
-  document.querySelector('.calendar-wrapper').addEventListener('click', handleCalendarInteraction);
+function renderStaffTable() {
+  const wrap = document.getElementById('staff-list');
+  if (!staffList.length) { wrap.innerHTML = '<div class="inbox-empty">No staff found.</div>'; return; }
+  const isAdmin = currentUser.role === 'administrator';
+  wrap.innerHTML = `<table class="staff-table">
+    <thead><tr>
+      <th>Name</th><th>Email</th><th>Role</th><th>Status</th>${isAdmin?'<th>Actions</th>':''}
+    </tr></thead>
+    <tbody>${staffList.map(s => `<tr>
+      <td>${s.name}</td>
+      <td style="color:var(--text-muted);">${s.email}</td>
+      <td><span class="role-pill role-${s.role}" style="font-size:10px;">${s.role}</span></td>
+      <td><span style="font-size:11px;color:${s.active?'#8fcc9f':'#d49a9a'};">${s.active?'Active':'Inactive'}</span></td>
+      ${isAdmin ? `<td>
+        <select onchange="changeRole('${s.id}',this.value)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:11px;">
+          <option ${s.role==='administrator'?'selected':''} value="administrator">Administrator</option>
+          <option ${s.role==='receptionist'?'selected':''} value="receptionist">Receptionist</option>
+          <option ${s.role==='guide'?'selected':''} value="guide">Guide</option>
+          <option ${s.role==='therapist'?'selected':''} value="therapist">Therapist</option>
+        </select>
+        <button class="abtn abtn-red" style="margin-left:6px;font-size:11px;" onclick="toggleStaffActive('${s.id}',${s.active})">${s.active?'Deactivate':'Activate'}</button>
+      </td>` : ''}
+    </tr>`).join('')}
+    </tbody>
+  </table>`;
+  document.getElementById('add-staff-btn').style.display = isAdmin ? '' : 'none';
+}
 
-  document.getElementById('f-staff').addEventListener('change', refreshAssignmentWarning);
-  document.getElementById('f-time-hour').addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
-  document.getElementById('f-time-minute').addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
-  document.getElementById('f-weekly').addEventListener('change', refreshAssignmentWarning);
-  document.getElementById('off-reason').addEventListener('input', handleOffReasonInput);
-  document.getElementById('email-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
-  document.getElementById('pwd-input').addEventListener('input', () => document.getElementById('login-error').classList.remove('show'));
-});
+async function changeRole(id, role) {
+  await dbPatch('staff', id, { role });
+  await loadStaffList();
+  renderStaffTable();
+}
+async function toggleStaffActive(id, current) {
+  await dbPatch('staff', id, { active: !current });
+  await loadStaffList();
+  renderStaffTable();
+}
+
+function openAddStaffModal() { openAModal('amodal-staff'); }
+async function saveStaff() {
+  const name = document.getElementById('ns-name').value.trim();
+  const email = document.getElementById('ns-email').value.trim();
+  const code = document.getElementById('ns-code').value.trim();
+  const role = document.getElementById('ns-role').value;
+  if (!name || !email || !code) { alert('All fields required'); return; }
+  await dbPost('staff', { name, email, access_code: code, role, active: true });
+  await loadStaffList();
+  closeAModal('amodal-staff');
+  renderStaffTable();
+  showAdminToast(`✓ ${name} added as ${role}`);
+}
+
+// ══════════════════════════════════════════════
+//  MODAL HELPERS
+// ══════════════════════════════════════════════
+function openAModal(id) { document.getElementById(id).classList.add('open'); }
+function closeAModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.amodal-overlay').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
+document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
+
+// Enter keys
+document.getElementById('guest-room').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
+document.getElementById('guest-name').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
 </script>
+
+<!-- ══════════════════════════════════════════════
+  SQL TO RUN IN SUPABASE (SQL Editor → New Query)
+  Copy and run this ONCE to set up your database.
+══════════════════════════════════════════════
+
+create table if not exists staff (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text unique not null,
+  access_code text not null,
+  role text not null check (role in ('administrator','receptionist','guide','therapist')),
+  active boolean default true,
+  created_at timestamptz default now()
+);
+
+create table if not exists booking_requests (
+  id uuid primary key default gen_random_uuid(),
+  room text not null,
+  guest_name text not null,
+  service_type text not null,
+  service_name text not null,
+  requested_date date,
+  requested_time text,
+  duration_minutes int,
+  therapist_preference text,
+  notes text,
+  price numeric,
+  status text default 'pending' check (status in ('pending','approved','declined')),
+  handled_by uuid references staff(id),
+  handled_at timestamptz,
+  cloudbeds_synced boolean default false,
+  created_at timestamptz default now()
+);
+
+create table if not exists activities (
+  id uuid primary key default gen_random_uuid(),
+  tab text not null check (tab in ('hotel','finca')),
+  day_of_week int,
+  day_key date,
+  hour int not null,
+  duration_minutes int default 60,
+  type_id text not null,
+  client text,
+  therapist_id uuid references staff(id),
+  supervisor_id uuid references staff(id),
+  notes text,
+  repeat_weekly boolean default false,
+  booking_request_id uuid references booking_requests(id),
+  created_at timestamptz default now()
+);
+
+-- First admin account (email: admin@essensearenal.com, code: 777)
+insert into staff (name, email, access_code, role) values
+  ('Admin', 'admin@essensearenal.com', '777', 'administrator')
+on conflict (email) do nothing;
+
+-- Disable RLS so the app can read/write freely (add proper RLS later)
+alter table staff disable row level security;
+alter table booking_requests disable row level security;
+alter table activities disable row level security;
+
+-->
 </body>
 </html>
