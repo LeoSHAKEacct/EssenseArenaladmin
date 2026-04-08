@@ -10,6 +10,8 @@
   --forest: #1a2e1a; --moss: #2d4a2d; --fern: #4a7c59; --sage: #7aaa86;
   --mist: #c8dbc8; --cream: #f5f0e8; --sand: #e8dcc8; --gold: #c8a96e;
   --clay: #8b6b4a; --white: #faf8f4;
+  --warm-white: #fffdf9; --parchment: #f7f2ea; --light: #eef4e8; --mid: #6b7569; --charcoal: #253025;
+  --hotel-color: #7a9e6b; --finca-color: #c37c48;
   --bg: #0f0e0c; --surface: #1a1815; --surface2: #221f1b; --surface3: #2c2822;
   --border: #3a342c; --border-light: #4a4238;
   --text: #e8ddd0; --text-muted: #8a7d6e; --text-dim: #5a5048;
@@ -368,6 +370,168 @@ button, .abtn, .nav-tab, .admin-tab, .cal-tab, .book-btn, .btn-primary, .btn-gol
   .booking-item { flex-direction: column; }
   .request-card { padding: 14px; }
 }
+
+/* Restored unified calendar */
+#screen-admin { background: var(--warm-white); color: var(--charcoal); }
+.calendar-admin-header { background: var(--warm-white); border-bottom: 1px solid rgba(26,46,26,0.08); }
+.calendar-header-right { flex-wrap: wrap; justify-content: flex-end; }
+.user-pill {
+  font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--forest); background: rgba(184,207,168,0.12);
+  border: 1px solid rgba(184,207,168,0.2); border-radius: 999px;
+  padding: 5px 9px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.week-nav {
+  background: var(--cream); border-bottom: 1px solid rgba(26,46,26,0.12);
+  display:flex; align-items:center; justify-content:space-between; padding:10px 28px;
+}
+.week-label {
+  font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400;
+  color:var(--forest); letter-spacing:.04em;
+}
+.week-btns { display:flex; gap:6px; align-items:center; }
+.calendar-legend {
+  display:flex; align-items:center; gap:10px; padding:10px 28px 0;
+  color:var(--mid); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+}
+.calendar-legend-item { display:inline-flex; align-items:center; gap:6px; }
+.calendar-legend-swatch { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.nav-btn {
+  background:#fff; border:1px solid rgba(26,46,26,0.15); border-radius:4px; width:32px; height:32px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:15px; color:var(--mid); transition:all .15s;
+}
+.nav-btn:hover { border-color:var(--sage); color:var(--forest); }
+.btn-today {
+  background:var(--forest); border:none; border-radius:4px; padding:0 14px; height:32px;
+  font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mist); cursor:pointer; transition:background .2s;
+}
+.btn-today:hover { background:var(--moss); }
+.btn-add-activity {
+  background:#E8837A; border:none; border-radius:50%; width:32px; height:32px; min-height:32px;
+  display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:18px; line-height:1; cursor:pointer; transition:background .2s;
+}
+.btn-add-activity:hover { background:#d97269; }
+.calendar-wrapper { flex:1; padding:24px 28px; overflow-x:auto; }
+.calendar-grid {
+  display:grid; grid-template-columns:80px repeat(7,1fr); min-width:760px; border:1px solid rgba(26,46,26,0.12);
+  border-radius:8px; overflow:hidden; background:#fff; box-shadow:0 2px 16px rgba(26,46,26,0.06);
+}
+.col-header {
+  background:var(--forest); color:var(--mist); padding:12px 8px; text-align:center; border-right:1px solid rgba(255,255,255,0.08);
+}
+.col-header:last-child { border-right:none; }
+.col-header.time-header { background:var(--forest); }
+.col-header .day-name {
+  font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--sage); display:block;
+}
+.col-header .day-num {
+  font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; color:var(--mist); display:block; line-height:1.1;
+}
+.col-header.today-col .day-num { color:var(--clay); }
+.time-label {
+  background:var(--parchment); border-top:1px solid rgba(26,46,26,0.12); border-right:1px solid rgba(26,46,26,0.12);
+  padding:10px 6px 10px 10px; display:flex; align-items:flex-start;
+}
+.time-label span { font-size:10px; letter-spacing:.06em; color:var(--mid); white-space:nowrap; }
+.day-cell {
+  border-top:1px solid rgba(26,46,26,0.12); border-right:1px solid rgba(26,46,26,0.12);
+  padding:6px; min-height:90px; position:relative; transition:background .15s;
+}
+.day-cell:last-child { border-right:none; }
+.day-cell:hover { background:rgba(122,158,107,0.04); }
+.add-btn {
+  position:absolute; bottom:5px; right:5px; width:22px; height:22px; min-height:22px; background:#E8837A; border:none; border-radius:50%;
+  color:#fff; font-size:14px; line-height:1; cursor:pointer; opacity:0; transition:opacity .15s, background .15s;
+  display:flex; align-items:center; justify-content:center;
+}
+.day-cell:hover .add-btn { opacity:1; }
+.add-btn:hover { background:#d97269; color:#fff; }
+.activity-pill {
+  border-radius:4px; padding:4px 7px; margin-bottom:4px; font-size:11px; cursor:pointer; position:relative;
+  transition:transform .1s, box-shadow .1s; border-left:3px solid rgba(0,0,0,0.2);
+}
+.activity-pill:hover { transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.12); }
+.activity-pill .pill-time { font-size:9px; opacity:.75; letter-spacing:.05em; display:inline-flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.activity-pill .pill-location {
+  display:inline-flex; align-items:center; gap:4px; padding:1px 5px; border-radius:999px; font-size:8px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; border:1px solid transparent;
+}
+.activity-pill .pill-location.location-hotel { background:rgba(122,158,107,0.18); border-color:rgba(122,158,107,0.35); color:var(--forest); }
+.activity-pill .pill-location.location-finca { background:rgba(195,124,72,0.18); border-color:rgba(195,124,72,0.35); color:#7c4b24; }
+.activity-pill .pill-name { font-weight:500; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.activity-pill .pill-staff { font-size:9px; opacity:.7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; }
+.pill-del {
+  position:absolute; top:3px; right:3px; width:14px; height:14px; min-height:14px; background:rgba(0,0,0,0.2); border:none; border-radius:50%;
+  color:#fff; font-size:9px; cursor:pointer; opacity:0; display:flex; align-items:center; justify-content:center; line-height:1; transition:opacity .15s;
+}
+.activity-pill:hover .pill-del { opacity:1; }
+.pill-del:hover { background:rgba(180,40,40,0.6); }
+.color-yoga { background:#e8f5e2; color:#2d5a1e; }
+.color-massage { background:#fdf0e4; color:#6b3a10; }
+.color-cacao { background:#f0e8dc; color:#5a3010; }
+.color-bird { background:#e0f0f5; color:#0d4a5a; }
+.color-night { background:#e8e8f5; color:#2a2a5a; }
+.color-meditation { background:#f0ecf8; color:#4a3060; }
+.color-kayak { background:#e0f5f5; color:#0d4a4a; }
+.color-cooking { background:#fdf5e4; color:#6b4010; }
+.color-other { background:#f0f0ee; color:#3a3a38; }
+.color-beauty { background:#fce4ef; color:#6b1040; }
+.color-temazcal { background:#fae6d4; color:#7a3010; }
+.color-soundbath { background:#eee8f8; color:#4a2870; }
+.color-foresttherapy { background:#e0f0e4; color:#1a4a20; }
+.color-welcome { background:#f5f0e8; color:#5a4830; }
+.color-detox { background:#e0f4f0; color:#0d4a3a; }
+.color-therapy { background:#e8e4f5; color:#2a1a5a; }
+.calendar-modal-overlay {
+  position:fixed; inset:0; background:rgba(26,46,26,0.55); backdrop-filter:blur(4px); z-index:250; display:flex; align-items:center; justify-content:center;
+  padding:20px; opacity:0; pointer-events:none; transition:opacity .25s;
+}
+.calendar-modal-overlay.open { opacity:1; pointer-events:all; }
+.calendar-modal {
+  background:var(--warm-white); border-radius:10px; width:100%; max-width:460px; box-shadow:0 24px 60px rgba(0,0,0,0.2); overflow:hidden; transform:translateY(16px); transition:transform .25s;
+}
+.calendar-modal-overlay.open .calendar-modal { transform:translateY(0); }
+.calendar-modal-header { background:var(--forest); padding:18px 22px; display:flex; justify-content:space-between; align-items:center; }
+.calendar-modal-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:300; color:var(--mist); letter-spacing:.04em; }
+.calendar-modal-close { background:none; border:none; color:var(--light); font-size:20px; cursor:pointer; line-height:1; }
+.calendar-modal-body { padding:22px; display:flex; flex-direction:column; gap:14px; max-height:70vh; overflow-y:auto; }
+.calendar-form-row { display:flex; gap:12px; }
+.calendar-form-group { display:flex; flex-direction:column; gap:5px; flex:1; }
+.calendar-form-label { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--mid); }
+.calendar-form-input, .calendar-form-select {
+  border:1px solid rgba(26,46,26,0.15); border-radius:4px; padding:8px 10px; font-size:13px; color:var(--charcoal); background:#fff; outline:none; transition:border-color .15s; width:100%;
+}
+.calendar-form-input:focus, .calendar-form-select:focus { border-color:var(--sage); }
+.calendar-type-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.calendar-type-chip {
+  padding:8px 6px; border-radius:5px; border:2px solid transparent; cursor:pointer; text-align:center; font-size:11px; font-weight:500; transition:all .15s; line-height:1.3;
+}
+.calendar-type-chip:hover { transform:translateY(-1px); }
+.calendar-type-chip.selected { border-color:var(--forest)!important; box-shadow:0 0 0 2px rgba(26,46,26,0.2); }
+.calendar-assignment-warning {
+  border:1px solid rgba(192,57,43,0.35); background:rgba(192,57,43,0.08); color:#7f1d1d; border-radius:6px; padding:8px 10px; font-size:12px; line-height:1.35; display:none;
+}
+.calendar-assignment-warning.show { display:block; }
+.calendar-mini-table { border:1px solid rgba(26,46,26,0.15); border-radius:6px; max-height:240px; overflow:auto; background:#fff; }
+.calendar-mini-table table { width:100%; border-collapse:collapse; font-size:12px; }
+.calendar-mini-table th, .calendar-mini-table td { padding:8px 10px; border-bottom:1px solid #eee; text-align:left; vertical-align:top; }
+.calendar-mini-table th { position:sticky; top:0; background:var(--cream); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); }
+.calendar-tiny-btn { background:#fff; border:1px solid rgba(26,46,26,0.15); border-radius:4px; padding:4px 7px; font-size:11px; cursor:pointer; }
+.calendar-tiny-btn:hover { border-color:#c0392b; color:#c0392b; }
+.calendar-modal-footer { padding:14px 22px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid rgba(26,46,26,0.12); background:var(--cream); }
+.calendar-btn-cancel { background:#fff; border:1px solid rgba(26,46,26,0.15); border-radius:4px; padding:9px 18px; font-size:13px; color:var(--mid); cursor:pointer; }
+.calendar-btn-save { background:var(--forest); border:none; border-radius:4px; padding:9px 22px; font-size:13px; color:var(--mist); cursor:pointer; font-weight:500; }
+.calendar-btn-delete { background:#c0392b; border:none; border-radius:4px; padding:9px 18px; font-size:13px; color:#fff; cursor:pointer; margin-right:auto; }
+@media (max-width: 768px) {
+  .calendar-admin-header { padding: 12px 14px; }
+  .week-nav, .calendar-legend, .calendar-wrapper { padding-left: 14px; padding-right: 14px; }
+  .calendar-header-right { gap: 8px; }
+}
+@media (max-width: 600px) {
+  .calendar-legend { padding-top: 10px; }
+  .calendar-modal-overlay { padding: 0; }
+  .calendar-modal { max-width: 100vw; min-height: 100vh; border-radius: 0; }
+  .calendar-form-row { flex-direction: column; }
+}
 </style>
 </head>
 <body>
@@ -504,9 +668,13 @@ button, .abtn, .nav-tab, .admin-tab, .cal-tab, .book-btn, .btn-primary, .btn-gol
 <div id="screen-admin" class="screen">
   <header class="app-header">
     <div class="app-logo">Essence <span>Arenal · Admin</span></div>
-    <div class="header-right">
+    <div class="header-right calendar-header-right">
       <span id="admin-role-pill" class="role-pill role-administrator"></span>
       <span id="admin-name-display" style="font-size:12px;color:var(--text-muted);"></span>
+      <span class="user-pill" id="user-pill"></span>
+      <button class="btn-ghost" id="btn-availability" onclick="openAvailabilityModal()" style="display:none">Disponibilidad</button>
+      <button class="btn-ghost" onclick="openAuditModal()">Dashboard</button>
+      <button class="btn-add-activity" onclick="openQuickAddModal()" title="Nueva actividad" aria-label="Nueva actividad">+</button>
       <button class="abtn" onclick="adminLogout()">Exit</button>
     </div>
   </header>
@@ -537,23 +705,20 @@ button, .abtn, .nav-tab, .admin-tab, .cal-tab, .book-btn, .btn-primary, .btn-gol
 
   <!-- CALENDAR -->
   <div id="asec-calendar" class="admin-section">
-    <div class="week-bar">
-      <div class="week-label" id="admin-week-label">—</div>
-      <div class="week-nav">
-        <button onclick="adminShiftWeek(-1)">‹</button>
-        <button onclick="adminShiftWeek(0)" style="font-size:11px;padding:0 8px;width:auto;">Hoy</button>
-        <button onclick="adminShiftWeek(1)">›</button>
+    <div class="week-nav">
+      <div class="week-label" id="week-label"></div>
+      <div class="week-btns">
+        <button class="nav-btn" onclick="changeWeek(-1)">‹</button>
+        <button class="btn-today" onclick="goToday()">Hoy</button>
+        <button class="nav-btn" onclick="changeWeek(1)">›</button>
       </div>
     </div>
-    <div class="cal-tabs">
-      <div class="cal-tab active" id="ctab-hotel" onclick="switchCalTab('hotel')">🏨 Hotel</div>
-      <div class="cal-tab" id="ctab-finca" onclick="switchCalTab('finca')">🌿 Finca</div>
+    <div class="calendar-legend" aria-label="Leyenda de ubicaciones">
+      <span class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:var(--hotel-color)"></span>Hotel</span>
+      <span class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:var(--finca-color)"></span>Finca</span>
     </div>
-    <div class="cal-wrap">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
-        <button class="abtn abtn-gold" onclick="openAddActivityModal(null,null,null)">＋ Add activity</button>
-      </div>
-      <div class="calendar-grid" id="admin-cal-grid"></div>
+    <div class="calendar-wrapper">
+      <div class="calendar-grid" id="calendar-grid"></div>
     </div>
   </div>
 
@@ -572,52 +737,123 @@ button, .abtn, .nav-tab, .admin-tab, .cal-tab, .book-btn, .btn-primary, .btn-gol
   </div>
 </div>
 
-<!-- ADMIN: Add/Edit Activity Modal -->
-<div class="amodal-overlay" id="amodal-activity">
-  <div class="amodal">
-    <div class="amodal-title" id="amodal-act-title">New Activity</div>
-    <div class="amodal-sub" id="amodal-act-sub">—</div>
-    <button class="amodal-close" onclick="closeAModal('amodal-activity')">×</button>
-    <div class="aform-group"><label class="aform-label">Activity type</label><div class="type-grid" id="admin-type-grid"></div></div>
-    <div class="aform-row">
-      <div class="aform-group"><label class="aform-label">Start time</label>
-        <select class="aform-control" id="af-time">
-          <option value="6">6:00 am</option><option value="7">7:00 am</option><option value="8">8:00 am</option>
-          <option value="9">9:00 am</option><option value="10">10:00 am</option><option value="11">11:00 am</option>
-          <option value="12">12:00 pm</option><option value="13">1:00 pm</option><option value="14">2:00 pm</option>
-          <option value="15">3:00 pm</option><option value="16">4:00 pm</option><option value="17">5:00 pm</option>
-          <option value="18">6:00 pm</option><option value="19">7:00 pm</option><option value="20">8:00 pm</option>
+<!-- RESTORED: Unified Calendar Activity Modal -->
+<div class="calendar-modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="calendar-modal">
+    <div class="calendar-modal-header">
+      <div class="calendar-modal-title" id="modal-title">Nueva actividad</div>
+      <button class="calendar-modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="calendar-modal-body">
+      <div class="calendar-form-group">
+        <div class="calendar-form-label">Tipo de actividad</div>
+        <div class="calendar-type-grid" id="type-grid"></div>
+      </div>
+      <div class="calendar-form-row">
+        <div class="calendar-form-group">
+          <label class="calendar-form-label">Hora inicio</label>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <select class="calendar-form-select" id="f-time-hour" style="max-width:110px;"></select>
+            <span style="color:var(--mid);">:</span>
+            <select class="calendar-form-select" id="f-time-minute" style="max-width:110px;"></select>
+          </div>
+          <input type="hidden" id="f-time" value="07:00">
+        </div>
+        <div class="calendar-form-group">
+          <label class="calendar-form-label">Duración</label>
+          <select class="calendar-form-select" id="f-duration">
+            <option value="60">1 hora</option>
+            <option value="90">1.5 horas</option>
+            <option value="120">2 horas</option>
+            <option value="180">3 horas</option>
+            <option value="240">4 horas</option>
+            <option value="30">30 min</option>
+          </select>
+        </div>
+      </div>
+      <div class="calendar-form-group">
+        <label class="calendar-form-label">Ubicación</label>
+        <select class="calendar-form-select" id="f-section">
+          <option value="hotel">Hotel</option>
+          <option value="finca">Finca</option>
         </select>
       </div>
-      <div class="aform-group"><label class="aform-label">Duration</label>
-        <select class="aform-control" id="af-duration">
-          <option value="30">30 min</option><option value="60">1 hour</option><option value="90">1.5 hours</option>
-          <option value="120">2 hours</option><option value="180">3 hours</option>
-        </select>
+      <div class="calendar-form-group">
+        <label class="calendar-form-label">Cliente / grupo</label>
+        <input class="calendar-form-input" type="text" id="f-client" placeholder="Nombre del cliente o grupo">
+      </div>
+      <div class="calendar-form-row">
+        <div class="calendar-form-group">
+          <label class="calendar-form-label">Guía / Terapeuta</label>
+          <select class="calendar-form-select" id="f-staff"><option value="">— sin asignar —</option></select>
+        </div>
+        <div class="calendar-form-group">
+          <label class="calendar-form-label">BY</label>
+          <select class="calendar-form-select" id="f-by"><option value="">— ninguno —</option></select>
+        </div>
+      </div>
+      <div class="calendar-assignment-warning" id="assignment-warning"></div>
+      <div class="calendar-form-group">
+        <label class="calendar-form-label">Notas</label>
+        <input class="calendar-form-input" type="text" id="f-notes" placeholder="Observaciones opcionales">
+      </div>
+      <div class="calendar-form-group">
+        <label class="calendar-form-label"><input type="checkbox" id="f-weekly" style="margin-right:6px;">Repetir cada semana (actividad fija)</label>
       </div>
     </div>
-    <div class="aform-row">
-      <div class="aform-group"><label class="aform-label">Location</label>
-        <select class="aform-control" id="af-tab"><option value="hotel">Hotel</option><option value="finca">Finca</option></select>
+    <div class="calendar-modal-footer">
+      <button class="calendar-btn-delete" id="btn-delete" style="display:none" onclick="deleteActivity()">Eliminar</button>
+      <button class="calendar-btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="calendar-btn-save" onclick="saveActivity()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESTORED: Availability Modal -->
+<div class="calendar-modal-overlay" id="availability-modal" onclick="handleAvailabilityOverlayClick(event)">
+  <div class="calendar-modal">
+    <div class="calendar-modal-header">
+      <div class="calendar-modal-title">Editor de disponibilidad</div>
+      <button class="calendar-modal-close" onclick="closeAvailabilityModal()">✕</button>
+    </div>
+    <div class="calendar-modal-body">
+      <div class="calendar-form-row">
+        <div class="calendar-form-group">
+          <label class="calendar-form-label">Empleado</label>
+          <select class="calendar-form-select" id="off-employee"></select>
+        </div>
+        <div class="calendar-form-group">
+          <label class="calendar-form-label">Fecha</label>
+          <input class="calendar-form-input" type="date" id="off-date">
+        </div>
       </div>
-      <div class="aform-group"><label class="aform-label">Repeat weekly</label>
-        <select class="aform-control" id="af-repeat"><option value="false">No</option><option value="true">Yes</option></select>
+      <button class="calendar-btn-save" type="button" onclick="addDayOffRule()">Agregar día libre</button>
+      <div class="calendar-form-group">
+        <label class="calendar-form-label">Días libres registrados</label>
+        <div class="calendar-mini-table" id="off-list"></div>
       </div>
     </div>
-    <div class="aform-group"><label class="aform-label">Client / Group</label><input class="aform-control" type="text" id="af-client" placeholder="Client name or group"></div>
-    <div class="aform-row">
-      <div class="aform-group"><label class="aform-label">Guide / Therapist</label>
-        <select class="aform-control" id="af-therapist"><option value="">— unassigned —</option></select>
-      </div>
-      <div class="aform-group"><label class="aform-label">Supervisor</label>
-        <select class="aform-control" id="af-supervisor"><option value="">— none —</option></select>
+    <div class="calendar-modal-footer">
+      <button class="calendar-btn-cancel" onclick="closeAvailabilityModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESTORED: Audit Modal -->
+<div class="calendar-modal-overlay" id="audit-modal" onclick="handleAuditOverlayClick(event)">
+  <div class="calendar-modal" style="max-width:780px;">
+    <div class="calendar-modal-header">
+      <div class="calendar-modal-title">Dashboard de actividad</div>
+      <button class="calendar-modal-close" onclick="closeAuditModal()">✕</button>
+    </div>
+    <div class="calendar-modal-body">
+      <div class="calendar-form-group">
+        <label class="calendar-form-label">Últimas acciones (agregar / eliminar / editar)</label>
+        <div class="calendar-mini-table" id="audit-list"></div>
       </div>
     </div>
-    <div class="aform-group"><label class="aform-label">Notes</label><input class="aform-control" type="text" id="af-notes" placeholder="Additional notes…"></div>
-    <div class="aform-actions">
-      <button class="abtn abtn-red" id="af-delete-btn" style="display:none;" onclick="deleteActivity()">Delete</button>
-      <button class="abtn" onclick="closeAModal('amodal-activity')">Cancel</button>
-      <button class="abtn abtn-gold" onclick="saveActivity()">Save</button>
+    <div class="calendar-modal-footer">
+      <button class="calendar-btn-cancel" onclick="closeAuditModal()">Cerrar</button>
     </div>
   </div>
 </div>
@@ -654,6 +890,9 @@ const SUPA_URL = 'https://xvndnvhjwlwyrvibbedt.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2bmRudmhqd2x3eXJ2aWJiZWR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5NTUsImV4cCI6MjA5MTA3NTk1NX0.tWjefeS7wfi9GTf03HlIV6o0n-VEkan-IF9OeIqkOKk';
 const ADMIN_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 const GUEST_MGMT_EMAILS = []; // admins can add emails here via the Staff panel
+const CALENDAR_STORAGE_KEY = 'essence_arenal_calendar_v1';
+const AVAILABILITY_KEY = 'essence_arenal_availability_v1';
+const AUDIT_KEY = 'essence_arenal_audit_v1';
 
 const HEADERS = {
   'apikey': SUPA_KEY,
@@ -692,6 +931,15 @@ let adminCalTab = 'hotel';
 let inboxFilter = 'all';
 let staffList = [];
 let allRequests = [];
+let weekOffset = 0;
+let activities = [];
+let activityAudit = [];
+let employeeAvailability = {};
+let editingId = null;
+let pendingCell = null;
+let renderTimer = null;
+let pendingRenderMode = 'defer';
+let selectedType = 'yoga';
 
 // ══════════════════════════════════════════════
 //  SCREEN ROUTING
@@ -895,14 +1143,12 @@ function showAdminPanel() {
   pill.className = `role-pill role-${currentUser.role}`;
   // Hide staff tab for non-admins
   document.getElementById('atab-staff').style.display = currentUser.role === 'administrator' ? '' : 'none';
-  // Hide inbox tab for staff who are not admin or guest_management
-  if (currentUser.role !== 'administrator' && currentUser.role !== 'guest_management') {
-    document.getElementById('atab-inbox').style.display = 'none';
-    switchAdminTab('calendar');
-  } else {
-    document.getElementById('atab-inbox').style.display = '';
-    switchAdminTab('inbox');
-  }
+  document.getElementById('atab-inbox').style.display = (currentUser.role === 'administrator' || currentUser.role === 'guest_management') ? '' : 'none';
+  loadData();
+  loadAvailability();
+  loadAudit();
+  updateAuthUI();
+  switchAdminTab('calendar');
   loadStaffList();
 }
 
@@ -910,6 +1156,7 @@ function adminLogout() {
   currentUser = null;
   document.getElementById('staff-email').value = '';
   document.getElementById('staff-code').value = '';
+  document.getElementById('staff-error').style.display = 'none';
   showScreen('screen-landing');
 }
 
@@ -1007,25 +1254,37 @@ async function handleRequest(id, newStatus) {
 }
 
 async function addApprovedToCalendar(req) {
-  // Map service type to activity type id
   const typeMap = {
-    'Spa & Wellness': 'spa', 'Tours': 'hike', 'Room Service': 'other',
-    'Holistic Therapy': 'meditation', 'Signature Massage': 'massage',
-    'Beauty Treatment': 'spa', 'Sound Healing': 'sound', 'Cacao Ceremony': 'cacao',
-    'Couples Massage': 'massage', 'Volcano Tour': 'hike', 'Night Tour': 'night-tour',
-    'Bird Watching': 'birds', 'Waterfall Hike': 'waterfall', 'Kayak on Lake Arenal': 'hike',
+    'Spa & Wellness': 'massage', 'Tours': 'bird', 'Room Service': 'other',
+    'Holistic Therapy': 'therapy', 'Signature Massage': 'massage',
+    'Beauty Treatment': 'beauty', 'Sound Healing': 'soundbath', 'Cacao Ceremony': 'cacao',
+    'Couples Massage': 'massage', 'Volcano Tour': 'foresttherapy', 'Night Tour': 'night',
+    'Bird Watching': 'bird', 'Waterfall Hike': 'foresttherapy', 'Kayak on Lake Arenal': 'kayak',
   };
-  const typeId = typeMap[req.service_name] || typeMap[req.service_type] || 'other';
-  const hour = req.requested_time ? parseInt(req.requested_time.split(':')[0]) : 10;
-  const tab = (req.service_type === 'Tours') ? 'finca' : 'hotel';
-  await dbPost('activities', {
-    tab, day_key: req.requested_date || new Date().toISOString().split('T')[0],
-    hour, duration_minutes: req.duration_minutes || 60,
-    type_id: typeId, client: req.guest_name,
-    notes: `Room ${req.room} · ${req.notes || ''}`.trim(),
-    repeat_weekly: false,
-    booking_request_id: req.id
-  });
+  const type = typeMap[req.service_name] || typeMap[req.service_type] || 'other';
+  const dateStr = req.requested_date || new Date().toISOString().split('T')[0];
+  const timeValue = to24HourTime(req.requested_time || '10:00 AM');
+  const hour = parseInt(timeValue.split(':')[0], 10);
+  const slot = getSlotIdForHour(hour);
+  const activity = {
+    id: Date.now() + Math.random(),
+    section: req.service_type === 'Tours' ? 'finca' : 'hotel',
+    dow: new Date(`${dateStr}T00:00:00`).getDay(),
+    slot,
+    date: dateStr,
+    type,
+    time: timeValue,
+    duration: req.duration_minutes || 60,
+    client: `${req.guest_name} · Room ${req.room}`,
+    staff: '',
+    by: '',
+    notes: req.notes || '',
+    weekly: false,
+    booking_request_id: req.id,
+  };
+  activities.push(activity);
+  saveData();
+  scheduleCalendarRender();
 }
 
 // ══════════════════════════════════════════════
@@ -1154,202 +1413,603 @@ function showAdminToast(msg) {
 }
 
 // ══════════════════════════════════════════════
-//  CALENDAR
+//  RESTORED UNIFIED CALENDAR
 // ══════════════════════════════════════════════
-const ACTIVITY_TYPES = [
-  { id:'yoga', label:'Yoga', icon:'🧘', color:'green' },
-  { id:'meditation', label:'Meditación', icon:'🪷', color:'purple' },
-  { id:'massage', label:'Masaje', icon:'💆', color:'blue' },
-  { id:'spa', label:'Spa', icon:'🌸', color:'rose' },
-  { id:'cacao', label:'Tour Cacao', icon:'🍫', color:'orange' },
-  { id:'night-tour', label:'Tour Nocturno', icon:'🦜', color:'teal' },
-  { id:'birds', label:'Bird Watching', icon:'🐦', color:'green' },
-  { id:'hike', label:'Caminata', icon:'🥾', color:'orange' },
-  { id:'waterfall', label:'Cataratas', icon:'💧', color:'teal' },
-  { id:'cooking', label:'Clase Cocina', icon:'🍃', color:'gold' },
-  { id:'sound', label:'Sound Healing', icon:'🔔', color:'purple' },
-  { id:'other', label:'Otro', icon:'✦', color:'blue' },
-];
-const DAYS_SHORT = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-const MONTHS_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const DAYS_SHORT = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const TIME_SLOTS = [
-  { label:'7 am', hour:7 }, { label:'10 am', hour:10 },
-  { label:'2 pm', hour:14 }, { label:'5 pm', hour:17 },
+  { id: 'morning', label: '7–9 am', hour: 7 },
+  { id: 'midday', label: '10–12 pm', hour: 10 },
+  { id: 'afternoon', label: '2–5 pm', hour: 14 },
+  { id: 'evening', label: '5–8 pm', hour: 17 },
 ];
+const CALENDAR_TYPES = [
+  { id: 'yoga', name: 'Yoga', color: 'yoga', emoji: '🧘' },
+  { id: 'massage', name: 'Masaje', color: 'massage', emoji: '💆' },
+  { id: 'beauty', name: 'Belleza', color: 'beauty', emoji: '🌸' },
+  { id: 'soundbath', name: 'Baño de Sonido', color: 'soundbath', emoji: '🎵' },
+  { id: 'temazcal', name: 'Temazcal', color: 'temazcal', emoji: '🔥' },
+  { id: 'foresttherapy', name: 'Forest Therapy', color: 'foresttherapy', emoji: '🌿' },
+  { id: 'meditation', name: 'Meditación', color: 'meditation', emoji: '✨' },
+  { id: 'therapy', name: 'Terapia (NLP)', color: 'therapy', emoji: '🧠' },
+  { id: 'welcome', name: 'Bienvenida', color: 'welcome', emoji: '👋' },
+  { id: 'detox', name: 'Detox Iónico', color: 'detox', emoji: '🦶' },
+  { id: 'cacao', name: 'Tour Cacao', color: 'cacao', emoji: '🍫' },
+  { id: 'bird', name: 'Bird Watching', color: 'bird', emoji: '🦜' },
+  { id: 'night', name: 'Tour Nocturno', color: 'night', emoji: '🌙' },
+  { id: 'kayak', name: 'Kayak', color: 'kayak', emoji: '🛶' },
+  { id: 'cooking', name: 'Cocina', color: 'cooking', emoji: '🍃' },
+  { id: 'other', name: 'Otro', color: 'other', emoji: '📋' },
+];
+const EMPLOYEES = {
+  'Daniela': ['massage', 'beauty'],
+  'Fabián': ['massage'],
+  'Alejandro': ['massage', 'yoga', 'soundbath', 'temazcal'],
+  'Aurelio': ['cacao', 'bird', 'night', 'kayak', 'cooking', 'foresttherapy', 'yoga', 'meditation'],
+  'Jairo': ['welcome', 'detox', 'temazcal'],
+  'Fernando': ['temazcal'],
+  'Nico': ['therapy'],
+};
+const DEFAULT_EMPLOYEE_AVAILABILITY = {
+  'Daniela': { weekly: { 1: { off: true } }, dates: {} },
+  'Fabián': { weekly: { 2: { start: '14:00' } }, dates: {} },
+  'Alejandro': { weekly: { 3: { end: '12:00' } }, dates: {} },
+  'Aurelio': { weekly: {}, dates: {} },
+  'Jairo': { weekly: { 5: { off: true } }, dates: {} },
+  'Fernando': { weekly: { 6: { start: '16:00' } }, dates: {} },
+  'Nico': { weekly: { 0: { blockedTypes: ['therapy'] } }, dates: {} },
+};
 
-function getMonday(d) {
-  const dt = new Date(d); const day = dt.getDay();
-  dt.setDate(dt.getDate() + (day === 0 ? -6 : 1 - day)); dt.setHours(0,0,0,0); return dt;
-}
-function toDayKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function getWeekDays(offset) {
-  const monday = getMonday(new Date());
-  monday.setDate(monday.getDate() + offset * 7);
-  return Array.from({length:7}, (_,i) => { const d = new Date(monday); d.setDate(d.getDate()+i); return d; });
-}
-function todayKey() { return toDayKey(new Date()); }
-
-function adminShiftWeek(dir) { if(dir===0) adminWeekOffset=0; else adminWeekOffset+=dir; renderAdminCalendar(); }
-function switchCalTab(tab) {
-  adminCalTab = tab;
-  document.getElementById('ctab-hotel').classList.toggle('active', tab==='hotel');
-  document.getElementById('ctab-finca').classList.toggle('active', tab==='finca');
-  renderAdminCalendar();
-}
-
-async function renderAdminCalendar() {
-  const days = getWeekDays(adminWeekOffset);
-  const first = days[0], last = days[6];
-  document.getElementById('admin-week-label').textContent = `${first.getDate()} de ${MONTHS_ES[first.getMonth()]} — ${last.getDate()} de ${MONTHS_ES[last.getMonth()]}, ${last.getFullYear()}`;
-  const grid = document.getElementById('admin-cal-grid');
-  grid.innerHTML = '<div class="time-cell"></div>' + DAYS_SHORT.map((d,i) => {
-    const day = days[i]; const isToday = toDayKey(day) === todayKey();
-    return `<div class="cal-header${isToday?' today':''}"><span>${d}</span><strong>${day.getDate()}</strong></div>`;
-  }).join('');
-  // Fetch activities for this week
-  const startKey = toDayKey(days[0]), endKey = toDayKey(days[6]);
-  let acts = [];
-  try {
-    const all = await dbGet('activities', `tab=eq.${adminCalTab}&order=hour.asc`);
-    acts = (all || []).filter(a => {
-      if (a.repeat_weekly) {
-        const origDow = new Date(a.day_key).getDay();
-        return days.some(d => d.getDay() === origDow);
-      }
-      return a.day_key >= startKey && a.day_key <= endKey;
-    });
-  } catch(e) {}
-  // Build display map
-  const displayMap = {};
-  acts.forEach(a => {
-    days.forEach(d => {
-      const origDow = new Date(a.day_key).getDay();
-      if (a.repeat_weekly && d.getDay() !== origDow) return;
-      if (!a.repeat_weekly && toDayKey(d) !== a.day_key) return;
-      const key = `${toDayKey(d)}_${a.hour}`;
-      if (!displayMap[key]) displayMap[key] = [];
-      displayMap[key].push(a);
-    });
-  });
-  TIME_SLOTS.forEach(slot => {
-    grid.innerHTML += `<div class="time-cell">${slot.label}</div>`;
-    days.forEach(d => {
-      const dayKey = toDayKey(d);
-      const slotActs = displayMap[`${dayKey}_${slot.hour}`] || [];
-      let html = `<div class="slot-cell">`;
-      slotActs.forEach(a => {
-        const type = ACTIVITY_TYPES.find(t => t.id === a.type_id) || ACTIVITY_TYPES[ACTIVITY_TYPES.length-1];
-        const isGuest = !!a.booking_request_id;
-        const colorClass = isGuest ? 'color-from-guest' : `color-${type.color}`;
-        const repeatIcon = a.repeat_weekly ? ' 🔁' : '';
-        const guestIcon = isGuest ? ' 👤' : '';
-        html += `<div class="activity-pill ${colorClass}" onclick="openEditActivityModal('${a.id}')">
-          <span class="pill-name">${type.icon} ${type.label}${repeatIcon}${guestIcon}</span>
-          ${a.client ? `<span class="pill-detail">${a.client}</span>` : ''}
-          ${isGuest ? `<span class="pill-guest">Guest request</span>` : ''}
-          <span class="pill-delete" onclick="event.stopPropagation();confirmDeleteActivity('${a.id}')">×</span>
-        </div>`;
-      });
-      html += `<div class="add-btn-inline" onclick="openAddActivityModal('${dayKey}',${slot.hour},'${adminCalTab}')">+</div></div>`;
-      grid.innerHTML += html;
-    });
-  });
+function getWeekStart(offset = 0) {
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  const day = d.getDay();
+  d.setDate(d.getDate() - day + offset * 7);
+  return d;
 }
 
-// Activity modal
-async function openAddActivityModal(dayKey, hour, tab) {
-  editingActivityId = null;
-  selectedActivityType = ACTIVITY_TYPES[0].id;
-  document.getElementById('amodal-act-title').textContent = 'New Activity';
-  document.getElementById('amodal-act-sub').textContent = dayKey ? `${tab} · ${dayKey} · ${hour}:00` : '';
-  document.getElementById('af-time').value = hour || 7;
-  document.getElementById('af-duration').value = '60';
-  document.getElementById('af-tab').value = tab || adminCalTab;
-  document.getElementById('af-repeat').value = 'false';
-  document.getElementById('af-client').value = '';
-  document.getElementById('af-notes').value = '';
-  document.getElementById('af-delete-btn').style.display = 'none';
-  renderTypeGrid();
-  await populateStaffDropdowns();
-  openAModal('amodal-activity');
-}
-
-async function openEditActivityModal(id) {
-  try {
-    const data = await dbGet('activities', `id=eq.${id}`);
-    if (!data || !data[0]) return;
-    const a = data[0];
-    editingActivityId = id;
-    selectedActivityType = a.type_id;
-    document.getElementById('amodal-act-title').textContent = 'Edit Activity';
-    document.getElementById('amodal-act-sub').textContent = `${a.tab} · ${a.day_key}`;
-    document.getElementById('af-time').value = a.hour;
-    document.getElementById('af-duration').value = a.duration_minutes || 60;
-    document.getElementById('af-tab').value = a.tab;
-    document.getElementById('af-repeat').value = a.repeat_weekly ? 'true' : 'false';
-    document.getElementById('af-client').value = a.client || '';
-    document.getElementById('af-notes').value = a.notes || '';
-    document.getElementById('af-delete-btn').style.display = '';
-    renderTypeGrid();
-    await populateStaffDropdowns(a.therapist_id, a.supervisor_id);
-    openAModal('amodal-activity');
-  } catch(e) {}
-}
-
-function renderTypeGrid() {
-  const grid = document.getElementById('admin-type-grid');
-  grid.innerHTML = ACTIVITY_TYPES.map(t =>
-    `<div class="type-chip${selectedActivityType===t.id?' selected':''}" onclick="selectActType('${t.id}')">
-      <span class="chip-icon">${t.icon}</span>${t.label}
-    </div>`).join('');
-}
-function selectActType(id) { selectedActivityType = id; renderTypeGrid(); }
-
-async function populateStaffDropdowns(therapistId, supervisorId) {
-  const opts = staffList.map(s => `<option value="${s.id}" ${s.id===therapistId?'selected':''}>${s.name} (${s.role})</option>`).join('');
-  const sOpts = staffList.map(s => `<option value="${s.id}" ${s.id===supervisorId?'selected':''}>${s.name} (${s.role})</option>`).join('');
-  document.getElementById('af-therapist').innerHTML = `<option value="">— unassigned —</option>${opts}`;
-  document.getElementById('af-supervisor').innerHTML = `<option value="">— none —</option>${sOpts}`;
-}
-
-async function saveActivity() {
-  if (!selectedActivityType) { alert('Select an activity type'); return; }
-  const body = {
-    tab: document.getElementById('af-tab').value,
-    hour: parseInt(document.getElementById('af-time').value),
-    duration_minutes: parseInt(document.getElementById('af-duration').value),
-    type_id: selectedActivityType,
-    client: document.getElementById('af-client').value,
-    notes: document.getElementById('af-notes').value,
-    repeat_weekly: document.getElementById('af-repeat').value === 'true',
-    therapist_id: document.getElementById('af-therapist').value || null,
-    supervisor_id: document.getElementById('af-supervisor').value || null,
-  };
-  if (!editingActivityId) {
-    body.day_key = new Date().toISOString().split('T')[0]; // fallback
+function formatWeekLabel(start) {
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  if (start.getMonth() === end.getMonth()) {
+    return `${start.getDate()} – ${end.getDate()} ${months[start.getMonth()]} ${start.getFullYear()}`;
   }
-  try {
-    if (editingActivityId) {
-      await dbPatch('activities', editingActivityId, body);
-    } else {
-      await dbPost('activities', body);
-    }
-    closeAModal('amodal-activity');
-    renderAdminCalendar();
-  } catch(e) { alert('Save failed'); }
+  return `${start.getDate()} ${months[start.getMonth()]} – ${end.getDate()} ${months[end.getMonth()]} ${start.getFullYear()}`;
 }
 
-async function confirmDeleteActivity(id) {
-  if (!confirm('Delete this activity?')) return;
-  await dbDelete('activities', id);
-  renderAdminCalendar();
+function changeWeek(delta) { weekOffset += delta; scheduleCalendarRender(); }
+function goToday() { weekOffset = 0; scheduleCalendarRender(); }
+function renderAdminCalendar() { scheduleCalendarRender(); }
+
+function getSectionLabel(section) { return section === 'finca' ? 'Finca' : 'Hotel'; }
+function getSectionClass(section) { return section === 'finca' ? 'location-finca' : 'location-hotel'; }
+function getTypeNameById(typeId) { return CALENDAR_TYPES.find(t => t.id === typeId)?.name || typeId; }
+function getCurrentUserEmail() { return currentUser?.email || 'desconocido'; }
+function isEditor() { return currentUser?.role === 'administrator' || ADMIN_EMAILS.includes(currentUser?.email || ''); }
+function updateAuthUI() {
+  const pill = document.getElementById('user-pill');
+  if (pill) pill.textContent = `${isEditor() ? 'Editor' : 'Staff'} · ${getCurrentUserEmail()}`;
+  const btn = document.getElementById('btn-availability');
+  if (btn) btn.style.display = isEditor() ? 'inline-flex' : 'none';
 }
-async function deleteActivity() {
-  if (!editingActivityId) return;
-  if (!confirm('Delete this activity?')) return;
-  await dbDelete('activities', editingActivityId);
-  closeAModal('amodal-activity');
-  renderAdminCalendar();
+
+function getSlotIdForHour(hour) {
+  if (hour >= 17) return 'evening';
+  if (hour >= 14) return 'afternoon';
+  if (hour >= 10) return 'midday';
+  return 'morning';
+}
+
+function to24HourTime(value = '10:00 AM') {
+  const normalized = String(value).trim().toUpperCase();
+  const match = normalized.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/);
+  if (!match) return '10:00';
+  let hour = parseInt(match[1], 10);
+  const minute = match[2];
+  const period = match[3];
+  if (period === 'AM' && hour === 12) hour = 0;
+  if (period === 'PM' && hour !== 12) hour += 12;
+  return `${String(hour).padStart(2, '0')}:${minute}`;
+}
+
+function saveData() { localStorage.setItem(CALENDAR_STORAGE_KEY, JSON.stringify(activities)); }
+function saveAvailability() { localStorage.setItem(AVAILABILITY_KEY, JSON.stringify(employeeAvailability)); }
+function saveAudit() { localStorage.setItem(AUDIT_KEY, JSON.stringify(activityAudit)); }
+function cloneDefaultAvailability() { return JSON.parse(JSON.stringify(DEFAULT_EMPLOYEE_AVAILABILITY)); }
+function normalizeAvailabilityShape(raw) {
+  const base = cloneDefaultAvailability();
+  Object.keys(EMPLOYEES).forEach(name => {
+    if (!base[name]) base[name] = { weekly: {}, dates: {} };
+    if (!base[name].weekly) base[name].weekly = {};
+    if (!base[name].dates) base[name].dates = {};
+  });
+  if (!raw || typeof raw !== 'object') return base;
+  Object.keys(raw).forEach(name => {
+    if (!base[name]) base[name] = { weekly: {}, dates: {} };
+    base[name].weekly = raw[name]?.weekly || {};
+    base[name].dates = raw[name]?.dates || {};
+  });
+  return base;
+}
+function loadData() {
+  try {
+    const raw = localStorage.getItem(CALENDAR_STORAGE_KEY);
+    activities = raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    activities = [];
+  }
+}
+function loadAvailability() {
+  try {
+    const raw = localStorage.getItem(AVAILABILITY_KEY);
+    employeeAvailability = raw ? normalizeAvailabilityShape(JSON.parse(raw)) : cloneDefaultAvailability();
+  } catch (e) {
+    employeeAvailability = cloneDefaultAvailability();
+  }
+}
+function loadAudit() {
+  try {
+    const raw = localStorage.getItem(AUDIT_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    activityAudit = Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    activityAudit = [];
+  }
+}
+
+function logAudit(action, activity, detail = '') {
+  const record = {
+    id: Date.now() + Math.random(),
+    at: new Date().toISOString(),
+    action,
+    user: getCurrentUserEmail(),
+    detail: detail || `${getTypeNameById(activity?.type || 'other')}${activity?.client ? ` · ${activity.client}` : ''}${activity?.time ? ` (${activity.time})` : ''}`,
+  };
+  activityAudit.unshift(record);
+  if (activityAudit.length > 400) activityAudit = activityAudit.slice(0, 400);
+  saveAudit();
+}
+
+function fmtAuditDate(iso) {
+  try { return new Date(iso).toLocaleString('es-CR', { hour12: false }); }
+  catch (_) { return iso || ''; }
+}
+
+function timeToMinutes(value) {
+  if (!/^\d{2}:\d{2}$/.test(value || '')) return null;
+  const [h, m] = value.split(':').map(Number);
+  return h * 60 + m;
+}
+function hasAnyRestriction(rule) {
+  return Boolean(rule && (rule.off || rule.start || rule.end || (rule.blockedTypes && rule.blockedTypes.length)));
+}
+function getEmployeeAvailabilityRule(employeeName, dateStr) {
+  const cfg = employeeAvailability[employeeName];
+  if (!cfg || !dateStr) return null;
+  const dayIndex = new Date(`${dateStr}T00:00:00`).getDay();
+  const weeklyRule = cfg.weekly?.[dayIndex] || {};
+  const dateRule = cfg.dates?.[dateStr] || {};
+  const blocked = [...(weeklyRule.blockedTypes || []), ...(dateRule.blockedTypes || [])];
+  const merged = {
+    off: Boolean(weeklyRule.off || dateRule.off),
+    start: dateRule.start || weeklyRule.start || '',
+    end: dateRule.end || weeklyRule.end || '',
+    blockedTypes: Array.from(new Set(blocked)),
+  };
+  if (!merged.off && !merged.start && !merged.end && !merged.blockedTypes.length) return null;
+  return merged;
+}
+
+function validateAssignmentAvailability(employeeName, dateStr, timeValue, typeId) {
+  if (!employeeName || !dateStr) return { ok: true, reason: '' };
+  const rule = getEmployeeAvailabilityRule(employeeName, dateStr);
+  if (!hasAnyRestriction(rule)) return { ok: true, reason: '' };
+  if (rule.off) return { ok: false, reason: `${employeeName} tiene día libre.` };
+  const target = timeToMinutes(timeValue);
+  if (target !== null && rule.start) {
+    const startMin = timeToMinutes(rule.start);
+    if (startMin !== null && target < startMin) return { ok: false, reason: `${employeeName} está disponible solo después de ${rule.start}.` };
+  }
+  if (target !== null && rule.end) {
+    const endMin = timeToMinutes(rule.end);
+    if (endMin !== null && target > endMin) return { ok: false, reason: `${employeeName} está disponible solo hasta ${rule.end}.` };
+  }
+  if (rule.blockedTypes?.includes(typeId)) {
+    return { ok: false, reason: `${employeeName} no está disponible para ${getTypeNameById(typeId)} ese día.` };
+  }
+  return { ok: true, reason: '' };
+}
+
+function resolveModalDateStr() {
+  if (pendingCell?.dateStr) return pendingCell.dateStr;
+  if (editingId !== null) {
+    const editing = activities.find(a => a.id === editingId);
+    if (editing?.date) return editing.date;
+    if (typeof editing?.dow === 'number') {
+      const weekStart = getWeekStart(weekOffset);
+      const d = new Date(weekStart);
+      d.setDate(d.getDate() + editing.dow);
+      return d.toISOString().split('T')[0];
+    }
+  }
+  return getWeekStart(weekOffset).toISOString().split('T')[0];
+}
+
+function refreshAssignmentWarning() {
+  const warningEl = document.getElementById('assignment-warning');
+  const staff = document.getElementById('f-staff').value;
+  if (!staff) {
+    warningEl.classList.remove('show');
+    warningEl.textContent = '';
+    return;
+  }
+  const check = validateAssignmentAvailability(staff, resolveModalDateStr(), document.getElementById('f-time').value, selectedType);
+  if (!check.ok) {
+    warningEl.textContent = `⚠ ${check.reason}`;
+    warningEl.classList.add('show');
+    return;
+  }
+  warningEl.classList.remove('show');
+  warningEl.textContent = '';
+}
+
+function updateStaffDropdowns(preserveSelection = false) {
+  const allNames = Object.keys(EMPLOYEES);
+  const qualified = selectedType === 'other' ? allNames : allNames.filter(name => EMPLOYEES[name].includes(selectedType));
+  const options = qualified.length ? qualified : allNames;
+  const staffSel = document.getElementById('f-staff');
+  const bySel = document.getElementById('f-by');
+  const prevStaff = preserveSelection ? staffSel.value : '';
+  const prevBy = preserveSelection ? bySel.value : '';
+  staffSel.innerHTML = '<option value="">— sin asignar —</option>';
+  options.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    staffSel.appendChild(opt);
+  });
+  if (prevStaff && options.includes(prevStaff)) staffSel.value = prevStaff;
+  bySel.innerHTML = '<option value="">— ninguno —</option>';
+  allNames.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    bySel.appendChild(opt);
+  });
+  if (prevBy) bySel.value = prevBy;
+}
+
+function syncTimePickerValue() {
+  const hour = document.getElementById('f-time-hour').value;
+  const minute = document.getElementById('f-time-minute').value;
+  document.getElementById('f-time').value = `${hour}:${minute}`;
+}
+function setTimePickerValue(timeValue = '07:00') {
+  const [hRaw, mRaw] = (timeValue || '07:00').split(':');
+  const hour = String(Number(hRaw || '7')).padStart(2, '0');
+  const minute = String(Number(mRaw || '0')).padStart(2, '0');
+  document.getElementById('f-time-hour').value = hour;
+  document.getElementById('f-time-minute').value = ['00', '15', '30', '45'].includes(minute) ? minute : '00';
+  syncTimePickerValue();
+}
+function initTimePicker() {
+  const hourSelect = document.getElementById('f-time-hour');
+  const minuteSelect = document.getElementById('f-time-minute');
+  if (!hourSelect || !minuteSelect) return;
+  hourSelect.innerHTML = '';
+  for (let h = 0; h < 24; h++) {
+    const hh = String(h).padStart(2, '0');
+    const option = document.createElement('option');
+    option.value = hh;
+    option.textContent = hh;
+    hourSelect.appendChild(option);
+  }
+  minuteSelect.innerHTML = '';
+  ['00', '15', '30', '45'].forEach(mm => {
+    const option = document.createElement('option');
+    option.value = mm;
+    option.textContent = mm;
+    minuteSelect.appendChild(option);
+  });
+  setTimePickerValue('07:00');
+}
+
+function scheduleCalendarRender(mode = 'defer') {
+  const nextMode = mode === 'debounce' ? 'debounce' : 'defer';
+  const nextDelay = nextMode === 'debounce' ? 120 : 16;
+  if (renderTimer && pendingRenderMode === 'debounce' && nextMode === 'defer') {
+    clearTimeout(renderTimer);
+    renderTimer = null;
+  }
+  if (renderTimer && pendingRenderMode === nextMode) clearTimeout(renderTimer);
+  pendingRenderMode = nextMode;
+  renderTimer = window.setTimeout(() => {
+    renderTimer = null;
+    pendingRenderMode = 'defer';
+    renderCalendar();
+  }, nextDelay);
+}
+
+function openQuickAddModal() {
+  const weekStart = getWeekStart(weekOffset);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  let dayIndex = 0;
+  if (today >= weekStart && today <= weekEnd) dayIndex = today.getDay();
+  const date = new Date(weekStart);
+  date.setDate(date.getDate() + dayIndex);
+  openModal(null, dayIndex, TIME_SLOTS[0]?.id || 'morning', date.toISOString().split('T')[0]);
+}
+
+async function renderCalendar() {
+  const weekStart = getWeekStart(weekOffset);
+  const weekLabel = document.getElementById('week-label');
+  const grid = document.getElementById('calendar-grid');
+  if (!weekLabel || !grid) return;
+  weekLabel.textContent = formatWeekLabel(weekStart);
+  const fragment = document.createDocumentFragment();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const activityMap = new Map();
+  activities.forEach(activity => {
+    const scopeKey = activity.weekly ? `weekly:${activity.dow}` : `date:${activity.date}`;
+    const key = `${scopeKey}|${activity.slot}`;
+    const bucket = activityMap.get(key) || [];
+    bucket.push(activity);
+    activityMap.set(key, bucket);
+  });
+  const timeHeader = document.createElement('div');
+  timeHeader.className = 'col-header time-header';
+  fragment.appendChild(timeHeader);
+  for (let d = 0; d < 7; d++) {
+    const date = new Date(weekStart);
+    date.setDate(date.getDate() + d);
+    const isToday = date.getTime() === today.getTime();
+    const div = document.createElement('div');
+    div.className = `col-header${isToday ? ' today-col' : ''}`;
+    div.innerHTML = `<span class="day-name">${DAYS_SHORT[d]}</span><span class="day-num">${date.getDate()}</span>`;
+    fragment.appendChild(div);
+  }
+  TIME_SLOTS.forEach(slot => {
+    const timeLabel = document.createElement('div');
+    timeLabel.className = 'time-label';
+    timeLabel.innerHTML = `<span>${slot.label}</span>`;
+    fragment.appendChild(timeLabel);
+    for (let d = 0; d < 7; d++) {
+      const date = new Date(weekStart);
+      date.setDate(date.getDate() + d);
+      const dateStr = date.toISOString().split('T')[0];
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+      (activityMap.get(`weekly:${d}|${slot.id}`) || []).forEach(act => cell.appendChild(makePill(act)));
+      (activityMap.get(`date:${dateStr}|${slot.id}`) || []).forEach(act => cell.appendChild(makePill(act)));
+      const addBtn = document.createElement('button');
+      addBtn.className = 'add-btn';
+      addBtn.textContent = '+';
+      addBtn.title = 'Agregar actividad';
+      addBtn.dataset.dayIndex = String(d);
+      addBtn.dataset.slotId = slot.id;
+      addBtn.dataset.dateStr = dateStr;
+      cell.appendChild(addBtn);
+      fragment.appendChild(cell);
+    }
+  });
+  grid.replaceChildren(fragment);
+}
+
+function makePill(act) {
+  const type = CALENDAR_TYPES.find(t => t.id === act.type) || CALENDAR_TYPES[CALENDAR_TYPES.length - 1];
+  const pill = document.createElement('div');
+  pill.className = `activity-pill color-${type.color}`;
+  pill.dataset.activityId = String(act.id);
+  const staffLine = [act.staff, act.by].filter(Boolean).join(', ');
+  pill.innerHTML = `
+    <span class="pill-time">${act.time || ''}${act.weekly ? ' 🔁' : ''}<span class="pill-location ${getSectionClass(act.section)}">${getSectionLabel(act.section)}</span></span>
+    <span class="pill-name">${type.emoji} ${type.name}${act.client ? ' · ' + act.client : ''}</span>
+    ${staffLine ? `<span class="pill-staff">${staffLine}</span>` : ''}
+    <button class="pill-del" title="Eliminar" data-activity-id="${act.id}">✕</button>
+  `;
+  return pill;
+}
+
+function quickDelete(id) {
+  if (!confirm('¿Eliminar esta actividad?')) return;
+  const removed = activities.find(a => a.id === id);
+  activities = activities.filter(a => a.id !== id);
+  if (removed) logAudit('eliminar', removed);
+  saveData();
+  scheduleCalendarRender();
+}
+
+function buildTypeGrid() {
+  const grid = document.getElementById('type-grid');
+  grid.innerHTML = '';
+  CALENDAR_TYPES.forEach(t => {
+    const chip = document.createElement('div');
+    chip.className = `calendar-type-chip color-${t.color}${selectedType === t.id ? ' selected' : ''}`;
+    chip.innerHTML = `${t.emoji}<br>${t.name}`;
+    chip.onclick = () => {
+      selectedType = t.id;
+      buildTypeGrid();
+      updateStaffDropdowns(true);
+      refreshAssignmentWarning();
+    };
+    grid.appendChild(chip);
+  });
+}
+
+function openModal(act, dayIndex, slotId, dateStr) {
+  editingId = act ? act.id : null;
+  pendingCell = act ? null : { dayIndex, slotId, dateStr };
+  document.getElementById('modal-title').textContent = act ? 'Editar actividad' : 'Nueva actividad';
+  document.getElementById('btn-delete').style.display = act ? 'block' : 'none';
+  selectedType = act ? act.type : 'yoga';
+  buildTypeGrid();
+  updateStaffDropdowns(false);
+  setTimePickerValue(act?.time || '07:00');
+  document.getElementById('f-duration').value = act?.duration || '60';
+  document.getElementById('f-section').value = act?.section || 'hotel';
+  document.getElementById('f-client').value = act?.client || '';
+  document.getElementById('f-staff').value = act?.staff || '';
+  document.getElementById('f-by').value = act?.by || '';
+  document.getElementById('f-notes').value = act?.notes || '';
+  document.getElementById('f-weekly').checked = act ? !!act.weekly : false;
+  refreshAssignmentWarning();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('modal-overlay')) closeModal(); }
+
+function saveActivity() {
+  const timeValue = document.getElementById('f-time').value;
+  if (!/^\d{2}:(00|15|30|45)$/.test(timeValue)) {
+    alert('La hora debe usar intervalos de 15 minutos: 00, 15, 30 o 45.');
+    return;
+  }
+  const act = {
+    type: selectedType,
+    time: timeValue,
+    duration: parseInt(document.getElementById('f-duration').value, 10),
+    section: document.getElementById('f-section').value,
+    client: document.getElementById('f-client').value.trim(),
+    staff: document.getElementById('f-staff').value,
+    by: document.getElementById('f-by').value,
+    notes: document.getElementById('f-notes').value.trim(),
+    weekly: document.getElementById('f-weekly').checked,
+  };
+  const validationDate = resolveModalDateStr();
+  const availabilityCheck = validateAssignmentAvailability(act.staff, validationDate, act.time, act.type);
+  if (!availabilityCheck.ok && !confirm(`Aviso de disponibilidad:\n\n${availabilityCheck.reason}\n\n¿Deseas guardar de todas formas?`)) return;
+  if (editingId !== null) {
+    const idx = activities.findIndex(a => a.id === editingId);
+    if (idx > -1) {
+      const before = { ...activities[idx] };
+      Object.assign(activities[idx], act);
+      logAudit('editar', activities[idx], `${getTypeNameById(before.type)} → ${getTypeNameById(activities[idx].type)}`);
+    }
+  } else {
+    act.id = Date.now();
+    act.dow = pendingCell.dayIndex;
+    act.slot = pendingCell.slotId;
+    act.date = pendingCell.dateStr;
+    act.booking_request_id = null;
+    activities.push(act);
+    logAudit('agregar', act);
+  }
+  saveData();
+  closeModal();
+  scheduleCalendarRender();
+}
+
+function deleteActivity() {
+  if (!confirm('¿Eliminar esta actividad permanentemente?')) return;
+  const removed = activities.find(a => a.id === editingId);
+  activities = activities.filter(a => a.id !== editingId);
+  if (removed) logAudit('eliminar', removed);
+  saveData();
+  closeModal();
+  scheduleCalendarRender();
+}
+
+function ensureEmployeeAvailabilityNode(name) {
+  if (!employeeAvailability[name]) employeeAvailability[name] = { weekly: {}, dates: {} };
+  if (!employeeAvailability[name].weekly) employeeAvailability[name].weekly = {};
+  if (!employeeAvailability[name].dates) employeeAvailability[name].dates = {};
+}
+function openAvailabilityModal() {
+  if (!isEditor()) {
+    alert('Solo editores pueden gestionar días libres.');
+    return;
+  }
+  const select = document.getElementById('off-employee');
+  select.innerHTML = '';
+  Object.keys(EMPLOYEES).forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+  document.getElementById('off-date').value = new Date().toISOString().split('T')[0];
+  renderOffList();
+  document.getElementById('availability-modal').classList.add('open');
+}
+function closeAvailabilityModal() { document.getElementById('availability-modal').classList.remove('open'); }
+function handleAvailabilityOverlayClick(e) { if (e.target === document.getElementById('availability-modal')) closeAvailabilityModal(); }
+function addDayOffRule() {
+  if (!isEditor()) return;
+  const employee = document.getElementById('off-employee').value;
+  const dateStr = document.getElementById('off-date').value;
+  if (!employee || !dateStr) {
+    alert('Selecciona empleado y fecha.');
+    return;
+  }
+  ensureEmployeeAvailabilityNode(employee);
+  const existing = employeeAvailability[employee].dates[dateStr] || {};
+  employeeAvailability[employee].dates[dateStr] = { ...existing, off: true };
+  saveAvailability();
+  scheduleCalendarRender();
+  renderOffList();
+}
+function removeDayOffRule(employee, dateStr) {
+  ensureEmployeeAvailabilityNode(employee);
+  const existing = employeeAvailability[employee].dates[dateStr];
+  if (!existing) return;
+  delete existing.off;
+  const hasAnything = existing.start || existing.end || (existing.blockedTypes && existing.blockedTypes.length);
+  if (!hasAnything) delete employeeAvailability[employee].dates[dateStr];
+  else employeeAvailability[employee].dates[dateStr] = existing;
+  saveAvailability();
+  scheduleCalendarRender();
+  renderOffList();
+}
+function renderOffList() {
+  const host = document.getElementById('off-list');
+  const rows = [];
+  Object.keys(employeeAvailability).forEach(name => {
+    const dateMap = employeeAvailability[name]?.dates || {};
+    Object.keys(dateMap).forEach(dateStr => {
+      if (dateMap[dateStr]?.off) rows.push({ name, dateStr });
+    });
+  });
+  rows.sort((a, b) => a.dateStr.localeCompare(b.dateStr));
+  if (!rows.length) {
+    host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin días libres registrados.</td></tr></tbody></table>';
+    return;
+  }
+  host.innerHTML = `<table><thead><tr><th>Empleado</th><th>Fecha</th><th>Acción</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r.name}</td><td>${r.dateStr}</td><td><button class="calendar-tiny-btn" onclick="removeDayOffRule('${r.name}','${r.dateStr}')">Quitar</button></td></tr>`).join('')}</tbody></table>`;
+}
+function openAuditModal() { renderAuditList(); document.getElementById('audit-modal').classList.add('open'); }
+function closeAuditModal() { document.getElementById('audit-modal').classList.remove('open'); }
+function handleAuditOverlayClick(e) { if (e.target === document.getElementById('audit-modal')) closeAuditModal(); }
+function renderAuditList() {
+  const host = document.getElementById('audit-list');
+  if (!activityAudit.length) {
+    host.innerHTML = '<table><tbody><tr><td style="padding:10px;color:#6b7569;">Sin movimientos aún.</td></tr></tbody></table>';
+    return;
+  }
+  host.innerHTML = `<table><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>${activityAudit.map(log => `<tr><td>${fmtAuditDate(log.at)}</td><td>${log.user || ''}</td><td>${log.action || ''}</td><td>${log.detail || ''}</td></tr>`).join('')}</tbody></table>`;
+}
+
+function handleCalendarInteraction(event) {
+  const deleteButton = event.target.closest('.pill-del');
+  if (deleteButton) {
+    event.stopPropagation();
+    window.setTimeout(() => quickDelete(Number(deleteButton.dataset.activityId)), 0);
+    return;
+  }
+  const addButton = event.target.closest('.add-btn');
+  if (addButton) {
+    event.stopPropagation();
+    window.setTimeout(() => openModal(null, Number(addButton.dataset.dayIndex), addButton.dataset.slotId, addButton.dataset.dateStr), 0);
+    return;
+  }
+  const pill = event.target.closest('.activity-pill');
+  if (pill) {
+    const activity = activities.find(item => item.id === Number(pill.dataset.activityId));
+    if (activity) window.setTimeout(() => openModal(activity), 0);
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -1421,6 +2081,21 @@ function openAModal(id) { document.getElementById(id).classList.add('open'); }
 function closeAModal(id) { document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.amodal-overlay').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
 document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('click', e => { if(e.target===el) el.classList.remove('open'); }));
+document.querySelectorAll('.calendar-modal-overlay').forEach(el => el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); }));
+
+window.addEventListener('load', () => {
+  initTimePicker();
+  const wrapper = document.querySelector('.calendar-wrapper');
+  if (wrapper) wrapper.addEventListener('click', handleCalendarInteraction);
+  const staffSelect = document.getElementById('f-staff');
+  const timeHour = document.getElementById('f-time-hour');
+  const timeMinute = document.getElementById('f-time-minute');
+  const weeklyToggle = document.getElementById('f-weekly');
+  if (staffSelect) staffSelect.addEventListener('change', refreshAssignmentWarning);
+  if (timeHour) timeHour.addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
+  if (timeMinute) timeMinute.addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
+  if (weeklyToggle) weeklyToggle.addEventListener('change', refreshAssignmentWarning);
+});
 
 // Enter keys
 document.getElementById('guest-room').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
