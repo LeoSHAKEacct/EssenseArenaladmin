@@ -652,6 +652,8 @@ button, .abtn, .nav-tab, .admin-tab, .cal-tab, .book-btn, .btn-primary, .btn-gol
 // ══════════════════════════════════════════════
 const SUPA_URL = 'https://xvndnvhjwlwyrvibbedt.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2bmRudmhqd2x3eXJ2aWJiZWR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5NTUsImV4cCI6MjA5MTA3NTk1NX0.tWjefeS7wfi9GTf03HlIV6o0n-VEkan-IF9OeIqkOKk';
+const ADMIN_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
+const GUEST_MGMT_EMAILS = []; // admins can add emails here via the Staff panel
 
 const HEADERS = {
   'apikey': SUPA_KEY,
@@ -862,16 +864,27 @@ function showToast(msg) {
 function showStaffLogin() { showScreen('screen-staff-login'); }
 
 function staffLogin() {
-  const email = document.getElementById('staff-email').value.trim();
+  const email = document.getElementById('staff-email').value.trim().toLowerCase();
   const code = document.getElementById('staff-code').value.trim();
   const errorEl = document.getElementById('staff-error');
 
-  if (email.includes('@') && code === '777') {
-    errorEl.style.display = 'none';
-    showScreen('screen-admin');
-  } else {
+  if (!email.includes('@') || code !== '777') {
     errorEl.style.display = 'block';
+    return;
   }
+
+  errorEl.style.display = 'none';
+
+  const isAdmin = ADMIN_EMAILS.includes(email);
+  const isGuestMgmt = isAdmin || GUEST_MGMT_EMAILS.includes(email);
+
+  currentUser = {
+    email: email,
+    name: email.split('@')[0],
+    role: isAdmin ? 'administrator' : (isGuestMgmt ? 'guest_management' : 'staff')
+  };
+
+  showAdminPanel();
 }
 
 function showAdminPanel() {
@@ -882,12 +895,14 @@ function showAdminPanel() {
   pill.className = `role-pill role-${currentUser.role}`;
   // Hide staff tab for non-admins
   document.getElementById('atab-staff').style.display = currentUser.role === 'administrator' ? '' : 'none';
-  // Guides/therapists: only show calendar
-  if (currentUser.role === 'guide' || currentUser.role === 'therapist') {
+  // Hide inbox tab for staff who are not admin or guest_management
+  if (currentUser.role !== 'administrator' && currentUser.role !== 'guest_management') {
     document.getElementById('atab-inbox').style.display = 'none';
     switchAdminTab('calendar');
+  } else {
+    document.getElementById('atab-inbox').style.display = '';
+    switchAdminTab('inbox');
   }
-  switchAdminTab('inbox');
   loadStaffList();
 }
 
