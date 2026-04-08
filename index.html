@@ -7,13 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --forest: #1a2e1a; --moss: #2d4a2d; --fern: #4a7c59; --sage: #7aaa86;
+  --forest: #2d4a2d; --moss: #4a7a3a; --fern: #4a7c59; --sage: #7aaa86;
   --mist: #c8dbc8; --cream: #f5f0e8; --sand: #e8dcc8; --gold: #c8a96e;
   --clay: #8b6b4a; --white: #faf8f4;
-  --warm-white: #fffdf9; --parchment: #f7f2ea; --light: #eef4e8; --mid: #6b7569; --charcoal: #253025;
+  --warm-white: #fffdf9; --parchment: #f5f2ec; --light: #eef4e8; --mid: #6b7569; --charcoal: #253025;
   --hotel-color: #7a9e6b; --finca-color: #c37c48;
   --bg: #0f0e0c; --surface: #1a1815; --surface2: #221f1b; --surface3: #2c2822;
-  --border: #3a342c; --border-light: #4a4238;
+  --border: #e8e4dc; --border-light: #f0ece6;
   --text: #e8ddd0; --text-muted: #8a7d6e; --text-dim: #5a5048;
   --admin-gold: #c9a96e; --admin-gold-light: #e2c48a;
   --green-bg: #1a2e22; --blue-bg: #1a2235; --orange-bg: #2e1e10;
@@ -339,7 +339,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   padding: 5px 9px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .week-nav {
-  background: var(--cream); border-bottom: 1px solid rgba(26,46,26,0.12);
+  background: #f8f5f0; border-bottom: 1px solid #e8e4dc;
   display:flex; align-items:center; justify-content:space-between; padding:10px 28px;
 }
 .week-label {
@@ -371,7 +371,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 .calendar-wrapper { flex:1; padding:24px 28px; overflow-x:auto; }
 .calendar-grid {
   display:grid; grid-template-columns:80px repeat(7,1fr); min-width:760px; border:1px solid rgba(26,46,26,0.12);
-  border-radius:8px; overflow:hidden; background:#fff; box-shadow:0 2px 16px rgba(26,46,26,0.06);
+  border-radius:8px; overflow:hidden; background:#fff; box-shadow:0 2px 16px rgba(26,46,26,0.03);
 }
 .col-header {
   background:var(--forest); color:var(--mist); padding:12px 8px; text-align:center; border-right:1px solid rgba(255,255,255,0.08);
@@ -384,9 +384,18 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 .col-header .day-num {
   font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:300; color:var(--mist); display:block; line-height:1.1;
 }
-.col-header.today-col .day-num { color:var(--clay); }
+.col-header.today-col .day-num {
+  background:#E8837A;
+  color:white;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
 .time-label {
-  background:var(--parchment); border-top:1px solid rgba(26,46,26,0.12); border-right:1px solid rgba(26,46,26,0.12);
+  background:#faf7f2; border-top:1px solid #e8e4dc; border-right:1px solid #e8e4dc;
   padding:10px 6px 10px 10px; display:flex; align-items:flex-start;
 }
 .time-label span { font-size:10px; letter-spacing:.06em; color:var(--mid); white-space:nowrap; }
