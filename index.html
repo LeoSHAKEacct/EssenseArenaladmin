@@ -517,6 +517,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div id="guest-error" class="error-msg">Room number and name required</div>
       <div class="field-group"><label>Room Number</label><input type="text" id="guest-room" placeholder="e.g. 12"></div>
       <div class="field-group"><label>Your Name</label><input type="text" id="guest-name" placeholder="First name"></div>
+      <div class="field-group"><label>Your Email</label><input type="email" id="guest-email" placeholder="your@email.com"></div>
       <button class="btn-primary" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
         <a onclick="showStaffLogin()">⚿ Staff access</a>
@@ -848,12 +849,16 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ══════════════════════════════════════════════
 //  SUPABASE CONFIG
 // ══════════════════════════════════════════════
 const SUPA_URL = 'https://xvndnvhjwlwyrvibbedt.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2bmRudmhqd2x3eXJ2aWJiZWR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5NTUsImV4cCI6MjA5MTA3NTk1NX0.tWjefeS7wfi9GTf03HlIV6o0n-VEkan-IF9OeIqkOKk';
+const SUPABASE_URL = SUPA_URL;
+const SUPABASE_ANON_KEY = SUPA_KEY;
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const ADMIN_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 const GUEST_MGMT_EMAILS = []; // admins can add emails here via the Staff panel
 const CALENDAR_STORAGE_KEY = 'essence_arenal_calendar_v1';
@@ -921,9 +926,20 @@ function showScreen(id) {
 function guestLogin() {
   const room = document.getElementById('guest-room').value.trim();
   const name = document.getElementById('guest-name').value.trim();
-  if (!room || !name) { document.getElementById('guest-error').classList.add('show'); return; }
-  document.getElementById('guest-error').classList.remove('show');
-  guestSession = { room, name };
+  const email = document.getElementById('guest-email').value.trim().toLowerCase();
+  const errorEl = document.getElementById('guest-error');
+  if (!room || !name) {
+    errorEl.textContent = 'Room number and name required';
+    errorEl.classList.add('show');
+    return;
+  }
+  if (!email.includes('@')) {
+    errorEl.textContent = 'Please enter a valid email';
+    errorEl.classList.add('show');
+    return;
+  }
+  errorEl.classList.remove('show');
+  guestSession = { room, name, email };
   document.getElementById('room-display').textContent = `Room ${room} · ${name}`;
   showScreen('screen-guest');
   renderGuestServices();
@@ -1018,6 +1034,7 @@ async function submitBooking() {
     requested_date: date || null,
     requested_time: time,
     duration_minutes: service.duration || 60,
+    therapist_preference: guestSession.email,
     notes: notes,
     price: parseFloat((service.price || '$0').replace('$','')) || null,
     status: 'pending'
@@ -1208,11 +1225,36 @@ async function handleRequest(id, newStatus) {
   // If approved → add to calendar + sync to Cloudbeds
   if (newStatus === 'approved') {
     await addApprovedToCalendar(req);
+    await sendBookingConfirmation(req);
     await syncToCloudbeds(req, id);
   }
   // Refresh
   await loadInbox();
   showAdminToast(newStatus === 'approved' ? '✓ Approved & synced to Cloudbeds' : '✗ Request declined');
+}
+
+function getRequestEmail(request) {
+  const email = (request?.guest_email || request?.therapist_preference || '').trim().toLowerCase();
+  return email.includes('@') ? email : '';
+}
+
+async function sendBookingConfirmation(request) {
+  const toEmail = getRequestEmail(request);
+  if (!toEmail || !supabase) return;
+  const { error } = await supabase.from('email_queue').insert({
+    to_email: toEmail,
+    guest_name: request.guest_name,
+    service_name: request.service_name,
+    booking_date: request.requested_date || null,
+    booking_time: request.requested_time || null,
+    duration_min: request.duration_minutes || 60,
+    created_at: new Date().toISOString(),
+  });
+  if (!error) {
+    showAdminToast(`📧 Confirmation queued for ${toEmail}`);
+  } else {
+    console.warn('[Email queue] insert failed:', error.message || error);
+  }
 }
 
 async function addApprovedToCalendar(req) {
@@ -2062,6 +2104,7 @@ window.addEventListener('load', () => {
 // Enter keys
 document.getElementById('guest-room').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
 document.getElementById('guest-name').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
+document.getElementById('guest-email').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
 </script>
 
 <!-- ══════════════════════════════════════════════
