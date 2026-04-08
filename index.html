@@ -154,8 +154,9 @@ body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--
 .btn-ghost:hover { background:rgba(122,170,134,0.08); }
 .btn-confirm { background:linear-gradient(135deg,var(--fern),var(--moss)); border:none; border-radius:2px; padding:.65rem 1.5rem; color:var(--cream); font-family:'Jost',sans-serif; font-size:.65rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
 .btn-confirm:hover { transform:translateY(-1px); }
-.toast { position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); background:#0f2e18; border:1px solid rgba(122,170,134,0.4); border-radius:3px; padding:.9rem 1.8rem; font-size:.8rem; color:var(--sage); z-index:500; display:none; animation:fadeUp .4s ease; }
+.toast { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#F5C842; border:1px solid rgba(255,255,255,0.25); border-radius:8px; padding:.95rem 1.25rem; font-size:.85rem; color:#fff; z-index:500; display:none; animation:fadeUp .4s ease; box-shadow:0 14px 35px rgba(0,0,0,0.28); }
 .toast.show { display:block; }
+.toast-check { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#2d5a2d; color:#fff; font-size:.8rem; font-weight:600; margin-right:.55rem; vertical-align:middle; }
 
 /* Bookings list */
 .booking-item { background:rgba(15,31,15,0.6); border:1px solid rgba(122,170,134,0.15); border-radius:2px; padding:1.2rem; margin-bottom:1rem; display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
@@ -839,7 +840,12 @@ async function loadMyBookings() {
 
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
+  if (msg.startsWith('✓')) {
+    t.innerHTML = `<span class="toast-check">✓</span>${msg.replace(/^✓\s*/, '')}`;
+  } else {
+    t.textContent = msg;
+  }
+  t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
