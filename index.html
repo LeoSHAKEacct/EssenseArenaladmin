@@ -517,7 +517,9 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div id="guest-error" class="error-msg">Room number and name required</div>
       <div class="field-group"><label>Room Number</label><input type="text" id="guest-room" placeholder="e.g. 12"></div>
       <div class="field-group"><label>Your Name</label><input type="text" id="guest-name" placeholder="First name"></div>
-      <div class="field-group"><label>Your Email</label><input type="email" id="guest-email" placeholder="your@email.com"></div>
+      <label class="guest-label">YOUR EMAIL</label>
+      <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com">
+      <div id="guest-email-error" style="display:none; color:#e07070; font-size:11px; font-family:'DM Mono',monospace; margin-top:-8px;">Please enter a valid email</div>
       <button class="btn-primary" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
         <a onclick="showStaffLogin()">⚿ Staff access</a>
@@ -926,19 +928,20 @@ function showScreen(id) {
 function guestLogin() {
   const room = document.getElementById('guest-room').value.trim();
   const name = document.getElementById('guest-name').value.trim();
-  const email = document.getElementById('guest-email').value.trim().toLowerCase();
+  const email = document.getElementById('guest-email').value.trim();
   const errorEl = document.getElementById('guest-error');
+  const emailErrorEl = document.getElementById('guest-email-error');
   if (!room || !name) {
     errorEl.textContent = 'Room number and name required';
     errorEl.classList.add('show');
     return;
   }
-  if (!email.includes('@')) {
-    errorEl.textContent = 'Please enter a valid email';
-    errorEl.classList.add('show');
+  errorEl.classList.remove('show');
+  if (!email.includes('@') || !email.includes('.')) {
+    emailErrorEl.style.display = 'block';
     return;
   }
-  errorEl.classList.remove('show');
+  emailErrorEl.style.display = 'none';
   guestSession = { room, name, email };
   document.getElementById('room-display').textContent = `Room ${room} · ${name}`;
   showScreen('screen-guest');
