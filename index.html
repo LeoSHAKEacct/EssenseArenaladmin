@@ -89,17 +89,17 @@ body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--
 .staff-entry a:hover { color:var(--sage); }
 
 /* ── STAFF LOGIN ── */
-#screen-staff-login { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+#screen-staff-login { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; background:var(--forest); }
 .staff-card {
-  background: rgba(10,15,10,0.92); border:1px solid rgba(201,169,110,0.2);
+  background: rgba(15,31,15,0.88); border:1px solid rgba(122,170,134,0.25);
   border-radius:3px; padding:3rem; width:100%; max-width:400px;
-  backdrop-filter:blur(20px); animation:fadeUp .6s ease both;
+  backdrop-filter:blur(20px); box-shadow: 0 40px 80px rgba(0,0,0,0.5); animation:fadeUp .6s ease both;
 }
 .staff-card .login-logo h1 { color:var(--admin-gold); }
 .staff-card .login-logo p { color:var(--text-muted); font-family:'DM Sans',sans-serif; }
-.staff-card .field-group label { color:var(--admin-gold); opacity:.7; font-family:'DM Sans',sans-serif; }
-.staff-card .field-group input { background:rgba(255,255,255,0.03); border-color:var(--border); color:var(--text); font-family:'DM Sans',sans-serif; }
-.staff-card .field-group input:focus { border-color:var(--admin-gold); box-shadow:0 0 0 3px rgba(201,169,110,0.08); }
+.staff-card .field-group label { color:var(--admin-gold); opacity:.8; font-family:'DM Sans',sans-serif; }
+.staff-card .field-group input { background:rgba(255,255,255,0.06); border-color:var(--border); color:var(--text); font-family:'DM Sans',sans-serif; }
+.staff-card .field-group input:focus { border-color:var(--admin-gold); background:rgba(255,255,255,0.06); box-shadow:0 0 0 3px rgba(201,169,110,0.08); }
 .btn-gold { background:var(--admin-gold); color:#0f0e0c; border:none; border-radius:var(--radius-sm); padding:.85rem 1rem; font-family:'DM Sans',sans-serif; font-size:.75rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; cursor:pointer; width:100%; transition:all .2s; }
 .btn-gold:hover { background:var(--admin-gold-light); }
 .back-link { display:block; text-align:center; margin-top:1.5rem; font-size:.65rem; letter-spacing:.2em; color:rgba(122,170,134,0.4); text-transform:uppercase; cursor:pointer; }
@@ -320,11 +320,11 @@ body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--
       </div>
       <div style="height:1.5rem;"></div>
       <div id="staff-error" class="error-msg">Email or access code incorrect</div>
-      <div class="field-group"><label style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--admin-gold);opacity:.7;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;display:block;">Email</label>
-        <input type="email" id="staff-email" placeholder="your@email.com" style="width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:2px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:all .3s;">
+      <div class="field-group"><label style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--admin-gold);opacity:.8;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;display:block;">Email</label>
+        <input type="email" id="staff-email" placeholder="your@email.com" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:2px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:all .3s;">
       </div>
-      <div class="field-group"><label style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--admin-gold);opacity:.7;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;display:block;">Access Code</label>
-        <input type="password" id="staff-code" placeholder="••••" style="width:100%;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:2px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:1.2rem;letter-spacing:6px;outline:none;transition:all .3s;" onkeydown="if(event.key==='Enter')staffLogin()">
+      <div class="field-group"><label style="font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--admin-gold);opacity:.8;font-family:'DM Sans',sans-serif;margin-bottom:.5rem;display:block;">Access Code</label>
+        <input type="password" id="staff-code" placeholder="••••" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:2px;padding:.85rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:1.2rem;letter-spacing:6px;outline:none;transition:all .3s;" onkeydown="if(event.key==='Enter')staffLogin()">
       </div>
       <button class="btn-gold" onclick="staffLogin()">Sign In</button>
       <span class="back-link" onclick="showScreen('screen-landing')">← Back to guest portal</span>
