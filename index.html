@@ -59,18 +59,18 @@ body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--
 .login-logo .leaf { font-size: 2rem; margin-bottom: .5rem; display: block; }
 .login-logo h1 { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; letter-spacing:.15em; color:var(--cream); }
 .login-logo p { font-size:.65rem; letter-spacing:.35em; color:var(--sage); text-transform:uppercase; margin-top:.3rem; }
-.field-group { margin-bottom: 1.2rem; }
-.field-group label { display:block; font-size:.6rem; letter-spacing:.35em; text-transform:uppercase; color:var(--sage); margin-bottom:.5rem; }
-.field-group input, .field-group select, .field-group textarea {
+.field-group, .guest-field { margin-bottom: 1.2rem; }
+.field-group label, .guest-label { display:block; font-size:.6rem; letter-spacing:.35em; text-transform:uppercase; color:var(--sage); margin-bottom:.5rem; }
+.field-group input, .field-group select, .field-group textarea, .guest-input {
   width:100%; background:rgba(255,255,255,0.04); border:1px solid rgba(122,170,134,0.2);
   border-radius:2px; padding:.85rem 1rem; color:var(--cream);
   font-family:'Jost',sans-serif; font-size:.95rem; font-weight:300; letter-spacing:.05em;
   transition:all .3s; outline:none;
 }
-.field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+.field-group input:focus, .field-group select:focus, .field-group textarea:focus, .guest-input:focus {
   border-color:var(--sage); background:rgba(122,170,134,0.06); box-shadow:0 0 0 3px rgba(122,170,134,0.08);
 }
-.field-group input::placeholder, .field-group textarea::placeholder { color:rgba(200,219,200,0.3); }
+.field-group input::placeholder, .field-group textarea::placeholder, .guest-input::placeholder { color:rgba(200,219,200,0.3); }
 .field-group select option { background:#1a2e1a; color:var(--cream); }
 .btn-primary {
   width:100%; background:linear-gradient(135deg,var(--fern) 0%,var(--moss) 100%);
@@ -515,11 +515,13 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       </div>
       <p style="text-align:center;font-size:.8rem;color:rgba(200,219,200,0.5);margin-bottom:1.5rem;font-weight:300;">Guest Portal · Please enter your details</p>
       <div id="guest-error" class="error-msg">Room number and name required</div>
-      <div class="field-group"><label>Room Number</label><input type="text" id="guest-room" placeholder="e.g. 12"></div>
-      <div class="field-group"><label>Your Name</label><input type="text" id="guest-name" placeholder="First name"></div>
-      <label class="guest-label">YOUR EMAIL</label>
-      <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com">
-      <div id="guest-email-error" style="display:none; color:#e07070; font-size:11px; font-family:'DM Mono',monospace; margin-top:-8px;">Please enter a valid email</div>
+      <div class="guest-field"><label class="guest-label">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
+      <div class="guest-field"><label class="guest-label">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
+      <div class="guest-field">
+        <label class="guest-label">YOUR EMAIL</label>
+        <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com">
+      </div>
+      <div id="guest-email-error" style="display:none; color:#e07070; font-size:11px; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:12px;">Please enter a valid email</div>
       <button class="btn-primary" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
         <a onclick="showStaffLogin()">⚿ Staff access</a>
