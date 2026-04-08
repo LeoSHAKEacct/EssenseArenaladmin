@@ -911,13 +911,16 @@ function switchAdminTab(tab) {
 // ══════════════════════════════════════════════
 async function loadInbox() {
   const list = document.getElementById('inbox-list');
+  if (!list) return;
   list.innerHTML = '<div class="inbox-empty"><span class="spinner"></span> Loading…</div>';
   try {
-    allRequests = await dbGet('booking_requests', 'order=created_at.desc');
+    const data = await dbGet('booking_requests', 'order=created_at.desc');
+    allRequests = Array.isArray(data) ? data : [];
     renderInbox();
     const pendingCount = allRequests.filter(r => r.status === 'pending').length;
     document.getElementById('pending-dot').style.display = pendingCount > 0 ? 'inline-block' : 'none';
   } catch(e) {
+    allRequests = [];
     list.innerHTML = '<div class="inbox-empty">Could not load requests.</div>';
   }
 }
@@ -932,9 +935,10 @@ function filterInbox(f) {
 
 function renderInbox() {
   const list = document.getElementById('inbox-list');
+  if (!list) return;
   const filtered = inboxFilter === 'all' ? allRequests : allRequests.filter(r => r.status === inboxFilter);
   if (!filtered.length) {
-    list.innerHTML = `<div class="inbox-empty">No ${inboxFilter === 'all' ? '' : inboxFilter} requests.</div>`;
+    list.innerHTML = `<div class="inbox-empty">${inboxFilter === 'all' ? 'No requests yet' : `No ${inboxFilter} requests.`}</div>`;
     return;
   }
   list.innerHTML = filtered.map(r => {
