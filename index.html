@@ -356,7 +356,7 @@ body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--
   </div>
 
   <!-- ROOM SERVICE -->
-  <div id="guest-room" class="portal-section">
+  <div id="guest-room-section" class="portal-section">
     <div class="section-header">
       <h2>Room <em>Service</em></h2>
       <p>Organic, fresh, delivered to your door · Powered by our Bio Farm</p>
@@ -629,7 +629,8 @@ function guestLogout() {
 function showGuestTab(tab) {
   document.querySelectorAll('.portal-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  const sec = document.getElementById(`guest-${tab}`);
+  const sectionId = tab === 'room' ? 'guest-room-section' : `guest-${tab}`;
+  const sec = document.getElementById(sectionId);
   if (sec) sec.classList.add('active');
   event.target.classList.add('active');
   if (tab === 'bookings') loadMyBookings();
