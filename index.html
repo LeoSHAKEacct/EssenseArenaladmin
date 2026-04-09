@@ -700,8 +700,6 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   <header class="app-header">
     <div class="app-logo">Essence <span>Arenal · Admin</span></div>
     <div class="header-right calendar-header-right">
-      <span id="admin-role-pill" class="role-pill role-administrator"></span>
-      <span id="admin-name-display" style="font-size:12px;color:var(--text-muted);"></span>
       <span class="user-pill" id="user-pill"></span>
       <button class="btn-ghost" id="btn-availability" onclick="openAvailabilityModal()" style="display:none">Disponibilidad</button>
       <button class="btn-ghost" onclick="openAuditModal()">Dashboard</button>
@@ -1463,10 +1461,6 @@ function stopRequestNotifications() {
 
 function showAdminPanel() {
   showScreen('screen-admin');
-  document.getElementById('admin-name-display').textContent = currentUser.name;
-  const pill = document.getElementById('admin-role-pill');
-  pill.textContent = currentUser.role;
-  pill.className = `role-pill role-${currentUser.role}`;
   // Hide staff tab for non-admins
   document.getElementById('atab-staff').style.display = currentUser.role === 'administrator' ? '' : 'none';
   document.getElementById('atab-inbox').style.display = (currentUser.role === 'administrator' || currentUser.role === 'guest_management') ? '' : 'none';
