@@ -672,10 +672,24 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   <!-- ROOM SERVICE -->
   <div id="guest-room-section" class="portal-section">
     <div class="section-header">
-      <h2 id="room-header-title">Room <em>Service</em></h2>
-      <p id="room-header-sub">Organic, fresh, delivered to your door · Powered by our Bio Farm</p>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+        <div>
+          <h2 id="room-header-title">Products <em>Shop</em></h2>
+          <p id="room-header-sub">Natural products from Essence Arenal · Delivered to your room</p>
+        </div>
+        <div style="border:1px solid rgba(122,170,134,0.25);padding:.4rem .75rem;border-radius:999px;color:var(--sage);font-size:.68rem;letter-spacing:.12em;white-space:nowrap;">
+          🛒 <span id="product-cart-count">0</span>
+        </div>
+      </div>
     </div>
-    <div class="cards-grid" id="room-cards"></div>
+    <div class="cards-grid" id="product-cards"></div>
+    <div id="product-cart-panel" style="margin-top:14px;display:none;background:rgba(15,31,15,0.55);border:1px solid rgba(122,170,134,0.2);border-radius:6px;padding:14px;">
+      <div id="product-cart-items" style="font-size:.82rem;color:rgba(200,219,200,0.75);margin-bottom:10px;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <div id="product-cart-total" style="font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--gold);"></div>
+        <button class="btn-confirm" id="product-request-btn" onclick="requestProductDelivery()">Request Delivery</button>
+      </div>
+    </div>
   </div>
 
   <!-- TOURS -->
@@ -1203,46 +1217,49 @@ let guestLang = localStorage.getItem(GUEST_LANG_KEY) || 'en';
 
 const GUEST_I18N = {
   en: {
-    exit: '← Exit', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Room Service', toursTab: '🌋 Tours', bookingsTab: '📋 My Bookings',
+    exit: '← Exit', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Products', toursTab: '🌋 Tours', bookingsTab: '📋 My Bookings',
     requestBooking: 'Request Booking', preferredDate: 'Preferred Date', preferredTime: 'Preferred Time', specialRequests: 'Special requests / notes',
     confirmRequest: 'Confirm Request', cancel: 'Cancel', selectTherapist: 'Select your therapist', noPreference: 'No preference',
+    addToRoom: 'ADD TO ROOM', requestDelivery: 'Request Delivery', cartEmpty: 'No products added yet.',
     roomNumber: 'ROOM NUMBER', yourName: 'YOUR NAME', yourEmail: 'YOUR EMAIL', enterWelcome: 'Enter · Bienvenido', staffAccess: '⚿ Staff access',
     guestSubtitle: 'Guest Portal · Please enter your details',
     roomPlaceholder: 'e.g. 12', namePlaceholder: 'First name', emailPlaceholder: 'your@email.com',
     notesPlaceholder: 'Allergies, preferences, anything we should know…',
     roomDisplay: 'Room',
     spaHeaderTitle: 'Spa & <em>Wellness</em>', spaHeaderSub: 'Nestled in the rainforest · Choose your experience',
-    roomHeaderTitle: 'Room <em>Service</em>', roomHeaderSub: 'Organic, fresh, delivered to your door · Powered by our Bio Farm',
+    roomHeaderTitle: 'Products <em>Shop</em>', roomHeaderSub: 'Natural products from Essence Arenal · Delivered to your room',
     toursHeaderTitle: 'Experiences & <em>Tours</em>', toursHeaderSub: 'Explore the magic of Arenal · Book your adventure',
     bookingsHeaderTitle: 'My <em>Bookings</em>', bookingsHeaderSub: 'All your requests · We\'ll confirm shortly',
     invalidEmail: 'Please enter a valid email', requiredNameRoom: 'Room number and name required'
   },
   es: {
-    exit: '← SALIR', spaTab: '🌺 Spa & Masajes', roomTab: '🍃 Servicio al Cuarto', toursTab: '🌋 Tours', bookingsTab: '📋 Mis Reservas',
+    exit: '← SALIR', spaTab: '🌺 Spa & Masajes', roomTab: '🍃 Productos', toursTab: '🌋 Tours', bookingsTab: '📋 Mis Reservas',
     requestBooking: 'Reservar', preferredDate: 'Fecha Preferida', preferredTime: 'Hora Preferida', specialRequests: 'Notas especiales',
     confirmRequest: 'Confirmar', cancel: 'Cancelar', selectTherapist: 'Elige tu terapeuta', noPreference: 'Sin preferencia',
+    addToRoom: 'AGREGAR', requestDelivery: 'Solicitar entrega', cartEmpty: 'Aún no hay productos agregados.',
     roomNumber: 'NÚMERO DE CUARTO', yourName: 'TU NOMBRE', yourEmail: 'TU EMAIL', enterWelcome: 'ENTRAR · BIENVENIDO', staffAccess: '⚿ ACCESO STAFF',
     guestSubtitle: 'Portal de huéspedes · Ingresa tus datos',
     roomPlaceholder: 'ej. 12', namePlaceholder: 'Nombre', emailPlaceholder: 'tu@email.com',
     notesPlaceholder: 'Alergias, preferencias, cualquier detalle…',
     roomDisplay: 'Cuarto',
     spaHeaderTitle: 'Spa & <em>Bienestar</em>', spaHeaderSub: 'En el corazón del bosque lluvioso · Elige tu experiencia',
-    roomHeaderTitle: 'Servicio al <em>Cuarto</em>', roomHeaderSub: 'Orgánico y fresco, entregado a tu puerta · De nuestra Bio Farm',
+    roomHeaderTitle: 'Tienda de <em>Productos</em>', roomHeaderSub: 'Productos naturales de Essence Arenal · Entrega a tu cuarto',
     toursHeaderTitle: 'Experiencias & <em>Tours</em>', toursHeaderSub: 'Explora la magia de Arenal · Reserva tu aventura',
     bookingsHeaderTitle: 'Mis <em>Reservas</em>', bookingsHeaderSub: 'Todas tus solicitudes · Te confirmaremos pronto',
     invalidEmail: 'Por favor ingresa un email válido', requiredNameRoom: 'Se requiere número de cuarto y nombre'
   },
   fr: {
-    exit: '← SORTIR', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Service en Chambre', toursTab: '🌋 Excursions', bookingsTab: '📋 Mes Réservations',
+    exit: '← SORTIR', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Produits', toursTab: '🌋 Excursions', bookingsTab: '📋 Mes Réservations',
     requestBooking: 'Réserver', preferredDate: 'Date Préférée', preferredTime: 'Heure Préférée', specialRequests: 'Notes spéciales',
     confirmRequest: 'Confirmer', cancel: 'Annuler', selectTherapist: 'Choisissez votre thérapeute', noPreference: 'Sans préférence',
+    addToRoom: 'AJOUTER', requestDelivery: 'Demander livraison', cartEmpty: 'Aucun produit ajouté pour le moment.',
     roomNumber: 'NUMÉRO DE CHAMBRE', yourName: 'VOTRE NOM', yourEmail: 'VOTRE EMAIL', enterWelcome: 'ENTRER · BIENVENUE', staffAccess: '⚿ ACCÈS STAFF',
     guestSubtitle: 'Portail invité · Veuillez saisir vos informations',
     roomPlaceholder: 'ex. 12', namePlaceholder: 'Prénom', emailPlaceholder: 'votre@email.com',
     notesPlaceholder: 'Allergies, préférences, tout détail utile…',
     roomDisplay: 'Chambre',
     spaHeaderTitle: 'Spa & <em>Bien-être</em>', spaHeaderSub: 'Au cœur de la forêt tropicale · Choisissez votre expérience',
-    roomHeaderTitle: 'Service en <em>Chambre</em>', roomHeaderSub: 'Bio, frais, livré à votre porte · Depuis notre ferme bio',
+    roomHeaderTitle: 'Boutique <em>Produits</em>', roomHeaderSub: 'Produits naturels Essence Arenal · Livrés en chambre',
     toursHeaderTitle: 'Expériences & <em>Excursions</em>', toursHeaderSub: 'Découvrez la magie d\'Arenal · Réservez votre aventure',
     bookingsHeaderTitle: 'Mes <em>Réservations</em>', bookingsHeaderSub: 'Toutes vos demandes · Nous confirmerons bientôt',
     invalidEmail: 'Veuillez saisir un email valide', requiredNameRoom: 'Numéro de chambre et nom requis'
@@ -1446,16 +1463,23 @@ const TOUR_SERVICES = [
   { id:'waterfall-hike', name:'Waterfall Hike', sub:'El Salto', desc:'Trek through cloud forest to hidden waterfall. Swimming included.', price:'$70', icon:'💧', duration:180 },
   { id:'kayak-lake', name:'Kayak on Lake Arenal', sub:'Paddle adventure', desc:'Kayak on one of Costa Rica\'s most beautiful lakes.', price:'$60', icon:'🚣', duration:120 },
 ];
-const ROOM_SERVICES = [
-  { id:'breakfast-room', name:'Farm Breakfast', sub:'Delivered to your room', desc:'Fresh eggs, local fruits, handmade bread, organic coffee.', price:'$28', icon:'🍳', duration:0 },
-  { id:'picnic-basket', name:'Picnic Basket', sub:'Bio Farm selection', desc:'Artisan cheeses, cured meats, seasonal fruits, local wine.', price:'$45', icon:'🧺', duration:0 },
-  { id:'smoothie-bowl', name:'Smoothie Bowl', sub:'Superfood blend', desc:'Acai, pitahaya, granola, honey from our own hives.', price:'$18', icon:'🫐', duration:0 },
+const PRODUCT_ITEMS = [
+  { id:'product-cacao-kit', name:'Cacao Ceremony Kit', sub:'CEREMONIAL GRADE', desc:'Pure ceremonial cacao from our farm, ethically harvested and stone-ground.', price:28, icon:'🍫' },
+  { id:'product-mud-mask', name:'Volcanic Mud Mask', sub:'SKIN RITUAL', desc:'Rich in minerals from Costa Rica\'s volcanic soil. Deeply purifying.', price:22, icon:'🌋' },
+  { id:'product-essential-oil', name:'Rainforest Essential Oil Blend', sub:'AROMATHERAPY', desc:'Hand-blended from native plants. Calming, grounding, restorative.', price:35, icon:'🌿' },
+  { id:'product-sleep-tea', name:'Herbal Sleep Tea', sub:'NIGHT RITUAL', desc:'Organic herbs from our bio farm. Valerian, lemongrass, passionflower.', price:14, icon:'🍵' },
+  { id:'product-sunscreen', name:'Natural Sunscreen SPF 50', sub:'REEF SAFE', desc:'Zinc-based, biodegradable. Safe for the rainforest and your skin.', price:18, icon:'☀️' },
+  { id:'product-soap-set', name:'Handmade Soap Set (3)', sub:'ARTISAN COLLECTION', desc:'Cold-pressed with local botanicals. Cacao, coconut and citrus.', price:24, icon:'🧼' },
+  { id:'product-bird-guide', name:'Bird Watching Field Guide', sub:'ARENAL WILDLIFE', desc:'Illustrated guide to 120+ species found around Essence Arenal.', price:16, icon:'🦜' },
+  { id:'product-yoga-mat', name:'Bamboo Yoga Mat', sub:'ECO FRIENDLY', desc:'Natural rubber base, bamboo fiber surface. Light and packable.', price:65, icon:'🧘' },
 ];
+let productCart = [];
 
 function renderGuestServices() {
   renderCards('spa-cards', SPA_SERVICES, tr('spaTab').replace('🌺 ', ''));
   renderCards('tour-cards', TOUR_SERVICES, tr('toursTab').replace('🌋 ', ''));
-  renderCards('room-cards', ROOM_SERVICES, tr('roomTab').replace('🍃 ', ''));
+  renderProductCards();
+  renderProductCart();
 }
 function renderCards(containerId, services, category) {
   const c = document.getElementById(containerId);
@@ -1471,6 +1495,76 @@ function renderCards(containerId, services, category) {
         <button class="book-btn">${tr('requestBooking')}</button>
       </div>
     </div>`).join('');
+}
+
+function renderProductCards() {
+  const c = document.getElementById('product-cards');
+  if (!c) return;
+  c.innerHTML = PRODUCT_ITEMS.map(p => `
+    <div class="service-card">
+      <div class="card-visual">${p.icon}</div>
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-sub">${p.sub}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-price">$${p.price}</div>
+        <button class="book-btn" onclick="event.stopPropagation(); addProductToCart('${p.id}')">${tr('addToRoom')}</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addProductToCart(productId) {
+  const product = PRODUCT_ITEMS.find(p => p.id === productId);
+  if (!product) return;
+  const existing = productCart.find(p => p.id === productId);
+  if (existing) existing.qty += 1;
+  else productCart.push({ ...product, qty: 1 });
+  renderProductCart();
+}
+
+function renderProductCart() {
+  const countEl = document.getElementById('product-cart-count');
+  const panel = document.getElementById('product-cart-panel');
+  const itemsEl = document.getElementById('product-cart-items');
+  const totalEl = document.getElementById('product-cart-total');
+  const requestBtn = document.getElementById('product-request-btn');
+  if (!countEl || !panel || !itemsEl || !totalEl) return;
+  const count = productCart.reduce((sum, i) => sum + i.qty, 0);
+  countEl.textContent = String(count);
+  if (requestBtn) requestBtn.textContent = tr('requestDelivery');
+  if (!count) {
+    panel.style.display = 'none';
+    itemsEl.textContent = tr('cartEmpty');
+    totalEl.textContent = '$0';
+    return;
+  }
+  panel.style.display = 'block';
+  itemsEl.innerHTML = productCart.map(i => `<div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span>${i.name} ×${i.qty}</span><span>$${(i.price * i.qty).toFixed(2)}</span></div>`).join('');
+  const total = productCart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+  totalEl.textContent = `Total: $${total.toFixed(2)}`;
+}
+
+async function requestProductDelivery() {
+  if (!guestSession || !productCart.length) return;
+  const total = productCart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+  const payload = {
+    type: 'product_order',
+    room: guestSession.room,
+    guest_name: guestSession.name,
+    guest_email: guestSession.email,
+    items: productCart.map(i => ({ id: i.id, name: i.name, qty: i.qty, price: i.price })),
+    total_price: total,
+    status: 'pending'
+  };
+  try {
+    await dbPost('guest_requests', payload);
+    showToast('✓ Product delivery requested!');
+    productCart = [];
+    renderProductCart();
+  } catch (e) {
+    showToast('Could not send product order. Please try again.');
+  }
 }
 
 // Booking modal
