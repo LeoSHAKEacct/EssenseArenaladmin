@@ -90,6 +90,31 @@ body { font-family: 'Jost', sans-serif; background: #FAF6EE; color: var(--cream)
 .staff-entry a { font-size:.6rem; letter-spacing:.25em; color:rgba(122,170,134,0.4); text-transform:uppercase; text-decoration:none; cursor:pointer; transition:color .3s; }
 .staff-entry a:hover { color:var(--sage); }
 
+/* Guest language switcher */
+.lang-switcher {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 350;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(15,31,15,0.85);
+  border: 1px solid rgba(122,170,134,0.25);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.lang-switcher button {
+  background: none;
+  border: none;
+  color: rgba(200,219,200,0.75);
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.lang-switcher button.active { color: var(--cream); font-weight: 600; }
+
 /* ── STAFF LOGIN ── */
 #screen-staff-login { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; background:var(--forest); }
 .staff-card {
@@ -564,6 +589,14 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 <div class="bg-layer"></div>
 <div class="content">
 
+<div class="lang-switcher" id="guest-lang-switcher" aria-label="Language switcher">
+  <button type="button" onclick="setGuestLanguage('en')" id="lang-en">EN</button>
+  <span style="color:rgba(200,219,200,0.45);">|</span>
+  <button type="button" onclick="setGuestLanguage('es')" id="lang-es">ES</button>
+  <span style="color:rgba(200,219,200,0.45);">|</span>
+  <button type="button" onclick="setGuestLanguage('fr')" id="lang-fr">FR</button>
+</div>
+
 <!-- ══ SCREEN: GUEST LANDING ══ -->
 <div id="screen-landing" class="screen active">
   <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
@@ -573,18 +606,18 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         <h1>Essence Arenal</h1>
         <p>Hotel · Spa · Bio Farm</p>
       </div>
-      <p style="text-align:center;font-size:.8rem;color:rgba(200,219,200,0.5);margin-bottom:1.5rem;font-weight:300;">Guest Portal · Please enter your details</p>
+      <p id="guest-landing-subtitle" style="text-align:center;font-size:.8rem;color:rgba(200,219,200,0.5);margin-bottom:1.5rem;font-weight:300;">Guest Portal · Please enter your details</p>
       <div id="guest-error" class="error-msg">Room number and name required</div>
-      <div class="guest-field"><label class="guest-label">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
-      <div class="guest-field"><label class="guest-label">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
+      <div class="guest-field"><label class="guest-label" id="label-room">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
+      <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
       <div class="guest-field">
-        <label class="guest-label">YOUR EMAIL</label>
+        <label class="guest-label" id="label-email">YOUR EMAIL</label>
         <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com">
       </div>
       <div id="guest-email-error" style="display:none; color:#e07070; font-size:11px; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:12px;">Please enter a valid email</div>
-      <button class="btn-primary" onclick="guestLogin()">Enter · Bienvenido</button>
+      <button class="btn-primary" id="guest-enter-btn" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
-        <a onclick="showStaffLogin()">⚿ Staff access</a>
+        <a id="guest-staff-access" onclick="showStaffLogin()">⚿ Staff access</a>
       </div>
     </div>
   </div>
@@ -616,22 +649,22 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 <!-- ══ SCREEN: GUEST PORTAL ══ -->
 <div id="screen-guest" class="screen">
   <header class="portal-header">
-    <button class="logout-btn" onclick="guestLogout()">← Exit</button>
+    <button class="logout-btn" id="guest-exit-btn" onclick="guestLogout()">← Exit</button>
     <div class="room-badge"><div class="dot"></div><span id="room-display">Room —</span></div>
     <div class="portal-header-brand">Essence <span>Arenal</span></div>
   </header>
   <nav class="portal-nav">
-    <button class="nav-tab active" onclick="showGuestTab('spa')">🌺 Spa &amp; Massage</button>
-    <button class="nav-tab" onclick="showGuestTab('room')">🍃 Room Service</button>
-    <button class="nav-tab" onclick="showGuestTab('tours')">🌋 Tours</button>
-    <button class="nav-tab" onclick="showGuestTab('bookings')">📋 My Bookings</button>
+    <button class="nav-tab active" id="tab-spa" onclick="showGuestTab('spa')">🌺 Spa &amp; Massage</button>
+    <button class="nav-tab" id="tab-room" onclick="showGuestTab('room')">🍃 Room Service</button>
+    <button class="nav-tab" id="tab-tours" onclick="showGuestTab('tours')">🌋 Tours</button>
+    <button class="nav-tab" id="tab-bookings" onclick="showGuestTab('bookings')">📋 My Bookings</button>
   </nav>
 
   <!-- SPA -->
   <div id="guest-spa" class="portal-section active">
     <div class="section-header">
-      <h2>Spa &amp; <em>Wellness</em></h2>
-      <p>Nestled in the rainforest · Choose your experience</p>
+      <h2 id="spa-header-title">Spa &amp; <em>Wellness</em></h2>
+      <p id="spa-header-sub">Nestled in the rainforest · Choose your experience</p>
     </div>
     <div class="cards-grid" id="spa-cards"></div>
   </div>
@@ -639,8 +672,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   <!-- ROOM SERVICE -->
   <div id="guest-room-section" class="portal-section">
     <div class="section-header">
-      <h2>Room <em>Service</em></h2>
-      <p>Organic, fresh, delivered to your door · Powered by our Bio Farm</p>
+      <h2 id="room-header-title">Room <em>Service</em></h2>
+      <p id="room-header-sub">Organic, fresh, delivered to your door · Powered by our Bio Farm</p>
     </div>
     <div class="cards-grid" id="room-cards"></div>
   </div>
@@ -648,8 +681,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   <!-- TOURS -->
   <div id="guest-tours" class="portal-section">
     <div class="section-header">
-      <h2>Experiences &amp; <em>Tours</em></h2>
-      <p>Explore the magic of Arenal · Book your adventure</p>
+      <h2 id="tours-header-title">Experiences &amp; <em>Tours</em></h2>
+      <p id="tours-header-sub">Explore the magic of Arenal · Book your adventure</p>
     </div>
     <div class="cards-grid" id="tour-cards"></div>
   </div>
@@ -657,8 +690,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   <!-- MY BOOKINGS -->
   <div id="guest-bookings" class="portal-section">
     <div class="section-header">
-      <h2>My <em>Bookings</em></h2>
-      <p>All your requests · We'll confirm shortly</p>
+      <h2 id="bookings-header-title">My <em>Bookings</em></h2>
+      <p id="bookings-header-sub">All your requests · We'll confirm shortly</p>
     </div>
     <div id="my-bookings-list"><div style="text-align:center;padding:60px 20px;color:rgba(200,219,200,0.3);font-size:.9rem;">No bookings yet — explore the menu above ✦</div></div>
   </div>
@@ -670,8 +703,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
     <button class="modal-close" onclick="closeBookingModal()">×</button>
     <div class="modal-title" id="bm-title">Book Session</div>
     <div class="modal-sub" id="bm-sub">Spa &amp; Wellness</div>
-    <div class="field-group"><label>Preferred Date</label><input type="date" id="bm-date"></div>
-    <div class="field-group"><label>Preferred Time</label>
+    <div class="field-group"><label id="bm-label-date">Preferred Date</label><input type="date" id="bm-date"></div>
+    <div class="field-group"><label id="bm-label-time">Preferred Time</label>
       <div class="time-input-row">
         <input type="number" id="bm-time-hour" min="1" max="12" step="1" value="10" placeholder="10">
         <select id="bm-time-minute">
@@ -693,10 +726,10 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         <option value="Fabián">Fabián</option>
       </select>
     </div>
-    <div class="field-group"><label>Special requests / notes</label><textarea id="bm-notes" rows="3" placeholder="Allergies, preferences, anything we should know…"></textarea></div>
+    <div class="field-group"><label id="bm-label-notes">Special requests / notes</label><textarea id="bm-notes" rows="3" placeholder="Allergies, preferences, anything we should know…"></textarea></div>
     <div class="modal-actions">
-      <button class="btn-ghost" onclick="closeBookingModal()">Cancel</button>
-      <button class="btn-confirm" onclick="submitBooking()">Confirm Request</button>
+      <button class="btn-ghost" id="bm-cancel-btn" onclick="closeBookingModal()">Cancel</button>
+      <button class="btn-confirm" id="bm-confirm-btn" onclick="submitBooking()">Confirm Request</button>
     </div>
   </div>
 </div>
@@ -1120,6 +1153,7 @@ const AUDIT_KEY = 'essence_arenal_audit_v1';
 const STAFF_SESSION_KEY = 'essense_staff_session';
 const REQUEST_NOTIFICATION_TS_KEY = 'essense_last_request_check';
 const REQUEST_POLL_MS = 60000;
+const GUEST_LANG_KEY = 'essense_guest_lang';
 
 const HEADERS = {
   'apikey': SUPA_KEY,
@@ -1165,6 +1199,183 @@ let pendingRenderMode = 'defer';
 let selectedType = 'yoga';
 let requestWatchTimer = null;
 let lastRequestCheckAt = null;
+let guestLang = localStorage.getItem(GUEST_LANG_KEY) || 'en';
+
+const GUEST_I18N = {
+  en: {
+    exit: '← Exit', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Room Service', toursTab: '🌋 Tours', bookingsTab: '📋 My Bookings',
+    requestBooking: 'Request Booking', preferredDate: 'Preferred Date', preferredTime: 'Preferred Time', specialRequests: 'Special requests / notes',
+    confirmRequest: 'Confirm Request', cancel: 'Cancel', selectTherapist: 'Select your therapist', noPreference: 'No preference',
+    roomNumber: 'ROOM NUMBER', yourName: 'YOUR NAME', yourEmail: 'YOUR EMAIL', enterWelcome: 'Enter · Bienvenido', staffAccess: '⚿ Staff access',
+    guestSubtitle: 'Guest Portal · Please enter your details',
+    roomPlaceholder: 'e.g. 12', namePlaceholder: 'First name', emailPlaceholder: 'your@email.com',
+    notesPlaceholder: 'Allergies, preferences, anything we should know…',
+    roomDisplay: 'Room',
+    spaHeaderTitle: 'Spa & <em>Wellness</em>', spaHeaderSub: 'Nestled in the rainforest · Choose your experience',
+    roomHeaderTitle: 'Room <em>Service</em>', roomHeaderSub: 'Organic, fresh, delivered to your door · Powered by our Bio Farm',
+    toursHeaderTitle: 'Experiences & <em>Tours</em>', toursHeaderSub: 'Explore the magic of Arenal · Book your adventure',
+    bookingsHeaderTitle: 'My <em>Bookings</em>', bookingsHeaderSub: 'All your requests · We\'ll confirm shortly',
+    invalidEmail: 'Please enter a valid email', requiredNameRoom: 'Room number and name required'
+  },
+  es: {
+    exit: '← SALIR', spaTab: '🌺 Spa & Masajes', roomTab: '🍃 Servicio al Cuarto', toursTab: '🌋 Tours', bookingsTab: '📋 Mis Reservas',
+    requestBooking: 'Reservar', preferredDate: 'Fecha Preferida', preferredTime: 'Hora Preferida', specialRequests: 'Notas especiales',
+    confirmRequest: 'Confirmar', cancel: 'Cancelar', selectTherapist: 'Elige tu terapeuta', noPreference: 'Sin preferencia',
+    roomNumber: 'NÚMERO DE CUARTO', yourName: 'TU NOMBRE', yourEmail: 'TU EMAIL', enterWelcome: 'ENTRAR · BIENVENIDO', staffAccess: '⚿ ACCESO STAFF',
+    guestSubtitle: 'Portal de huéspedes · Ingresa tus datos',
+    roomPlaceholder: 'ej. 12', namePlaceholder: 'Nombre', emailPlaceholder: 'tu@email.com',
+    notesPlaceholder: 'Alergias, preferencias, cualquier detalle…',
+    roomDisplay: 'Cuarto',
+    spaHeaderTitle: 'Spa & <em>Bienestar</em>', spaHeaderSub: 'En el corazón del bosque lluvioso · Elige tu experiencia',
+    roomHeaderTitle: 'Servicio al <em>Cuarto</em>', roomHeaderSub: 'Orgánico y fresco, entregado a tu puerta · De nuestra Bio Farm',
+    toursHeaderTitle: 'Experiencias & <em>Tours</em>', toursHeaderSub: 'Explora la magia de Arenal · Reserva tu aventura',
+    bookingsHeaderTitle: 'Mis <em>Reservas</em>', bookingsHeaderSub: 'Todas tus solicitudes · Te confirmaremos pronto',
+    invalidEmail: 'Por favor ingresa un email válido', requiredNameRoom: 'Se requiere número de cuarto y nombre'
+  },
+  fr: {
+    exit: '← SORTIR', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Service en Chambre', toursTab: '🌋 Excursions', bookingsTab: '📋 Mes Réservations',
+    requestBooking: 'Réserver', preferredDate: 'Date Préférée', preferredTime: 'Heure Préférée', specialRequests: 'Notes spéciales',
+    confirmRequest: 'Confirmer', cancel: 'Annuler', selectTherapist: 'Choisissez votre thérapeute', noPreference: 'Sans préférence',
+    roomNumber: 'NUMÉRO DE CHAMBRE', yourName: 'VOTRE NOM', yourEmail: 'VOTRE EMAIL', enterWelcome: 'ENTRER · BIENVENUE', staffAccess: '⚿ ACCÈS STAFF',
+    guestSubtitle: 'Portail invité · Veuillez saisir vos informations',
+    roomPlaceholder: 'ex. 12', namePlaceholder: 'Prénom', emailPlaceholder: 'votre@email.com',
+    notesPlaceholder: 'Allergies, préférences, tout détail utile…',
+    roomDisplay: 'Chambre',
+    spaHeaderTitle: 'Spa & <em>Bien-être</em>', spaHeaderSub: 'Au cœur de la forêt tropicale · Choisissez votre expérience',
+    roomHeaderTitle: 'Service en <em>Chambre</em>', roomHeaderSub: 'Bio, frais, livré à votre porte · Depuis notre ferme bio',
+    toursHeaderTitle: 'Expériences & <em>Excursions</em>', toursHeaderSub: 'Découvrez la magie d\'Arenal · Réservez votre aventure',
+    bookingsHeaderTitle: 'Mes <em>Réservations</em>', bookingsHeaderSub: 'Toutes vos demandes · Nous confirmerons bientôt',
+    invalidEmail: 'Veuillez saisir un email valide', requiredNameRoom: 'Numéro de chambre et nom requis'
+  }
+};
+
+const SERVICE_I18N = {
+  es: {
+    'holistic-therapy': { name: 'Terapia Holística', sub: 'Sabiduría ancestral', desc: 'Restaura tu equilibrio interior con nuestro ritual del bosque lluvioso.' },
+    'signature-massage': { name: 'Masaje Signature', sub: 'Restauración profunda', desc: 'Trabajo corporal restaurador adaptado a las necesidades de tu cuerpo.' },
+    'beauty-treatment': { name: 'Tratamiento de Belleza', sub: 'Faciales y cuerpo', desc: 'Barro volcánico, cacao y botánicos naturales.' },
+    'sound-healing': { name: 'Sanación Sonora', sub: 'Cuencos tibetanos', desc: 'Terapia vibracional para un reinicio profundo del sistema nervioso.' },
+    'cacao-ceremony': { name: 'Ceremonia de Cacao', sub: 'Ritual sagrado', desc: 'Ceremonia de apertura del corazón con cacao ceremonial de nuestra finca.' },
+    'couples-massage': { name: 'Masaje en Pareja', sub: 'Para dos', desc: 'Experiencia de masaje lado a lado en nuestra suite en la jungla.' },
+    'volcano-tour': { name: 'Tour al Volcán', sub: 'Arenal activo', desc: 'Caminata guiada alrededor del volcán Arenal con guía naturalista.' },
+    'night-tour': { name: 'Tour Nocturno', sub: 'Fauna nocturna', desc: 'Observa perezosos, ranas y criaturas nocturnas exóticas.' },
+    'bird-watching': { name: 'Avistamiento de Aves', sub: 'Expedición al amanecer', desc: 'Más de 500 especies en la zona. Salida al amanecer recomendada.' },
+    'waterfall-hike': { name: 'Caminata a la Cascada', sub: 'El Salto', desc: 'Caminata por bosque nuboso hacia una cascada escondida. Incluye baño.' },
+    'kayak-lake': { name: 'Kayak en Lago Arenal', sub: 'Aventura en remo', desc: 'Navega en kayak por uno de los lagos más hermosos de Costa Rica.' },
+    'breakfast-room': { name: 'Desayuno de Finca', sub: 'Entrega en tu cuarto', desc: 'Huevos frescos, frutas locales, pan artesanal y café orgánico.' },
+    'picnic-basket': { name: 'Canasta Picnic', sub: 'Selección Bio Farm', desc: 'Quesos artesanales, embutidos, frutas de temporada y vino local.' },
+    'smoothie-bowl': { name: 'Smoothie Bowl', sub: 'Mezcla superfood', desc: 'Açaí, pitahaya, granola y miel de nuestras colmenas.' }
+  },
+  fr: {
+    'holistic-therapy': { name: 'Thérapie Holistique', sub: 'Sagesse ancestrale', desc: 'Retrouvez votre équilibre intérieur avec notre rituel signature.' },
+    'signature-massage': { name: 'Massage Signature', sub: 'Restauration profonde', desc: 'Massage profondément restaurateur adapté à vos besoins.' },
+    'beauty-treatment': { name: 'Soin Beauté', sub: 'Visage & corps', desc: 'Boue volcanique, cacao et botaniques naturels.' },
+    'sound-healing': { name: 'Soin Sonore', sub: 'Bols tibétains', desc: 'Thérapie vibratoire pour apaiser profondément le système nerveux.' },
+    'cacao-ceremony': { name: 'Cérémonie du Cacao', sub: 'Rituel sacré', desc: 'Cérémonie d\'ouverture du cœur avec cacao de notre ferme.' },
+    'couples-massage': { name: 'Massage en Couple', sub: 'Pour deux', desc: 'Massage côte à côte dans notre suite jungle.' },
+    'volcano-tour': { name: 'Tour du Volcan', sub: 'Arenal actif', desc: 'Randonnée guidée autour du volcan Arenal avec guide naturaliste.' },
+    'night-tour': { name: 'Tour Nocturne', sub: 'Faune nocturne', desc: 'Observez paresseux, grenouilles et créatures nocturnes exotiques.' },
+    'bird-watching': { name: 'Observation des Oiseaux', sub: 'Expédition à l\'aube', desc: 'Plus de 500 espèces dans la région. Départ tôt recommandé.' },
+    'waterfall-hike': { name: 'Randonnée Cascade', sub: 'El Salto', desc: 'Trek en forêt nuageuse vers une cascade cachée. Baignade incluse.' },
+    'kayak-lake': { name: 'Kayak au Lac Arenal', sub: 'Aventure pagaie', desc: 'Parcourez en kayak l\'un des plus beaux lacs du Costa Rica.' },
+    'breakfast-room': { name: 'Petit-déjeuner Ferme', sub: 'Livré en chambre', desc: 'Œufs frais, fruits locaux, pain artisanal et café bio.' },
+    'picnic-basket': { name: 'Panier Pique-nique', sub: 'Sélection Bio Farm', desc: 'Fromages artisanaux, charcuterie, fruits de saison et vin local.' },
+    'smoothie-bowl': { name: 'Smoothie Bowl', sub: 'Mélange superfood', desc: 'Açaï, pitaya, granola et miel de nos ruches.' }
+  }
+};
+
+function tr(key) {
+  return GUEST_I18N[guestLang]?.[key] || GUEST_I18N.en[key] || key;
+}
+
+function localizeService(service) {
+  const localized = SERVICE_I18N[guestLang]?.[service.id] || {};
+  return {
+    ...service,
+    name: localized.name || service.name,
+    sub: localized.sub || service.sub,
+    desc: localized.desc || service.desc
+  };
+}
+
+function updateLanguageSwitcherVisibility() {
+  const sw = document.getElementById('guest-lang-switcher');
+  if (!sw) return;
+  const visible = ['screen-landing', 'screen-guest'].some(id => document.getElementById(id)?.classList.contains('active'));
+  sw.style.display = visible ? 'inline-flex' : 'none';
+}
+
+function applyGuestLanguage() {
+  document.getElementById('lang-en')?.classList.toggle('active', guestLang === 'en');
+  document.getElementById('lang-es')?.classList.toggle('active', guestLang === 'es');
+  document.getElementById('lang-fr')?.classList.toggle('active', guestLang === 'fr');
+
+  const mapText = [
+    ['guest-landing-subtitle', tr('guestSubtitle')],
+    ['label-room', tr('roomNumber')],
+    ['label-name', tr('yourName')],
+    ['label-email', tr('yourEmail')],
+    ['guest-enter-btn', tr('enterWelcome')],
+    ['guest-staff-access', tr('staffAccess')],
+    ['guest-exit-btn', tr('exit')],
+    ['tab-spa', tr('spaTab')],
+    ['tab-room', tr('roomTab')],
+    ['tab-tours', tr('toursTab')],
+    ['tab-bookings', tr('bookingsTab')],
+    ['bm-label-date', tr('preferredDate')],
+    ['bm-label-time', tr('preferredTime')],
+    ['bm-label-notes', tr('specialRequests')],
+    ['bm-confirm-btn', tr('confirmRequest')],
+    ['bm-cancel-btn', tr('cancel')],
+    ['bm-therapist-label', tr('selectTherapist')],
+    ['guest-email-error', tr('invalidEmail')]
+  ];
+  mapText.forEach(([id, value]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  });
+
+  const roomEl = document.getElementById('guest-room');
+  const nameEl = document.getElementById('guest-name');
+  const emailEl = document.getElementById('guest-email');
+  const notesEl = document.getElementById('bm-notes');
+  if (roomEl) roomEl.placeholder = tr('roomPlaceholder');
+  if (nameEl) nameEl.placeholder = tr('namePlaceholder');
+  if (emailEl) emailEl.placeholder = tr('emailPlaceholder');
+  if (notesEl) notesEl.placeholder = tr('notesPlaceholder');
+
+  const therapistSelect = document.getElementById('bm-therapist');
+  if (therapistSelect && therapistSelect.options[0]) therapistSelect.options[0].textContent = tr('noPreference');
+
+  const spaTitle = document.getElementById('spa-header-title');
+  const spaSub = document.getElementById('spa-header-sub');
+  const roomTitle = document.getElementById('room-header-title');
+  const roomSub = document.getElementById('room-header-sub');
+  const toursTitle = document.getElementById('tours-header-title');
+  const toursSub = document.getElementById('tours-header-sub');
+  const bookingsTitle = document.getElementById('bookings-header-title');
+  const bookingsSub = document.getElementById('bookings-header-sub');
+  if (spaTitle) spaTitle.innerHTML = tr('spaHeaderTitle');
+  if (spaSub) spaSub.textContent = tr('spaHeaderSub');
+  if (roomTitle) roomTitle.innerHTML = tr('roomHeaderTitle');
+  if (roomSub) roomSub.textContent = tr('roomHeaderSub');
+  if (toursTitle) toursTitle.innerHTML = tr('toursHeaderTitle');
+  if (toursSub) toursSub.textContent = tr('toursHeaderSub');
+  if (bookingsTitle) bookingsTitle.innerHTML = tr('bookingsHeaderTitle');
+  if (bookingsSub) bookingsSub.textContent = tr('bookingsHeaderSub');
+
+  if (guestSession?.room && guestSession?.name) {
+    document.getElementById('room-display').textContent = `${tr('roomDisplay')} ${guestSession.room} · ${guestSession.name}`;
+  }
+
+  renderGuestServices();
+}
+
+function setGuestLanguage(lang) {
+  guestLang = ['en', 'es', 'fr'].includes(lang) ? lang : 'en';
+  localStorage.setItem(GUEST_LANG_KEY, guestLang);
+  applyGuestLanguage();
+}
 
 // ══════════════════════════════════════════════
 //  SCREEN ROUTING
@@ -1176,6 +1387,7 @@ function showScreen(id) {
   });
   const el = document.getElementById(id);
   if (el) { el.style.display = 'block'; el.classList.add('active'); }
+  updateLanguageSwitcherVisibility();
 }
 
 // ══════════════════════════════════════════════
@@ -1188,7 +1400,7 @@ function guestLogin() {
   const errorEl = document.getElementById('guest-error');
   const emailErrorEl = document.getElementById('guest-email-error');
   if (!room || !name) {
-    errorEl.textContent = 'Room number and name required';
+    errorEl.textContent = tr('requiredNameRoom');
     errorEl.classList.add('show');
     return;
   }
@@ -1199,7 +1411,7 @@ function guestLogin() {
   }
   emailErrorEl.style.display = 'none';
   guestSession = { room, name, email };
-  document.getElementById('room-display').textContent = `Room ${room} · ${name}`;
+  document.getElementById('room-display').textContent = `${tr('roomDisplay')} ${room} · ${name}`;
   showScreen('screen-guest');
   renderGuestServices();
   loadMyBookings();
@@ -1241,9 +1453,9 @@ const ROOM_SERVICES = [
 ];
 
 function renderGuestServices() {
-  renderCards('spa-cards', SPA_SERVICES, 'Spa & Wellness');
-  renderCards('tour-cards', TOUR_SERVICES, 'Tours');
-  renderCards('room-cards', ROOM_SERVICES, 'Room Service');
+  renderCards('spa-cards', SPA_SERVICES, tr('spaTab').replace('🌺 ', ''));
+  renderCards('tour-cards', TOUR_SERVICES, tr('toursTab').replace('🌋 ', ''));
+  renderCards('room-cards', ROOM_SERVICES, tr('roomTab').replace('🍃 ', ''));
 }
 function renderCards(containerId, services, category) {
   const c = document.getElementById(containerId);
@@ -1252,11 +1464,11 @@ function renderCards(containerId, services, category) {
     <div class="service-card" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${category}')">
       <div class="card-visual">${s.icon}</div>
       <div class="card-body">
-        <div class="card-name">${s.name}</div>
-        <div class="card-sub">${s.sub}</div>
-        <div class="card-desc">${s.desc}</div>
+        <div class="card-name">${localizeService(s).name}</div>
+        <div class="card-sub">${localizeService(s).sub}</div>
+        <div class="card-desc">${localizeService(s).desc}</div>
         <div class="card-price">${s.price}</div>
-        <button class="book-btn">Request Booking</button>
+        <button class="book-btn">${tr('requestBooking')}</button>
       </div>
     </div>`).join('');
 }
@@ -2808,6 +3020,8 @@ document.querySelectorAll('.modal-overlay').forEach(el => el.addEventListener('c
 document.querySelectorAll('.calendar-modal-overlay').forEach(el => el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); }));
 
 window.addEventListener('load', () => {
+  updateLanguageSwitcherVisibility();
+  applyGuestLanguage();
   initTimePicker();
   const wrapper = document.querySelector('.calendar-wrapper');
   if (wrapper) wrapper.addEventListener('click', handleCalendarInteraction);
