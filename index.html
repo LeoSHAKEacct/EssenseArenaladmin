@@ -194,6 +194,9 @@ body { font-family: 'Jost', sans-serif; background: #FAF6EE; color: var(--cream)
 .status-pending { background:rgba(200,150,50,0.15); color:#d4a96e; border:1px solid rgba(200,150,50,0.3); }
 .status-approved { background:rgba(74,124,89,0.15); color:#7aaa86; border:1px solid rgba(74,124,89,0.3); }
 .status-declined { background:rgba(180,60,60,0.12); color:#c08080; border:1px solid rgba(180,60,60,0.25); }
+.orders-subsection { margin-bottom:1.8rem; }
+.orders-sub-title { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; color:var(--sage); letter-spacing:.14em; text-transform:uppercase; margin-bottom:.9rem; padding-bottom:.4rem; border-bottom:1px solid rgba(122,170,134,0.18); }
+.orders-empty-state { text-align:center; padding:36px 20px; color:rgba(200,219,200,0.28); font-size:.85rem; }
 
 /* ══════════════════════════════════════
    ADMIN PANEL
@@ -708,13 +711,20 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
     <div class="cards-grid" id="tour-cards"></div>
   </div>
 
-  <!-- MY BOOKINGS -->
+  <!-- MY ORDERS -->
   <div id="guest-bookings" class="portal-section">
     <div class="section-header">
-      <h2 id="bookings-header-title">My <em>Bookings</em></h2>
+      <h2 id="bookings-header-title">My <em>Orders</em></h2>
       <p id="bookings-header-sub">All your requests · We'll confirm shortly</p>
     </div>
-    <div id="my-bookings-list"><div style="text-align:center;padding:60px 20px;color:rgba(200,219,200,0.3);font-size:.9rem;">No bookings yet — explore the menu above ✦</div></div>
+    <div class="orders-subsection">
+      <h3 class="orders-sub-title" id="orders-spa-title">Spa &amp; Activity Bookings</h3>
+      <div id="my-bookings-list"></div>
+    </div>
+    <div class="orders-subsection">
+      <h3 class="orders-sub-title" id="orders-products-title">Product Orders</h3>
+      <div id="my-products-list"></div>
+    </div>
   </div>
 </div>
 
@@ -1223,7 +1233,7 @@ let guestLang = localStorage.getItem(GUEST_LANG_KEY) || 'en';
 
 const GUEST_I18N = {
   en: {
-    exit: '← Exit', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Products', toursTab: '🌋 Tours', bookingsTab: '📋 My Bookings',
+    exit: '← Exit', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Products', toursTab: '🌋 Tours', bookingsTab: '📋 My Orders',
     requestBooking: 'Request Booking', preferredDate: 'Preferred Date', preferredTime: 'SELECT TIME', specialRequests: 'Special requests / notes',
     confirmRequest: 'Confirm Request', cancel: 'Cancel', selectTherapist: 'Select your therapist', noPreference: 'No preference',
     addToRoom: 'ADD TO ROOM', requestDelivery: 'Request Delivery', cartEmpty: 'No products added yet.',
@@ -1235,11 +1245,13 @@ const GUEST_I18N = {
     spaHeaderTitle: 'Spa & <em>Wellness</em>', spaHeaderSub: 'Nestled in the rainforest · Choose your experience',
     roomHeaderTitle: 'Products <em>Shop</em>', roomHeaderSub: 'Natural products from Essence Arenal · Delivered to your room',
     toursHeaderTitle: 'Experiences & <em>Tours</em>', toursHeaderSub: 'Explore the magic of Arenal · Book your adventure',
-    bookingsHeaderTitle: 'My <em>Bookings</em>', bookingsHeaderSub: 'All your requests · We\'ll confirm shortly',
+    bookingsHeaderTitle: 'My <em>Orders</em>', bookingsHeaderSub: 'All your requests · We\'ll confirm shortly',
+    myBookingsSect: 'Spa & Activity Bookings', myProductsSect: 'Product Orders',
+    noOrdersYet: 'No orders yet — explore our spa services and products!',
     invalidEmail: 'Please enter a valid email', requiredNameRoom: 'Room number and name required'
   },
   es: {
-    exit: '← SALIR', spaTab: '🌺 Spa & Masajes', roomTab: '🍃 Productos', toursTab: '🌋 Tours', bookingsTab: '📋 Mis Reservas',
+    exit: '← SALIR', spaTab: '🌺 Spa & Masajes', roomTab: '🍃 Productos', toursTab: '🌋 Tours', bookingsTab: '📋 Mis Pedidos',
     requestBooking: 'Reservar', preferredDate: 'Fecha Preferida', preferredTime: 'SELECCIONA HORA', specialRequests: 'Notas especiales',
     confirmRequest: 'Confirmar', cancel: 'Cancelar', selectTherapist: 'Elige tu terapeuta', noPreference: 'Sin preferencia',
     addToRoom: 'AGREGAR', requestDelivery: 'Solicitar entrega', cartEmpty: 'Aún no hay productos agregados.',
@@ -1251,11 +1263,13 @@ const GUEST_I18N = {
     spaHeaderTitle: 'Spa & <em>Bienestar</em>', spaHeaderSub: 'En el corazón del bosque lluvioso · Elige tu experiencia',
     roomHeaderTitle: 'Tienda de <em>Productos</em>', roomHeaderSub: 'Productos naturales de Essence Arenal · Entrega a tu cuarto',
     toursHeaderTitle: 'Experiencias & <em>Tours</em>', toursHeaderSub: 'Explora la magia de Arenal · Reserva tu aventura',
-    bookingsHeaderTitle: 'Mis <em>Reservas</em>', bookingsHeaderSub: 'Todas tus solicitudes · Te confirmaremos pronto',
+    bookingsHeaderTitle: 'Mis <em>Pedidos</em>', bookingsHeaderSub: 'Todas tus solicitudes · Te confirmaremos pronto',
+    myBookingsSect: 'Reservas Spa & Actividades', myProductsSect: 'Pedidos de Productos',
+    noOrdersYet: 'Aún no tienes pedidos',
     invalidEmail: 'Por favor ingresa un email válido', requiredNameRoom: 'Se requiere número de cuarto y nombre'
   },
   fr: {
-    exit: '← SORTIR', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Produits', toursTab: '🌋 Excursions', bookingsTab: '📋 Mes Réservations',
+    exit: '← SORTIR', spaTab: '🌺 Spa & Massage', roomTab: '🍃 Produits', toursTab: '🌋 Excursions', bookingsTab: '📋 Mes Commandes',
     requestBooking: 'Réserver', preferredDate: 'Date Préférée', preferredTime: 'CHOISIR L\'HEURE', specialRequests: 'Notes spéciales',
     confirmRequest: 'Confirmer', cancel: 'Annuler', selectTherapist: 'Choisissez votre thérapeute', noPreference: 'Sans préférence',
     addToRoom: 'AJOUTER', requestDelivery: 'Demander livraison', cartEmpty: 'Aucun produit ajouté pour le moment.',
@@ -1267,7 +1281,9 @@ const GUEST_I18N = {
     spaHeaderTitle: 'Spa & <em>Bien-être</em>', spaHeaderSub: 'Au cœur de la forêt tropicale · Choisissez votre expérience',
     roomHeaderTitle: 'Boutique <em>Produits</em>', roomHeaderSub: 'Produits naturels Essence Arenal · Livrés en chambre',
     toursHeaderTitle: 'Expériences & <em>Excursions</em>', toursHeaderSub: 'Découvrez la magie d\'Arenal · Réservez votre aventure',
-    bookingsHeaderTitle: 'Mes <em>Réservations</em>', bookingsHeaderSub: 'Toutes vos demandes · Nous confirmerons bientôt',
+    bookingsHeaderTitle: 'Mes <em>Commandes</em>', bookingsHeaderSub: 'Toutes vos demandes · Nous confirmerons bientôt',
+    myBookingsSect: 'Réservations Spa & Activités', myProductsSect: 'Commandes Produits',
+    noOrdersYet: 'Pas encore de commandes',
     invalidEmail: 'Veuillez saisir un email valide', requiredNameRoom: 'Numéro de chambre et nom requis'
   }
 };
@@ -1386,6 +1402,10 @@ function applyGuestLanguage() {
   if (toursSub) toursSub.textContent = tr('toursHeaderSub');
   if (bookingsTitle) bookingsTitle.innerHTML = tr('bookingsHeaderTitle');
   if (bookingsSub) bookingsSub.textContent = tr('bookingsHeaderSub');
+  const spaOrderTitle = document.getElementById('orders-spa-title');
+  const productsOrderTitle = document.getElementById('orders-products-title');
+  if (spaOrderTitle) spaOrderTitle.textContent = tr('myBookingsSect');
+  if (productsOrderTitle) productsOrderTitle.textContent = tr('myProductsSect');
 
   if (guestSession?.room && guestSession?.name) {
     document.getElementById('room-display').textContent = `${tr('roomDisplay')} ${guestSession.room} · ${guestSession.name}`;
@@ -1631,26 +1651,58 @@ async function submitBooking() {
 
 async function loadMyBookings() {
   if (!guestSession) return;
-  const list = document.getElementById('my-bookings-list');
-  if (!list) return;
-  try {
-    const data = await dbGet('booking_requests', `room=eq.${encodeURIComponent(guestSession.room)}&guest_name=eq.${encodeURIComponent(guestSession.name)}&order=created_at.desc`);
-    if (!data || data.length === 0) {
-      list.innerHTML = '<div style="text-align:center;padding:60px 20px;color:rgba(200,219,200,0.3);font-size:.9rem;">No bookings yet — explore the menu above ✦</div>';
-      return;
+  const bookingList = document.getElementById('my-bookings-list');
+  const productList = document.getElementById('my-products-list');
+
+  // Spa & activity bookings
+  if (bookingList) {
+    bookingList.innerHTML = '<div class="orders-empty-state" style="padding:20px;">Loading…</div>';
+    try {
+      const data = await dbGet('booking_requests', `room=eq.${encodeURIComponent(guestSession.room)}&guest_name=eq.${encodeURIComponent(guestSession.name)}&order=created_at.desc`);
+      if (!data || data.length === 0) {
+        bookingList.innerHTML = `<div class="orders-empty-state">${tr('noOrdersYet')}</div>`;
+      } else {
+        bookingList.innerHTML = data.map(b => `
+          <div class="booking-item">
+            <div class="booking-info">
+              <div class="bi-name">${b.service_name}</div>
+              <div class="bi-detail">${b.service_type} · ${b.requested_date || ''} ${b.requested_time || ''}</div>
+              ${b.notes ? `<div class="bi-detail" style="margin-top:4px;font-style:italic;">"${b.notes}"</div>` : ''}
+              <div class="bi-detail" style="margin-top:6px;font-size:.65rem;opacity:.5;">Submitted ${new Date(b.created_at).toLocaleDateString()}</div>
+            </div>
+            <div><span class="status-badge status-${b.status}">${b.status}</span></div>
+          </div>`).join('');
+      }
+    } catch(e) {
+      bookingList.innerHTML = '<div class="orders-empty-state">Could not load bookings</div>';
     }
-    list.innerHTML = data.map(b => `
-      <div class="booking-item">
-        <div class="booking-info">
-          <div class="bi-name">${b.service_name}</div>
-          <div class="bi-detail">${b.service_type} · ${b.requested_date || ''} ${b.requested_time || ''}</div>
-          ${b.notes ? `<div class="bi-detail" style="margin-top:4px;font-style:italic;">"${b.notes}"</div>` : ''}
-          <div class="bi-detail" style="margin-top:6px;font-size:.65rem;opacity:.5;">Submitted ${new Date(b.created_at).toLocaleDateString()}</div>
-        </div>
-        <div><span class="status-badge status-${b.status}">${b.status}</span></div>
-      </div>`).join('');
-  } catch(e) {
-    list.innerHTML = '<div style="text-align:center;padding:40px;color:rgba(200,219,200,0.3);">Could not load bookings</div>';
+  }
+
+  // Product orders
+  if (productList) {
+    productList.innerHTML = '<div class="orders-empty-state" style="padding:20px;">Loading…</div>';
+    try {
+      const data = await dbGet('guest_requests', `type=eq.product_order&room=eq.${encodeURIComponent(guestSession.room)}&order=created_at.desc`);
+      if (!data || data.length === 0) {
+        productList.innerHTML = `<div class="orders-empty-state">${tr('noOrdersYet')}</div>`;
+      } else {
+        productList.innerHTML = data.map(o => {
+          const items = Array.isArray(o.items) ? o.items : (typeof o.items === 'string' ? JSON.parse(o.items) : []);
+          const status = o.status || 'pending';
+          return `
+            <div class="booking-item">
+              <div class="booking-info">
+                ${items.map(i => `<div class="bi-name">${i.name} <span style="font-size:.8em;font-family:'Jost',sans-serif;opacity:.65;">× ${i.qty} · $${Number(i.price).toFixed(2)}</span></div>`).join('')}
+                <div class="bi-detail" style="margin-top:4px;">Total: $${Number(o.total_price || 0).toFixed(2)}</div>
+                <div class="bi-detail" style="margin-top:6px;font-size:.65rem;opacity:.5;">Submitted ${new Date(o.created_at).toLocaleDateString()}</div>
+              </div>
+              <div><span class="status-badge status-${status}">${status}</span></div>
+            </div>`;
+        }).join('');
+      }
+    } catch(e) {
+      productList.innerHTML = '<div class="orders-empty-state">Could not load product orders</div>';
+    }
   }
 }
 
