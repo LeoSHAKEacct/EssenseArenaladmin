@@ -246,6 +246,61 @@ body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--
 .staff-table td { padding:14px; border-bottom:1px solid rgba(58,52,44,0.5); font-size:13px; color:var(--text); }
 .staff-table tr:hover td { background:#1a261a; }
 
+/* Restaurant soft replica */
+.restaurant-soft-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px; margin-bottom:18px; }
+.restaurant-soft-card { background:#141e14; border:1px solid #2b3d2b; border-radius:var(--radius); padding:14px 16px; }
+.restaurant-soft-card h4 { font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+.restaurant-soft-card p { font-size:13px; color:var(--text); line-height:1.45; }
+.restaurant-soft-list .request-card { margin-bottom:10px; }
+
+/* Restaurant workflow tabs */
+.restaurant-tabs { display:flex; gap:2px; padding:0 28px; background:#152015; border-bottom:1px solid #2b3d2b; margin-bottom:20px; }
+.restaurant-tab { padding:10px 16px; font-size:11px; font-weight:500; letter-spacing:1px; text-transform:uppercase; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; margin-bottom:-1px; }
+.restaurant-tab.active { color:var(--admin-gold); border-bottom-color:var(--admin-gold); }
+.restaurant-section { display:none; }
+.restaurant-section.active { display:block; }
+
+/* Table map */
+.table-map { display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:12px; padding:20px; background:#0f180f; border-radius:var(--radius); border:1px solid #2b3d2b; }
+.table-slot { background:#141e14; border:1px solid #2b3d2b; border-radius:8px; padding:12px; text-align:center; cursor:pointer; transition:all .2s; }
+.table-slot:hover { border-color:#3d5a3d; background:#1a261a; }
+.table-slot.occupied { border-color:var(--admin-gold); background:rgba(201,169,110,0.1); }
+.table-num { font-size:18px; font-weight:600; color:var(--admin-gold); margin-bottom:4px; }
+.table-status { font-size:10px; color:var(--text-muted); letter-spacing:.08em; text-transform:uppercase; }
+
+/* Shift board */
+.shift-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; }
+.shift-card { background:#141e14; border:1px solid #2b3d2b; border-radius:var(--radius); padding:12px; }
+.shift-card.on-duty { border-color:#2d7a3a; }
+.shift-card.off-duty { border-color:#6b7569; opacity:.6; }
+.shift-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.shift-time { font-size:11px; color:var(--text-muted); }
+.shift-role { font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--admin-gold); margin-top:6px; }
+
+/* POS tickets */
+.pos-container { max-height:500px; overflow-y:auto; }
+.pos-ticket { background:#141e14; border:1px solid #2b3d2b; border-radius:var(--radius); padding:14px; margin-bottom:10px; font-family:'DM Mono',monospace; font-size:11px; }
+.pos-ticket-header { border-bottom:1px dashed #2b3d2b; padding-bottom:8px; margin-bottom:8px; }
+.pos-ticket-num { color:var(--admin-gold); font-weight:600; }
+.pos-ticket-time { color:var(--text-muted); font-size:10px; }
+.pos-item { display:flex; justify-content:space-between; padding:4px 0; }
+.pos-item-name { color:var(--text); flex:1; }
+.pos-item-qty { color:var(--text-muted); margin:0 8px; }
+.pos-item-price { color:var(--admin-gold); }
+.pos-total { border-top:1px dashed #2b3d2b; padding-top:8px; margin-top:8px; display:flex; justify-content:space-between; font-weight:600; color:var(--admin-gold); }
+
+/* Menu editor modal */
+.menu-modal { background:#141e14; border:1px solid #2b3d2b; border-radius:14px; width:600px; max-width:95vw; max-height:85vh; overflow-y:auto; padding:28px; position:relative; }
+.menu-form-group { margin-bottom:14px; }
+.menu-form-label { font-size:11px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:5px; display:block; font-weight:500; }
+.menu-form-input { width:100%; background:#1a261a; border:1px solid #2b3d2b; border-radius:var(--radius-sm); padding:10px 12px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; outline:none; transition:border-color .2s; }
+.menu-form-input:focus { border-color:var(--admin-gold); }
+.menu-items-list { max-height:300px; overflow-y:auto; margin-bottom:14px; }
+.menu-item-row { background:#0f180f; border:1px solid #2b3d2b; border-radius:var(--radius-sm); padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+.menu-item-info { flex:1; }
+.menu-item-name { font-size:12px; font-weight:600; color:var(--text); }
+.menu-item-price { font-size:11px; color:var(--admin-gold); margin-top:2px; }
+
 /* Spinner */
 .spinner { display:inline-block; width:16px; height:16px; border:2px solid #2b3d2b; border-top-color:var(--admin-gold); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:6px; }
 
@@ -660,6 +715,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       📬 Requests<span id="pending-dot" class="pending-dot" style="display:none;"></span>
     </div>
     <div class="admin-tab" id="atab-calendar" onclick="switchAdminTab('calendar')">📅 Calendar</div>
+    <div class="admin-tab" id="atab-restaurant-soft" onclick="switchAdminTab('restaurant-soft')" style="display:none;">🍽️ Restaurant Replica</div>
     <div class="admin-tab" id="atab-staff" id="atab-staff" onclick="switchAdminTab('staff')">👥 Staff</div>
   </div>
 
@@ -694,6 +750,110 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
     </div>
     <div class="calendar-wrapper">
       <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+  </div>
+
+  <!-- RESTAURANT SOFT REPLICA -->
+  <div id="asec-restaurant-soft" class="admin-section">
+    <div class="staff-wrap">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div>
+          <div class="inbox-title">Restaurant Workflow</div>
+          <div class="inbox-sub">Menu management, table map, shift scheduling, POS tickets</div>
+        </div>
+        <button class="abtn abtn-gold" onclick="openMenuEditorModal()">＋ Add Menu Item</button>
+      </div>
+      
+      <div class="restaurant-tabs">
+        <div class="restaurant-tab active" onclick="switchRestaurantTab('orders')">🍽️ Orders & Tickets</div>
+        <div class="restaurant-tab" onclick="switchRestaurantTab('tables')">🪑 Table Map</div>
+        <div class="restaurant-tab" onclick="switchRestaurantTab('shift')">👨‍💼 Shift Board</div>
+        <div class="restaurant-tab" onclick="switchRestaurantTab('menu')">📋 Menu</div>
+      </div>
+      
+      <!-- Orders & Tickets -->
+      <div id="rest-orders" class="restaurant-section active">
+        <div style="margin-bottom:14px;">
+          <h3 style="font-size:14px;color:var(--admin-gold);margin-bottom:8px;">Active POS Tickets</h3>
+          <div class="pos-container" id="pos-tickets-list">
+            <div class="inbox-empty"><span class="spinner"></span> Loading tickets…</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Table Map -->
+      <div id="rest-tables" class="restaurant-section">
+        <div style="margin-bottom:12px;">
+          <h3 style="font-size:14px;color:var(--admin-gold);margin-bottom:8px;">Floor Plan</h3>
+          <div class="table-map" id="table-map-grid">
+            <!-- Tables auto-rendered -->
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:12px;">
+          <span style="display:inline-block;margin-right:20px;">🔵 Available</span>
+          <span style="display:inline-block;">🟡 Occupied</span>
+        </div>
+      </div>
+      
+      <!-- Shift Board -->
+      <div id="rest-shift" class="restaurant-section">
+        <div style="margin-bottom:12px;">
+          <h3 style="font-size:14px;color:var(--admin-gold);margin-bottom:8px;">Today's Schedule</h3>
+          <div class="shift-grid" id="shift-board-grid">
+            <!-- Schedule auto-rendered -->
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:#0f180f;border-radius:var(--radius);border:1px solid #2b3d2b;">
+          <button class="abtn abtn-gold" style="width:100%;" onclick="addShiftMember()">＋ Add Shift Member</button>
+        </div>
+      </div>
+      
+      <!-- Menu -->
+      <div id="rest-menu" class="restaurant-section">
+        <div style="margin-bottom:14px;">
+          <h3 style="font-size:14px;color:var(--admin-gold);margin-bottom:8px;">Current Menu</h3>
+          <div id="menu-items-display" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+            <div class="inbox-empty"><span class="spinner"></span> Loading menu…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu Editor Modal -->
+  <div class="amodal-overlay" id="menu-editor-modal" onclick="if(event.target===this)closeMenuEditorModal()">
+    <div class="menu-modal">
+      <button class="amodal-close" onclick="closeMenuEditorModal()">×</button>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--admin-gold);margin-bottom:4px;">Add Menu Item</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">Create a new dish for your restaurant menu</div>
+      
+      <div class="menu-form-group">
+        <label class="menu-form-label">Dish Name</label>
+        <input class="menu-form-input" type="text" id="menu-name" placeholder="e.g., Caesar Salad">
+      </div>
+      <div class="menu-form-group">
+        <label class="menu-form-label">Category</label>
+        <select class="menu-form-input" id="menu-category">
+          <option>Appetizer</option>
+          <option>Main Course</option>
+          <option>Dessert</option>
+          <option>Beverage</option>
+          <option>Sides</option>
+        </select>
+      </div>
+      <div class="menu-form-group">
+        <label class="menu-form-label">Price</label>
+        <input class="menu-form-input" type="number" id="menu-price" placeholder="0.00" step="0.01">
+      </div>
+      <div class="menu-form-group">
+        <label class="menu-form-label">Description</label>
+        <textarea class="menu-form-input" id="menu-desc" placeholder="Brief description" rows="3" style="resize:vertical;"></textarea>
+      </div>
+      
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+        <button class="abtn" onclick="closeMenuEditorModal()">Cancel</button>
+        <button class="abtn abtn-gold" onclick="saveMenuItem()">Add to Menu</button>
+      </div>
     </div>
   </div>
 
@@ -883,6 +1043,20 @@ const SUPABASE_URL = SUPA_URL;
 const SUPABASE_ANON_KEY = SUPA_KEY;
 const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const ADMIN_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
+const RESTAURANT_REPLICA_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
+
+// Restaurant workflow data
+let restaurantMenu = JSON.parse(localStorage.getItem('restaurant_menu') || '[]');
+let restaurantTables = JSON.parse(localStorage.getItem('restaurant_tables') || JSON.stringify(
+  [1,2,3,4,5,6,7,8,9,10,11,12].map(i => ({ id: i, occupied: Math.random() > 0.7, guests: 0 }))
+));
+let restaurantShift = JSON.parse(localStorage.getItem('restaurant_shift') || JSON.stringify([
+  { id: 1, name: 'Carlos', role: 'Server', onDuty: true, shift: '10:00 - 18:00' },
+  { id: 2, name: 'María', role: 'Chef', onDuty: true, shift: '10:00 - 20:00' },
+  { id: 3, name: 'Juan', role: 'Bartender', onDuty: false, shift: '16:00 - 23:00' }
+]));
+let restaurantPosTickets = [];
+
 const EDITOR_EMAILS = [
   'info@essencearenal.com',
   'nbotefur@gmail.com',
@@ -1252,6 +1426,7 @@ function showAdminPanel() {
   // Hide staff tab for non-admins
   document.getElementById('atab-staff').style.display = currentUser.role === 'administrator' ? '' : 'none';
   document.getElementById('atab-inbox').style.display = (currentUser.role === 'administrator' || currentUser.role === 'guest_management') ? '' : 'none';
+  document.getElementById('atab-restaurant-soft').style.display = canViewRestaurantReplica() ? '' : 'none';
   loadData();
   loadAvailability();
   loadAudit();
@@ -1274,7 +1449,15 @@ function adminLogout() {
 // ══════════════════════════════════════════════
 //  ADMIN TABS
 // ══════════════════════════════════════════════
+function canViewRestaurantReplica() {
+  const email = String(currentUser?.email || '').trim().toLowerCase();
+  return RESTAURANT_REPLICA_EMAILS.includes(email);
+}
+
 function switchAdminTab(tab) {
+  if (tab === 'restaurant-soft' && !canViewRestaurantReplica()) {
+    tab = 'calendar';
+  }
   document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
   const tabEl = document.getElementById(`atab-${tab}`);
@@ -1283,7 +1466,186 @@ function switchAdminTab(tab) {
   if (secEl) secEl.classList.add('active');
   if (tab === 'inbox') loadInbox();
   if (tab === 'calendar') { renderAdminCalendar(); }
+  if (tab === 'restaurant-soft') renderRestaurantReplica();
   if (tab === 'staff') renderStaffTable();
+}
+
+function switchRestaurantTab(tab) {
+  document.querySelectorAll('.restaurant-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.restaurant-section').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`rest-${tab}`).classList.add('active');
+  
+  if (tab === 'orders') renderPosTickets();
+  if (tab === 'tables') renderTableMap();
+  if (tab === 'shift') renderShiftBoard();
+  if (tab === 'menu') renderMenuDisplay();
+}
+
+function renderPosTickets() {
+  const list = document.getElementById('pos-tickets-list');
+  if (!list) return;
+  
+  if (!restaurantPosTickets.length) {
+    list.innerHTML = '<div class="inbox-empty">No active tickets</div>';
+    return;
+  }
+  
+  list.innerHTML = restaurantPosTickets.map(t => `
+    <div class="pos-ticket">
+      <div class="pos-ticket-header">
+        <div class="pos-ticket-num">Ticket #${t.id}</div>
+        <div class="pos-ticket-time">Table ${t.tableId} · ${new Date(t.time).toLocaleTimeString()}</div>
+      </div>
+      ${t.items.map(i => `
+        <div class="pos-item">
+          <span class="pos-item-name">${i.name}</span>
+          <span class="pos-item-qty">×${i.qty}</span>
+          <span class="pos-item-price">$${(i.price * i.qty).toFixed(2)}</span>
+        </div>
+      `).join('')}
+      <div class="pos-total">
+        <span>TOTAL:</span>
+        <span>$${t.items.reduce((sum, i) => sum + (i.price * i.qty), 0).toFixed(2)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTableMap() {
+  const grid = document.getElementById('table-map-grid');
+  if (!grid) return;
+  
+  grid.innerHTML = restaurantTables.map(t => `
+    <div class="table-slot ${t.occupied ? 'occupied' : ''}" onclick="toggleTableStatus(${t.id})">
+      <div class="table-num">${t.id}</div>
+      <div class="table-status">${t.occupied ? 'Occupied' : 'Available'}</div>
+    </div>
+  `).join('');
+}
+
+function renderShiftBoard() {
+  const grid = document.getElementById('shift-board-grid');
+  if (!grid) return;
+  
+  grid.innerHTML = restaurantShift.map(s => `
+    <div class="shift-card ${s.onDuty ? 'on-duty' : 'off-duty'}">
+      <div class="shift-name">${s.name}</div>
+      <div class="shift-time">${s.shift}</div>
+      <div class="shift-role">${s.role}</div>
+      <button class="abtn" style="width:100%;margin-top:8px;font-size:10px;" onclick="toggleShiftStatus(${s.id})">Toggle</button>
+    </div>
+  `).join('');
+}
+
+function renderMenuDisplay() {
+  const display = document.getElementById('menu-items-display');
+  if (!display) return;
+  
+  if (!restaurantMenu.length) {
+    display.innerHTML = '<div class="inbox-empty" style="grid-column:1/-1;">No menu items yet. Add one to get started.</div>';
+    return;
+  }
+  
+  display.innerHTML = restaurantMenu.map(item => `
+    <div class="restaurant-soft-card">
+      <h4 style="color:var(--admin-gold);">${item.name}</h4>
+      <p style="margin:6px 0;font-size:10px;color:var(--text-muted);">${item.category}</p>
+      <p style="margin:8px 0;">${item.desc || 'No description'}</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+        <span style="font-size:13px;color:var(--admin-gold);font-weight:600;">$${item.price.toFixed(2)}</span>
+        <button class="abtn" style="font-size:10px;padding:4px 8px;" onclick="removeMenuItem(${item.id})">Remove</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openMenuEditorModal() {
+  document.getElementById('menu-editor-modal').classList.add('open');
+}
+
+function closeMenuEditorModal() {
+  document.getElementById('menu-editor-modal').classList.remove('open');
+  document.getElementById('menu-name').value = '';
+  document.getElementById('menu-category').value = 'Main Course';
+  document.getElementById('menu-price').value = '';
+  document.getElementById('menu-desc').value = '';
+}
+
+function saveMenuItem() {
+  const name = document.getElementById('menu-name').value.trim();
+  const category = document.getElementById('menu-category').value;
+  const price = parseFloat(document.getElementById('menu-price').value) || 0;
+  const desc = document.getElementById('menu-desc').value.trim();
+  
+  if (!name || price <= 0) {
+    alert('Please fill in all fields with valid data');
+    return;
+  }
+  
+  const item = {
+    id: Date.now(),
+    name,
+    category,
+    price,
+    desc
+  };
+  
+  restaurantMenu.push(item);
+  localStorage.setItem('restaurant_menu', JSON.stringify(restaurantMenu));
+  closeMenuEditorModal();
+  renderMenuDisplay();
+  showAdminToast(`✓ Menu item "${name}" added`);
+}
+
+function removeMenuItem(id) {
+  restaurantMenu = restaurantMenu.filter(item => item.id !== id);
+  localStorage.setItem('restaurant_menu', JSON.stringify(restaurantMenu));
+  renderMenuDisplay();
+}
+
+function toggleTableStatus(tableId) {
+  const table = restaurantTables.find(t => t.id === tableId);
+  if (table) {
+    table.occupied = !table.occupied;
+    localStorage.setItem('restaurant_tables', JSON.stringify(restaurantTables));
+    renderTableMap();
+  }
+}
+
+function toggleShiftStatus(staffId) {
+  const staff = restaurantShift.find(s => s.id === staffId);
+  if (staff) {
+    staff.onDuty = !staff.onDuty;
+    localStorage.setItem('restaurant_shift', JSON.stringify(restaurantShift));
+    renderShiftBoard();
+  }
+}
+
+function addShiftMember() {
+  const name = prompt('Employee name:');
+  const role = prompt('Role (Server/Chef/Bartender):');
+  const shift = prompt('Shift time (e.g., 10:00 - 18:00):');
+  
+  if (name && role && shift) {
+    restaurantShift.push({
+      id: Date.now(),
+      name,
+      role,
+      onDuty: true,
+      shift
+    });
+    localStorage.setItem('restaurant_shift', JSON.stringify(restaurantShift));
+    renderShiftBoard();
+    showAdminToast(`✓ ${name} added to shift board`);
+  }
+}
+
+async function renderRestaurantReplica() {
+  renderPosTickets();
+  renderTableMap();
+  renderShiftBoard();
+  renderMenuDisplay();
 }
 
 // ══════════════════════════════════════════════
