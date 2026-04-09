@@ -686,6 +686,13 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         </select>
       </div>
     </div>
+    <div class="field-group" id="bm-therapist-wrap" style="display:none;"><label id="bm-therapist-label">Select your therapist</label>
+      <select id="bm-therapist">
+        <option value="No preference">No preference</option>
+        <option value="Daniela">Daniela</option>
+        <option value="Fabián">Fabián</option>
+      </select>
+    </div>
     <div class="field-group"><label>Special requests / notes</label><textarea id="bm-notes" rows="3" placeholder="Allergies, preferences, anything we should know…"></textarea></div>
     <div class="modal-actions">
       <button class="btn-ghost" onclick="closeBookingModal()">Cancel</button>
@@ -1263,6 +1270,12 @@ function openBookingModal(service, category) {
   document.getElementById('bm-time-hour').value = '10';
   document.getElementById('bm-time-minute').value = '00';
   document.getElementById('bm-time-period').value = 'AM';
+  const therapistServices = ['Signature Massage', 'Holistic Therapy', 'Beauty Treatment', 'Couples Massage'];
+  const therapistWrap = document.getElementById('bm-therapist-wrap');
+  const therapistSelect = document.getElementById('bm-therapist');
+  const showTherapist = therapistServices.includes(service.name);
+  if (therapistWrap) therapistWrap.style.display = showTherapist ? '' : 'none';
+  if (therapistSelect) therapistSelect.value = 'No preference';
   document.getElementById('bm-notes').value = '';
   document.getElementById('booking-modal').classList.add('open');
 }
@@ -1278,6 +1291,9 @@ async function submitBooking() {
   const hour = Math.min(12, Math.max(1, parseInt(hourInput, 10) || 1));
   const time = `${hour}:${minute} ${period}`;
   const notes = document.getElementById('bm-notes').value;
+  const therapistWrap = document.getElementById('bm-therapist-wrap');
+  const therapistSelection = document.getElementById('bm-therapist')?.value || 'No preference';
+  const therapistPreference = (therapistWrap && therapistWrap.style.display !== 'none') ? therapistSelection : null;
   const body = {
     room: guestSession.room,
     guest_name: guestSession.name,
@@ -1286,7 +1302,7 @@ async function submitBooking() {
     requested_date: date || null,
     requested_time: time,
     duration_minutes: service.duration || 60,
-    therapist_preference: guestSession.email,
+    therapist_preference: therapistPreference,
     notes: notes,
     price: parseFloat((service.price || '$0').replace('$','')) || null,
     status: 'pending'
@@ -1831,6 +1847,7 @@ function renderInbox() {
         <div class="rc-name">${r.service_name} ${cbBadge}</div>
         <div class="rc-detail">🛎 Room ${r.room} · ${r.guest_name}</div>
         <div class="rc-detail">📅 ${r.requested_date || 'Date TBD'} · ${r.requested_time || ''} · ${r.duration_minutes || 60}min</div>
+        ${r.therapist_preference ? `<div class="rc-detail">💆 Therapist: ${r.therapist_preference}</div>` : ''}
         <div class="rc-detail">💰 ${r.price ? '$'+r.price : 'No price'} · ${r.service_type}</div>
         ${r.notes ? `<div class="rc-detail" style="font-style:italic;margin-top:4px;">"${r.notes}"</div>` : ''}
         <div class="rc-time">Submitted ${new Date(r.created_at).toLocaleString()}</div>
