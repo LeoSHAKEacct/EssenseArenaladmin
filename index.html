@@ -8,9 +8,9 @@
 <style>
 :root {
   --forest: #2d4a2d; --moss: #4a7a3a; --fern: #4a7c59; --sage: #7aaa86;
-  --mist: #c8dbc8; --cream: #f5f0e8; --sand: #e8dcc8; --gold: #c8a96e;
+  --mist: #c8dbc8; --cream: #F5F0E4; --sand: #e8dcc8; --gold: #c8a96e;
   --clay: #8b6b4a; --white: #faf8f4;
-  --warm-white: #fffdf9; --parchment: #f5f2ec; --light: #eef4e8; --mid: #6b7569; --charcoal: #253025;
+  --warm-white: #FAF6EE; --parchment: #f5f2ec; --light: #eef4e8; --mid: #6b7569; --charcoal: #253025;
   --hotel-color: #7a9e6b; --finca-color: #c37c48;
   --bg: #0f0e0c; --surface: #1a1815; --surface2: #221f1b; --surface3: #2c2822;
   --border: #e8e4dc; --border-light: #f0ece6;
@@ -21,7 +21,7 @@
   --radius: 10px; --radius-sm: 6px;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Jost', sans-serif; background: var(--forest); color: var(--cream); min-height: 100vh; overflow-x: hidden; }
+body { font-family: 'Jost', sans-serif; background: #FAF6EE; color: var(--cream); min-height: 100vh; overflow-x: hidden; }
 
 /* ── BG ── */
 .bg-layer { position: fixed; inset: 0; z-index: 0;
@@ -386,6 +386,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 /* Restored unified calendar */
 #screen-admin { background: var(--warm-white); color: var(--charcoal); }
 .calendar-admin-header { background: var(--warm-white); border-bottom: 1px solid rgba(26,46,26,0.08); }
+.admin-section { background: var(--warm-white); }
 .calendar-header-right { flex-wrap: wrap; justify-content: flex-end; }
 .user-pill {
   font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
@@ -394,7 +395,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   padding: 5px 9px; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .week-nav {
-  background: #f8f5f0; border-bottom: 1px solid #e8e4dc;
+  background: var(--warm-white); border-bottom: 1px solid #e8e4dc;
   display:flex; align-items:center; justify-content:space-between; padding:10px 28px;
 }
 .week-label {
@@ -426,7 +427,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 .calendar-wrapper { flex:1; padding:24px 28px; overflow-x:auto; }
 .calendar-grid {
   display:grid; grid-template-columns:80px repeat(7,1fr); min-width:760px; border:1px solid rgba(26,46,26,0.12);
-  border-radius:8px; overflow:hidden; background:#fff; box-shadow:0 2px 16px rgba(26,46,26,0.03);
+  border-radius:8px; overflow:hidden; background:var(--warm-white); box-shadow:0 2px 16px rgba(26,46,26,0.03);
 }
 .col-header {
   background:var(--forest); color:var(--mist); padding:12px 8px; text-align:center; border-right:1px solid rgba(255,255,255,0.08);
@@ -450,7 +451,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   justify-content:center;
 }
 .time-label {
-  background:#faf7f2; border-top:1px solid #e8e4dc; border-right:1px solid #e8e4dc;
+  background:var(--warm-white); border-top:1px solid #e8e4dc; border-right:1px solid #e8e4dc;
   padding:10px 6px 10px 10px; display:flex; align-items:flex-start;
 }
 .time-label span { font-size:10px; letter-spacing:.06em; color:var(--mid); white-space:nowrap; }
@@ -519,7 +520,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
 .calendar-form-group { display:flex; flex-direction:column; gap:5px; flex:1; }
 .calendar-form-label { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--mid); }
 .calendar-form-input, .calendar-form-select {
-  border:1px solid rgba(26,46,26,0.15); border-radius:4px; padding:8px 10px; font-size:13px; color:var(--charcoal); background:#fff; outline:none; transition:border-color .15s; width:100%;
+  border:1px solid rgba(26,46,26,0.15); border-radius:4px; padding:8px 10px; font-size:13px; color:var(--charcoal); background:var(--warm-white); outline:none; transition:border-color .15s; width:100%;
 }
 .calendar-form-input:focus, .calendar-form-select:focus { border-color:var(--sage); }
 .calendar-type-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
@@ -715,7 +716,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       📬 Requests<span id="pending-dot" class="pending-dot" style="display:none;"></span>
     </div>
     <div class="admin-tab" id="atab-calendar" onclick="switchAdminTab('calendar')">📅 Calendar</div>
-    <div class="admin-tab" id="atab-restaurant-soft" onclick="switchAdminTab('restaurant-soft')" style="display:none;">🍽️ Restaurant Replica</div>
+    <div class="admin-tab" id="atab-restaurant-soft" onclick="switchAdminTab('restaurant-soft')" style="display:none;">🍽️ Restaurant</div>
     <div class="admin-tab" id="atab-staff" id="atab-staff" onclick="switchAdminTab('staff')">👥 Staff</div>
   </div>
 
@@ -758,7 +759,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
     <div class="staff-wrap">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
         <div>
-          <div class="inbox-title">Restaurant Workflow</div>
+          <div class="inbox-title">Restaurant</div>
           <div class="inbox-sub">Menu management, table map, shift scheduling, POS tickets</div>
         </div>
         <button class="abtn abtn-gold" onclick="openMenuEditorModal()">＋ Add Menu Item</button>
@@ -774,9 +775,12 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <!-- Orders & Tickets -->
       <div id="rest-orders" class="restaurant-section active">
         <div style="margin-bottom:14px;">
-          <h3 style="font-size:14px;color:var(--admin-gold);margin-bottom:8px;">Active POS Tickets</h3>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <h3 style="font-size:14px;color:var(--admin-gold);">Active POS Tickets</h3>
+            <button class="abtn abtn-gold" onclick="openNewOrderModal()">＋ New Order</button>
+          </div>
           <div class="pos-container" id="pos-tickets-list">
-            <div class="inbox-empty"><span class="spinner"></span> Loading tickets…</div>
+            <div class="inbox-empty">No active tickets — tap New Order to create one</div>
           </div>
         </div>
       </div>
@@ -853,6 +857,45 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
         <button class="abtn" onclick="closeMenuEditorModal()">Cancel</button>
         <button class="abtn abtn-gold" onclick="saveMenuItem()">Add to Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Order Modal -->
+  <div class="amodal-overlay" id="new-order-modal" onclick="if(event.target===this)closeNewOrderModal()">
+    <div class="menu-modal" style="max-width:520px;">
+      <button class="amodal-close" onclick="closeNewOrderModal()">×</button>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--admin-gold);margin-bottom:4px;">New Order</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">Create a ticket for a guest order</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div class="menu-form-group">
+          <label class="menu-form-label">Room Number</label>
+          <input class="menu-form-input" type="text" id="order-room" placeholder="e.g. 104">
+        </div>
+        <div class="menu-form-group">
+          <label class="menu-form-label">Guest Name</label>
+          <input class="menu-form-input" type="text" id="order-guest" placeholder="Guest name">
+        </div>
+      </div>
+      <div class="menu-form-group">
+        <label class="menu-form-label">Table Number</label>
+        <select class="menu-form-input" id="order-table">
+          <option value="">— Select table —</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          <option>6</option><option>7</option><option>8</option><option>9</option>
+        </select>
+      </div>
+      <div class="menu-form-group">
+        <label class="menu-form-label">Add Items from Menu</label>
+        <div id="order-menu-items" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;max-height:200px;overflow-y:auto;"></div>
+      </div>
+      <div class="menu-form-group" id="order-items-summary-wrap" style="display:none;">
+        <label class="menu-form-label">Order Summary</label>
+        <div id="order-items-summary" style="background:#0f180f;border-radius:6px;padding:10px;border:1px solid #2b3d2b;"></div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+        <button class="abtn" onclick="closeNewOrderModal()">Cancel</button>
+        <button class="abtn abtn-gold" onclick="submitNewOrder()">Create Ticket</button>
       </div>
     </div>
   </div>
@@ -1048,7 +1091,7 @@ const RESTAURANT_REPLICA_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com
 // Restaurant workflow data
 let restaurantMenu = JSON.parse(localStorage.getItem('restaurant_menu') || '[]');
 let restaurantTables = JSON.parse(localStorage.getItem('restaurant_tables') || JSON.stringify(
-  [1,2,3,4,5,6,7,8,9,10,11,12].map(i => ({ id: i, occupied: Math.random() > 0.7, guests: 0 }))
+  [1,2,3,4,5,6,7,8,9].map(i => ({ id: i, occupied: false, guests: 0 }))
 ));
 let restaurantShift = JSON.parse(localStorage.getItem('restaurant_shift') || JSON.stringify([
   { id: 1, name: 'Carlos', role: 'Server', onDuty: true, shift: '10:00 - 18:00' },
@@ -1324,6 +1367,7 @@ function tryLogin() {
 
   errorEl.style.display = 'none';
 
+  localStorage.setItem('essense_last_email', email);
   currentUser = buildUserFromEmail(email, EDITOR_EMAILS.includes(email));
   localStorage.setItem(STAFF_SESSION_KEY, JSON.stringify({ email, editor: EDITOR_EMAILS.includes(email) }));
   if ('Notification' in window && Notification.permission === 'default') {
@@ -1431,9 +1475,19 @@ function showAdminPanel() {
   loadAvailability();
   loadAudit();
   updateAuthUI();
-  switchAdminTab('calendar');
   loadStaffList();
   startRequestNotifications();
+  // Smart default tab: show Requests if there are pending, else Calendar
+  (async () => {
+    try {
+      const data = await dbGet('booking_requests', 'status=eq.pending&limit=1');
+      const hasPending = Array.isArray(data) && data.length > 0;
+      const inboxVisible = (currentUser.role === 'administrator' || currentUser.role === 'guest_management');
+      switchAdminTab(hasPending && inboxVisible ? 'inbox' : 'calendar');
+    } catch(e) {
+      switchAdminTab('calendar');
+    }
+  })();
 }
 
 function adminLogout() {
@@ -1487,7 +1541,7 @@ function renderPosTickets() {
   if (!list) return;
   
   if (!restaurantPosTickets.length) {
-    list.innerHTML = '<div class="inbox-empty">No active tickets</div>';
+    list.innerHTML = '<div class="inbox-empty">No active tickets — tap New Order to create one</div>';
     return;
   }
   
@@ -1495,7 +1549,8 @@ function renderPosTickets() {
     <div class="pos-ticket">
       <div class="pos-ticket-header">
         <div class="pos-ticket-num">Ticket #${t.id}</div>
-        <div class="pos-ticket-time">Table ${t.tableId} · ${new Date(t.time).toLocaleTimeString()}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--admin-gold);margin-top:4px;">Room ${t.room || '—'} · ${t.guestName || 'Guest'}</div>
+        <div class="pos-ticket-time">Table ${t.tableId || '—'} · ${new Date(t.time).toLocaleTimeString()}</div>
       </div>
       ${t.items.map(i => `
         <div class="pos-item">
@@ -1508,8 +1563,99 @@ function renderPosTickets() {
         <span>TOTAL:</span>
         <span>$${t.items.reduce((sum, i) => sum + (i.price * i.qty), 0).toFixed(2)}</span>
       </div>
+      <button class="abtn abtn-red" style="width:100%;margin-top:10px;font-size:11px;" onclick="closeTicket(${t.id})">Close Ticket</button>
     </div>
   `).join('');
+}
+
+let orderCartItems = {};
+
+function openNewOrderModal() {
+  orderCartItems = {};
+  document.getElementById('order-room').value = '';
+  document.getElementById('order-guest').value = '';
+  document.getElementById('order-table').value = '';
+  renderOrderMenuItems();
+  document.getElementById('order-items-summary-wrap').style.display = 'none';
+  document.getElementById('order-items-summary').innerHTML = '';
+  document.getElementById('new-order-modal').classList.add('open');
+}
+
+function closeNewOrderModal() {
+  document.getElementById('new-order-modal').classList.remove('open');
+  orderCartItems = {};
+}
+
+function renderOrderMenuItems() {
+  const host = document.getElementById('order-menu-items');
+  if (!host) return;
+  if (!restaurantMenu.length) {
+    host.innerHTML = '<div style="color:var(--text-muted);font-size:12px;grid-column:1/-1;">No menu items yet — add some in the Menu tab first.</div>';
+    return;
+  }
+  host.innerHTML = restaurantMenu.map(item => `
+    <div style="background:#1a261a;border:1px solid #2b3d2b;border-radius:6px;padding:8px;cursor:pointer;" onclick="toggleOrderItem(${item.id})" id="order-item-${item.id}">
+      <div style="font-size:11px;font-weight:600;color:var(--text);">${item.name}</div>
+      <div style="font-size:10px;color:var(--admin-gold);margin-top:2px;">$${item.price.toFixed(2)}</div>
+      <div style="font-size:10px;color:var(--text-muted);">${item.category}</div>
+      <div id="order-item-qty-${item.id}" style="font-size:11px;color:#8fcc9f;margin-top:4px;"></div>
+    </div>
+  `).join('');
+}
+
+function toggleOrderItem(itemId) {
+  const item = restaurantMenu.find(i => i.id === itemId);
+  if (!item) return;
+  if (orderCartItems[itemId]) {
+    orderCartItems[itemId].qty += 1;
+  } else {
+    orderCartItems[itemId] = { ...item, qty: 1 };
+  }
+  const qtyEl = document.getElementById(`order-item-qty-${itemId}`);
+  if (qtyEl) qtyEl.textContent = `× ${orderCartItems[itemId].qty} in order`;
+  updateOrderSummary();
+}
+
+function updateOrderSummary() {
+  const items = Object.values(orderCartItems);
+  const wrap = document.getElementById('order-items-summary-wrap');
+  const summary = document.getElementById('order-items-summary');
+  if (!items.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  summary.innerHTML = items.map(i => `
+    <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;">
+      <span style="color:var(--text);">${i.name} ×${i.qty}</span>
+      <span style="color:var(--admin-gold);">$${(i.price * i.qty).toFixed(2)}</span>
+    </div>
+  `).join('') + `<div style="border-top:1px dashed #2b3d2b;margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-weight:600;font-size:12px;"><span style="color:var(--text);">TOTAL</span><span style="color:var(--admin-gold);">$${total.toFixed(2)}</span></div>`;
+}
+
+function submitNewOrder() {
+  const room = document.getElementById('order-room').value.trim();
+  const guestName = document.getElementById('order-guest').value.trim();
+  const tableId = document.getElementById('order-table').value;
+  const items = Object.values(orderCartItems);
+  if (!room || !guestName) { alert('Please enter a Room Number and Guest Name'); return; }
+  if (!items.length) { alert('Please add at least one item to the order'); return; }
+  const ticket = {
+    id: Date.now(),
+    room,
+    guestName,
+    tableId,
+    time: new Date().toISOString(),
+    items
+  };
+  restaurantPosTickets.unshift(ticket);
+  closeNewOrderModal();
+  renderPosTickets();
+  showAdminToast(`✓ Ticket created — Room ${room} · ${guestName}`);
+}
+
+function closeTicket(ticketId) {
+  restaurantPosTickets = restaurantPosTickets.filter(t => t.id !== ticketId);
+  renderPosTickets();
+  showAdminToast('✓ Ticket closed');
 }
 
 function renderTableMap() {
@@ -1554,7 +1700,7 @@ function renderMenuDisplay() {
       <p style="margin:8px 0;">${item.desc || 'No description'}</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
         <span style="font-size:13px;color:var(--admin-gold);font-weight:600;">$${item.price.toFixed(2)}</span>
-        <button class="abtn" style="font-size:10px;padding:4px 8px;" onclick="removeMenuItem(${item.id})">Remove</button>
+        <button class="abtn abtn-red" style="font-size:10px;padding:4px 8px;" onclick="removeMenuItem(${item.id})">Remove</button>
       </div>
     </div>
   `).join('');
@@ -2662,6 +2808,12 @@ window.addEventListener('load', () => {
   if (timeHour) timeHour.addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
   if (timeMinute) timeMinute.addEventListener('change', () => { syncTimePickerValue(); refreshAssignmentWarning(); });
   if (weeklyToggle) weeklyToggle.addEventListener('change', refreshAssignmentWarning);
+  // Pre-fill last used email
+  const lastEmail = localStorage.getItem('essense_last_email');
+  if (lastEmail) {
+    const emailInput = document.getElementById('staff-email');
+    if (emailInput) emailInput.value = lastEmail;
+  }
   if (restoreStaffSession()) {
     showAdminPanel();
   }
