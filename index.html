@@ -613,7 +613,30 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
       <div class="field-group">
         <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
-        <input type="tel" id="guest-phone" placeholder="e.g. 50688887777">
+        <div style="display:flex;gap:8px;">
+          <select id="guest-phone-code" style="background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem .6rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.85rem;font-weight:300;outline:none;min-width:110px;">
+            <option value="506">🇨🇷 +506</option>
+            <option value="1">🇺🇸 +1</option>
+            <option value="52">🇲🇽 +52</option>
+            <option value="57">🇨🇴 +57</option>
+            <option value="34">🇪🇸 +34</option>
+            <option value="44">🇬🇧 +44</option>
+            <option value="49">🇩🇪 +49</option>
+            <option value="33">🇫🇷 +33</option>
+            <option value="39">🇮🇹 +39</option>
+            <option value="31">🇳🇱 +31</option>
+            <option value="55">🇧🇷 +55</option>
+            <option value="54">🇦🇷 +54</option>
+            <option value="56">🇨🇱 +56</option>
+            <option value="51">🇵🇪 +51</option>
+            <option value="61">🇦🇺 +61</option>
+            <option value="81">🇯🇵 +81</option>
+            <option value="86">🇨🇳 +86</option>
+            <option value="91">🇮🇳 +91</option>
+          </select>
+          <input type="tel" id="guest-phone" placeholder="8888 7777" 
+            style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
+        </div>
       </div>
       <!-- Email error, input, and toggle scripts removed as requested -->
       <button class="btn-primary" id="guest-enter-btn" onclick="guestLogin()">Enter · Bienvenido</button>
@@ -1468,7 +1491,14 @@ function guestLogin() {
     return;
   }
   emailErrorEl.style.display = 'none';
-  guestSession = { room, name, email, phone: document.getElementById('guest-phone').value.trim() || null };
+  guestSession = {
+    room,
+    name,
+    email,
+    phone: document.getElementById('guest-phone').value.trim()
+      ? document.getElementById('guest-phone-code').value + document.getElementById('guest-phone').value.replace(/[^0-9]/g,'')
+      : null
+  };
   document.getElementById('room-display').textContent = `${tr('roomDisplay')} ${room} · ${name}`;
   showScreen('screen-guest');
   renderGuestServices();
