@@ -3285,9 +3285,11 @@ window.addEventListener('load', () => {
 });
 
 // Enter keys
-document.getElementById('guest-room').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
-document.getElementById('guest-name').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
-document.getElementById('guest-email').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
+const _roomEl = document.getElementById('guest-room');
+if (_roomEl) _roomEl.addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
+const _nameEl = document.getElementById('guest-name');
+if (_nameEl) _nameEl.addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
+// guest-email field removed, so no addEventListener needed
 </script>
 
 async function notifyStaffWhatsApp(booking) {
