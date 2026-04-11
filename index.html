@@ -3322,10 +3322,52 @@ async function notifyGuestWhatsApp(req, newStatus) {
   window.open(`https://wa.me/${guestPhone.replace(/[^0-9]/g,'')}?text=${msg}`, '_blank');
 }
 
+alter table booking_requests disable row level security;
+alter table activities disable row level security;
+</script>
+
+// --- Moved from after </script> ---
+async function notifyStaffWhatsApp(booking) {
+  try {
+    const staff = [
+      { name: 'Daniela', phone: '50688887777' },
+      { name: 'Fabián', phone: '50688887778' }
+    ];
+    const h = booking.requested_time ? booking.requested_time : 'TBD';
+    const msg = encodeURIComponent(
+      `New booking request at Essence Arenal!\n` +
+      `Service: ${booking.service_name} (${booking.service_type})\n` +
+      `Guest: ${booking.guest_name} · Room ${booking.room}\n` +
+      `📅 ${booking.requested_date || 'TBD'} at ${h}\n` +
+      `Duration: ${booking.duration_minutes} min\n` +
+      (booking.therapist_preference ? `Preferred therapist: ${booking.therapist_preference}\n` : '') +
+      (booking.notes ? `Notes: ${booking.notes}\n` : '') +
+      `\nLog in to the admin panel to approve or decline.`
+    );
+    staff.forEach(s => {
+      if (s.phone) window.open(`https://wa.me/${s.phone.replace(/[^0-9]/g,'')}?text=${msg}`, '_blank');
+    });
+  } catch(e) { console.warn('WhatsApp staff notify failed', e); }
+}
+
+async function notifyGuestWhatsApp(req, newStatus) {
+  const guestPhone = req.guest_phone || null;
+  if (!guestPhone) return;
+  const h = req.requested_time ? formatTime12h(req.requested_time) : 'TBD';
+  const msg = encodeURIComponent(
+    newStatus === 'approved'
+      ? `✅ *Essense Arenal — Booking Confirmed!*\n\nHi ${req.guest_name}! Your *${req.service_name}* is confirmed.\n📅 ${req.requested_date || 'TBD'} at ${h}\n\nWe look forward to seeing you. 🌿`
+      : `❌ *Essense Arenal — Booking Update*\n\nHi ${req.guest_name}, unfortunately we can't accommodate your *${req.service_name}* at that time. Please visit the portal to choose another slot. Sorry for the inconvenience. 🌿`
+  );
+  window.open(`https://wa.me/${guestPhone.replace(/[^0-9]/g,'')}?text=${msg}`, '_blank');
+}
+
+</script>
+<!-- SQL comment block -->
 <!-- ══════════════════════════════════════════════
   SQL TO RUN IN SUPABASE (SQL Editor → New Query)
   Copy and run this ONCE to set up your database.
-══════════════════════════════════════════════
+═══════════════════════════════════════════════
 
 create table if not exists staff (
   id uuid primary key default gen_random_uuid(),
@@ -3384,5 +3426,10 @@ alter table booking_requests disable row level security;
 alter table activities disable row level security;
 
 -->
+</body>
+</html>
+
+</body>
+</html>
 </body>
 </html>
