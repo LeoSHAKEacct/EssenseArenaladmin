@@ -153,26 +153,36 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .section-header h2 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; color:var(--cream); letter-spacing:.05em; }
 .section-header h2 em { color:var(--sage); font-style:italic; }
 .section-header p { color:rgba(200,219,200,0.6); font-size:.85rem; font-weight:300; margin-top:.4rem; letter-spacing:.05em; }
-.cards-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:1.5rem; }
-.service-card { background:rgba(15,31,15,0.7); border:1px solid rgba(122,170,134,0.18); border-radius:2px; overflow:hidden; transition:all .4s; cursor:pointer; }
-.service-card:hover { border-color:rgba(122,170,134,0.4); transform:translateY(-3px); box-shadow:0 20px 40px rgba(0,0,0,0.4); }
-.card-visual { height:120px; display:flex; align-items:center; justify-content:center; font-size:3rem; background:rgba(0,0,0,0.2); }
-.card-body { padding:1.2rem; }
-.card-name { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; color:var(--cream); margin-bottom:.3rem; }
-.card-sub { font-size:.65rem; letter-spacing:.15em; text-transform:uppercase; color:var(--sage); margin-bottom:.5rem; }
-.card-desc { font-size:.8rem; color:rgba(200,219,200,0.6); line-height:1.6; font-weight:300; margin-bottom:1rem; }
-.card-price { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:300; color:var(--gold); }
-.book-btn { background:transparent; border:1px solid rgba(122,170,134,0.35); border-radius:2px; padding:.55rem 1.2rem; color:var(--sage); font-family:'Jost',sans-serif; font-size:.62rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; margin-top:.8rem; }
-.book-btn:hover { background:rgba(122,170,134,0.1); border-color:var(--sage); }
+/* Service card carousel */
+.carousel-wrap { position:relative; }
+.carousel-card { background:rgba(10,24,10,0.85); border:1px solid rgba(122,170,134,0.22); border-radius:4px; overflow:hidden; display:flex; flex-direction:column; align-items:center; text-align:center; padding-bottom:2.2rem; transition:border-color .3s; }
+.carousel-card:hover { border-color:rgba(122,170,134,0.45); }
+.carousel-icon { font-size:5rem; width:100%; padding:2.8rem 1rem 2rem; background:rgba(0,0,0,0.22); }
+.carousel-name { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--cream); margin:1.6rem 1.5rem .3rem; line-height:1.15; }
+.carousel-sub { font-size:.58rem; letter-spacing:.28em; text-transform:uppercase; color:var(--sage); margin-bottom:1rem; }
+.carousel-desc { font-size:.88rem; color:rgba(200,219,200,0.6); max-width:420px; line-height:1.7; padding:0 2rem; margin-bottom:1.4rem; font-weight:300; }
+.carousel-price { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; color:var(--gold); margin-bottom:1.6rem; }
+.carousel-book-btn { background:linear-gradient(135deg,var(--fern),var(--moss)); border:none; border-radius:2px; padding:.7rem 2.2rem; color:var(--cream); font-family:'Jost',sans-serif; font-size:.62rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
+.carousel-book-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,0.35); }
+.carousel-nav { display:flex; align-items:center; justify-content:center; gap:1.2rem; padding:.9rem 0 .2rem; }
+.carousel-arrow { background:none; border:1px solid rgba(122,170,134,0.28); border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; color:var(--sage); font-size:1.6rem; cursor:pointer; transition:all .25s; line-height:1; flex-shrink:0; }
+.carousel-arrow:hover { background:rgba(122,170,134,0.12); border-color:var(--sage); }
+.carousel-dots { display:flex; gap:7px; align-items:center; }
+.carousel-dot { width:6px; height:6px; border-radius:50%; background:rgba(122,170,134,0.22); cursor:pointer; transition:all .3s; flex-shrink:0; }
+.carousel-dot.active { background:var(--sage); width:22px; border-radius:3px; }
 
 /* Booking modal */
 .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:300; align-items:center; justify-content:center; backdrop-filter:blur(6px); }
 .modal-overlay.open { display:flex; }
 .booking-modal { background:#0f1f0f; border:1px solid rgba(122,170,134,0.25); border-radius:3px; width:480px; max-width:95vw; max-height:90vh; overflow-y:auto; padding:2.5rem; position:relative; animation:fadeUp .4s ease; }
-.time-slot-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:.5rem; margin-top:.4rem; }
-.time-slot-btn { background:#f0f5ee; border:1px solid #4a7a3a; color:#2d4a2d; border-radius:20px; padding:8px 14px; font-family:'Jost',sans-serif; font-size:.72rem; letter-spacing:.05em; cursor:pointer; transition:all .2s; text-align:center; }
-.time-slot-btn:hover { background:#ddeedd; }
-.time-slot-btn.selected { background:#2d4a2d; color:#fff; border-color:#2d4a2d; }
+/* Drum / roller time picker */
+.drum-picker-wrap { position:relative; display:flex; gap:10px; margin-top:.5rem; }
+.drum-col { flex:1; height:220px; overflow-y:scroll; scroll-snap-type:y mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; border:1px solid rgba(122,170,134,0.2); border-radius:4px; background:rgba(6,16,6,0.95); }
+.drum-col::-webkit-scrollbar { display:none; }
+.drum-spacer { height:88px; }
+.drum-item { scroll-snap-align:center; height:44px; display:flex; align-items:center; justify-content:center; font-family:'Jost',sans-serif; font-size:.9rem; letter-spacing:.06em; color:rgba(200,219,200,0.22); cursor:pointer; user-select:none; transition:color .12s; }
+.drum-item.active { color:var(--cream); font-size:1rem; }
+.drum-selection-bar { position:absolute; left:0; right:0; top:calc(50% - 22px); height:44px; border-top:1px solid rgba(122,170,134,0.38); border-bottom:1px solid rgba(122,170,134,0.38); background:rgba(122,170,134,0.06); pointer-events:none; z-index:2; }
 .modal-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; color:var(--cream); margin-bottom:.3rem; }
 .modal-sub { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--sage); margin-bottom:1.8rem; }
 .modal-close { position:absolute; top:1.2rem; right:1.2rem; background:none; border:none; color:rgba(122,170,134,0.5); font-size:1.5rem; cursor:pointer; }
@@ -668,7 +678,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <h2 id="spa-header-title">Spa &amp; <em>Wellness</em></h2>
       <p id="spa-header-sub">Nestled in the rainforest · Choose your experience</p>
     </div>
-    <div class="cards-grid" id="spa-cards"></div>
+    <div class="carousel-wrap" id="spa-cards"></div>
   </div>
 
   <!-- ROOM SERVICE -->
@@ -684,7 +694,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         </div>
       </div>
     </div>
-    <div class="cards-grid" id="product-cards"></div>
+    <div class="carousel-wrap" id="product-cards"></div>
     <div id="product-cart-panel" style="margin-top:14px;display:none;background:rgba(15,31,15,0.55);border:1px solid rgba(122,170,134,0.2);border-radius:6px;padding:14px;">
       <div id="product-cart-items" style="font-size:.82rem;color:rgba(200,219,200,0.75);margin-bottom:10px;"></div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
@@ -700,7 +710,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <h2 id="tours-header-title">Experiences &amp; <em>Tours</em></h2>
       <p id="tours-header-sub">Explore the magic of Arenal · Book your adventure</p>
     </div>
-    <div class="cards-grid" id="tour-cards"></div>
+    <div class="carousel-wrap" id="tour-cards"></div>
   </div>
 
   <!-- MY ORDERS -->
@@ -756,30 +766,14 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         </div>
     <div class="modal-sub" id="bm-sub">Spa &amp; Wellness</div>
     <div class="field-group"><label id="bm-label-date">Preferred Date</label><input type="date" id="bm-date"></div>
-    <div class="field-group"><label id="bm-label-time">SELECT TIME</label>
-      <div class="time-slot-grid" id="bm-time-slots">
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'10:00 AM')">10 AM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'11:00 AM')">11 AM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'12:00 PM')">12 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'1:00 PM')">1 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'2:00 PM')">2 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'3:00 PM')">3 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'4:00 PM')">4 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'5:00 PM')">5 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'6:00 PM')">6 PM</button>
-        <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'7:00 PM')">7 PM</button>
-      </div>
-      <div style="margin-top:12px;">
-        <div style="font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;">Minutes</div>
-        <div style="display:flex;gap:8px;">
-          <button class="min-chip active" id="min-00" onclick="selectMinute(0)">:00</button>
-          <button class="min-chip" id="min-15" onclick="selectMinute(15)">:15</button>
-          <button class="min-chip" id="min-30" onclick="selectMinute(30)">:30</button>
-          <button class="min-chip" id="min-45" onclick="selectMinute(45)">:45</button>
-        </div>
+    <div class="field-group">
+      <label id="bm-label-time">SELECT TIME</label>
+      <div class="drum-picker-wrap" id="bm-drum-wrap">
+        <div class="drum-col" id="bm-drum-hour"></div>
+        <div class="drum-col" id="bm-drum-minute"></div>
+        <div class="drum-selection-bar"></div>
       </div>
       <div style="font-size:.72rem;color:var(--sage);letter-spacing:.08em;margin-top:10px;" id="bm-time-display">Selected: 10:00 AM</div>
-      <input type="hidden" id="bm-minute" value="0">
     </div>
     <div class="field-group" id="bm-therapist-wrap" style="display:none;"><label id="bm-therapist-label">Select your therapist</label>
       <select id="bm-therapist">
@@ -1529,37 +1523,89 @@ function renderGuestServices() {
   renderProductCards();
   renderProductCart();
 }
+// ── Carousel ──────────────────────────────────────
+const carouselData = {};
+
 function renderCards(containerId, services, category) {
   const c = document.getElementById(containerId);
   if (!c) return;
-  c.innerHTML = services.map(s => `
-    <div class="service-card" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${category}')">
-      <div class="card-visual">${s.icon}</div>
-      <div class="card-body">
-        <div class="card-name">${localizeService(s).name}</div>
-        <div class="card-sub">${localizeService(s).sub}</div>
-        <div class="card-desc">${localizeService(s).desc}</div>
-        <div class="card-price">${s.price}</div>
-        <button class="book-btn">${tr('requestBooking')}</button>
-      </div>
-    </div>`).join('');
+  carouselData[containerId] = { services, category, idx: 0 };
+  carouselData[containerId].refresh = () => _refreshCarouselCard(containerId);
+  c.innerHTML = `
+    <div class="carousel-card-area" id="${containerId}-card"></div>
+    <div class="carousel-nav">
+      <button class="carousel-arrow" onclick="carouselPrev('${containerId}')">&#8249;</button>
+      <div class="carousel-dots" id="${containerId}-dots"></div>
+      <button class="carousel-arrow" onclick="carouselNext('${containerId}')">&#8250;</button>
+    </div>`;
+  _refreshCarouselCard(containerId);
+}
+
+function carouselPrev(id) {
+  const d = carouselData[id]; if (!d) return;
+  d.idx = (d.idx - 1 + d.services.length) % d.services.length;
+  d.refresh();
+}
+function carouselNext(id) {
+  const d = carouselData[id]; if (!d) return;
+  d.idx = (d.idx + 1) % d.services.length;
+  d.refresh();
+}
+function carouselGoto(id, i) {
+  const d = carouselData[id]; if (!d) return;
+  d.idx = i; d.refresh();
+}
+
+function _refreshCarouselCard(id) {
+  const d = carouselData[id]; if (!d) return;
+  const s = d.services[d.idx];
+  const ls = d.category ? localizeService(s) : s;
+  const cardEl = document.getElementById(`${id}-card`);
+  if (cardEl) cardEl.innerHTML = `
+    <div class="carousel-card">
+      <div class="carousel-icon">${s.icon}</div>
+      <div class="carousel-name">${ls.name || s.name}</div>
+      <div class="carousel-sub">${ls.sub || s.sub}</div>
+      <div class="carousel-desc">${ls.desc || s.desc}</div>
+      <div class="carousel-price">${s.price}</div>
+      <button class="carousel-book-btn" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${d.category}')">${tr('requestBooking')}</button>
+    </div>`;
+  const dotsEl = document.getElementById(`${id}-dots`);
+  if (dotsEl) dotsEl.innerHTML = d.services.map((_, i) =>
+    `<span class="carousel-dot${i === d.idx ? ' active' : ''}" onclick="carouselGoto('${id}',${i})"></span>`).join('');
 }
 
 function renderProductCards() {
   const c = document.getElementById('product-cards');
   if (!c) return;
-  c.innerHTML = PRODUCT_ITEMS.map(p => `
-    <div class="service-card">
-      <div class="card-visual">${p.icon}</div>
-      <div class="card-body">
-        <div class="card-name">${p.name}</div>
-        <div class="card-sub">${p.sub}</div>
-        <div class="card-desc">${p.desc}</div>
-        <div class="card-price">$${p.price}</div>
-        <button class="book-btn" onclick="event.stopPropagation(); addProductToCart('${p.id}')">${tr('addToRoom')}</button>
-      </div>
-    </div>
-  `).join('');
+  carouselData['product-cards'] = { services: PRODUCT_ITEMS, idx: 0 };
+  carouselData['product-cards'].refresh = _refreshProductCard;
+  c.innerHTML = `
+    <div class="carousel-card-area" id="product-cards-card"></div>
+    <div class="carousel-nav">
+      <button class="carousel-arrow" onclick="carouselPrev('product-cards')">&#8249;</button>
+      <div class="carousel-dots" id="product-cards-dots"></div>
+      <button class="carousel-arrow" onclick="carouselNext('product-cards')">&#8250;</button>
+    </div>`;
+  _refreshProductCard();
+}
+
+function _refreshProductCard() {
+  const d = carouselData['product-cards']; if (!d) return;
+  const p = d.services[d.idx];
+  const cardEl = document.getElementById('product-cards-card');
+  if (cardEl) cardEl.innerHTML = `
+    <div class="carousel-card">
+      <div class="carousel-icon">${p.icon}</div>
+      <div class="carousel-name">${p.name}</div>
+      <div class="carousel-sub">${p.sub}</div>
+      <div class="carousel-desc">${p.desc}</div>
+      <div class="carousel-price">$${p.price}</div>
+      <button class="carousel-book-btn" onclick="addProductToCart('${p.id}')">${tr('addToRoom')}</button>
+    </div>`;
+  const dotsEl = document.getElementById('product-cards-dots');
+  if (dotsEl) dotsEl.innerHTML = PRODUCT_ITEMS.map((_, i) =>
+    `<span class="carousel-dot${i === d.idx ? ' active' : ''}" onclick="carouselGoto('product-cards',${i})"></span>`).join('');
 }
 
 function addProductToCart(productId) {
@@ -1621,8 +1667,6 @@ function openBookingModal(service, category) {
   document.getElementById('bm-title').textContent = service.name;
   document.getElementById('bm-sub').textContent = category;
   document.getElementById('bm-date').value = new Date().toISOString().split('T')[0];
-  window.selectedTimeSlot = null;
-  document.querySelectorAll('#bm-time-slots .time-slot-btn').forEach(b => b.classList.remove('selected'));
   const therapistServices = ['Signature Massage', 'Holistic Therapy', 'Beauty Treatment', 'Couples Massage'];
   const therapistWrap = document.getElementById('bm-therapist-wrap');
   const therapistSelect = document.getElementById('bm-therapist');
@@ -1631,43 +1675,73 @@ function openBookingModal(service, category) {
   if (therapistSelect) therapistSelect.value = 'No preference';
   document.getElementById('bm-notes').value = '';
   document.getElementById('booking-modal').classList.add('open');
+  initBookingDrum();
 }
 function closeBookingModal() { document.getElementById('booking-modal').classList.remove('open'); }
-function selectTimeSlot(btn, time) {
-  document.querySelectorAll('#bm-time-slots .time-slot-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  window.selectedTimeSlot = time;
-  updateTimeDisplay();
-}
-function selectMinute(m) {
-  document.getElementById('bm-minute').value = m;
-  ['00','15','30','45'].forEach(x => document.getElementById('min-'+x).classList.remove('active'));
-  document.getElementById('min-'+String(m).padStart(2,'0')).classList.add('active');
-  updateTimeDisplay();
+// ── Drum roller time picker ───────────────────────
+const BM_HOURS = [
+  {h24:7,label:'7 AM'},{h24:8,label:'8 AM'},{h24:9,label:'9 AM'},
+  {h24:10,label:'10 AM'},{h24:11,label:'11 AM'},{h24:12,label:'12 PM'},
+  {h24:13,label:'1 PM'},{h24:14,label:'2 PM'},{h24:15,label:'3 PM'},
+  {h24:16,label:'4 PM'},{h24:17,label:'5 PM'},{h24:18,label:'6 PM'},
+  {h24:19,label:'7 PM'},{h24:20,label:'8 PM'}
+];
+const BM_MINUTES = [{m:0,label:':00'},{m:15,label:':15'},{m:30,label:':30'},{m:45,label:':45'}];
+let bmSelectedHourIdx = 3;   // default 10 AM
+let bmSelectedMinuteIdx = 0; // default :00
+
+function initBookingDrum() {
+  const hourCol = document.getElementById('bm-drum-hour');
+  const minCol  = document.getElementById('bm-drum-minute');
+  if (!hourCol || !minCol) return;
+
+  if (!hourCol._drumReady) {
+    const buildCol = (col, items) => {
+      col.innerHTML = '<div class="drum-spacer"></div>' +
+        items.map(it => `<div class="drum-item">${it.label}</div>`).join('') +
+        '<div class="drum-spacer"></div>';
+    };
+    buildCol(hourCol, BM_HOURS);
+    buildCol(minCol, BM_MINUTES);
+
+    hourCol.addEventListener('scroll', () => {
+      bmSelectedHourIdx = Math.max(0, Math.min(BM_HOURS.length - 1, Math.round(hourCol.scrollTop / 44)));
+      _updateDrumHighlights();
+      _updateBmTimeDisplay();
+    });
+    minCol.addEventListener('scroll', () => {
+      bmSelectedMinuteIdx = Math.max(0, Math.min(BM_MINUTES.length - 1, Math.round(minCol.scrollTop / 44)));
+      _updateDrumHighlights();
+      _updateBmTimeDisplay();
+    });
+    hourCol._drumReady = true;
+  }
+
+  bmSelectedHourIdx = 3;
+  bmSelectedMinuteIdx = 0;
+  requestAnimationFrame(() => {
+    hourCol.scrollTop = bmSelectedHourIdx * 44;
+    minCol.scrollTop  = bmSelectedMinuteIdx * 44;
+    _updateDrumHighlights();
+    _updateBmTimeDisplay();
+  });
 }
 
-function updateTimeDisplay() {
-  const hourBtn = document.querySelector('.time-slot-btn.selected, .hour-btn.active, [class*="time"][class*="active"]');
-  let hour = 10;
-  if (hourBtn) {
-    // Try to extract hour from button text or data attribute
-    if (hourBtn.dataset && hourBtn.dataset.hour) {
-      hour = parseInt(hourBtn.dataset.hour);
-    } else {
-      // Try to parse from text (e.g. "10 AM")
-      const txt = hourBtn.textContent.trim();
-      const match = txt.match(/(\d+)/);
-      if (match) hour = parseInt(match[1]);
-      if (/PM/i.test(txt) && hour < 12) hour += 12;
-      if (/AM/i.test(txt) && hour === 12) hour = 0;
-    }
-  }
-  const minute = parseInt(document.getElementById('bm-minute')?.value || 0);
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  const h12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
-  const display = `Selected: ${h12}:${String(minute).padStart(2,'0')} ${ampm}`;
+function _updateDrumHighlights() {
+  document.querySelectorAll('#bm-drum-hour .drum-item').forEach((el, i) =>
+    el.classList.toggle('active', i === bmSelectedHourIdx));
+  document.querySelectorAll('#bm-drum-minute .drum-item').forEach((el, i) =>
+    el.classList.toggle('active', i === bmSelectedMinuteIdx));
+}
+
+function _updateBmTimeDisplay() {
+  const h = BM_HOURS[bmSelectedHourIdx];
+  const m = BM_MINUTES[bmSelectedMinuteIdx];
+  if (!h || !m) return;
+  const h12 = h.h24 > 12 ? h.h24 - 12 : h.h24;
+  const ampm = h.h24 >= 12 ? 'PM' : 'AM';
   const el = document.getElementById('bm-time-display');
-  if (el) el.textContent = display;
+  if (el) el.textContent = `Selected: ${h12}:${String(m.m).padStart(2,'0')} ${ampm}`;
 }
 
 async function submitBooking() {
@@ -1684,19 +1758,9 @@ async function submitBooking() {
     return;
   }
   const date = document.getElementById('bm-date').value;
-  let time = window.selectedTimeSlot || '10:00 AM';
-  // Compose time with minute picker
-  const minute = document.getElementById('bm-minute')?.value || '0';
-  // Try to extract hour from selectedTimeSlot
-  let hour = 10;
-  if (time) {
-    const match = time.match(/(\d+)/);
-    if (match) hour = parseInt(match[1]);
-    if (/PM/i.test(time) && hour < 12) hour += 12;
-    if (/AM/i.test(time) && hour === 12) hour = 0;
-  }
-  // Format as HH:MM
-  time = `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
+  const bmH = BM_HOURS[bmSelectedHourIdx] || BM_HOURS[3];
+  const bmM = BM_MINUTES[bmSelectedMinuteIdx] || BM_MINUTES[0];
+  const time = `${String(bmH.h24).padStart(2,'0')}:${String(bmM.m).padStart(2,'0')}`;
   const notes = document.getElementById('bm-notes').value;
   const therapistWrap = document.getElementById('bm-therapist-wrap');
   const therapistSelection = document.getElementById('bm-therapist')?.value || 'No preference';
