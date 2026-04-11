@@ -1473,10 +1473,15 @@ function showScreen(id) {
 //  GUEST FLOW
 // ══════════════════════════════════════════════
 function guestLogin() {
-async function guestLogin() {
-async function guestLogin() {
   guestSession = {};
   showScreen('screen-guest');
+  renderGuestServices();
+}
+
+
+
+
+
   renderGuestServices();
 }
 }
