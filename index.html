@@ -1663,7 +1663,6 @@ function updateTimeDisplay() {
   const el = document.getElementById('bm-time-display');
   if (el) el.textContent = display;
 }
-}
 
 async function submitBooking() {
   if (!bookingContext) return;
@@ -1833,7 +1832,13 @@ function restoreStaffSession() {
     if (!saved || typeof saved !== 'object' || !saved.email) return false;
     currentUser = buildUserFromEmail(saved.email, !!saved.editor);
     return true;
-  </script>
+  } catch(e) { return false; }
+}
+
+function buildUserFromEmail(email, isEditor) {
+  return staffList.find(s => s.email === email) || { email, role: 'receptionist', name: email };
+}
+</script>
   } catch (e) {
     return false;
   }
