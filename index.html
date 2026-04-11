@@ -158,7 +158,9 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .carousel-card { background:#e8dfc8; border:1px solid rgba(122,170,134,0.22); border-radius:4px; display:flex; flex-direction:column; align-items:center; text-align:center; padding:2.5rem 1rem 2.2rem; transition:border-color .3s; }
 .carousel-card:hover { border-color:rgba(122,170,134,0.55); }
 .carousel-medallion-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
-.carousel-medallion { width:clamp(200px,calc(100vw - 160px),280px); height:clamp(200px,calc(100vw - 160px),280px); border-radius:50%; border:1px solid rgba(122,170,134,0.35); background:#0d4a5a; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.65rem; flex-shrink:0; padding:1.8rem; }
+.carousel-medallion { width:clamp(200px,calc(100vw - 160px),280px); height:clamp(200px,calc(100vw - 160px),280px); border-radius:50%; border:1px solid rgba(122,170,134,0.35); background:#0d4a5a; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.65rem; flex-shrink:0; padding:1.8rem; transition:transform .22s ease, filter .22s ease; }
+.carousel-medallion--clickable { cursor:pointer; }
+.carousel-medallion--clickable:hover { transform:scale(1.06); filter:brightness(1.18); }
 .carousel-icon { font-size:3.8rem; line-height:1; }
 .carousel-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; color:var(--cream); line-height:1.2; }
 .carousel-sub { font-size:.52rem; letter-spacing:.26em; text-transform:uppercase; color:var(--sage); }
@@ -1725,7 +1727,7 @@ function _refreshSpaCatCard() {
     <div class="carousel-card">
       <div class="carousel-medallion-row">
         <button class="carousel-arrow" onclick="carouselPrev('spa-cats')">&#8249;</button>
-        <div class="carousel-medallion">
+        <div class="carousel-medallion carousel-medallion--clickable" onclick="selectSpaCategory('${s.id}')">
           <div class="carousel-icon">${s.icon}</div>
           <div class="carousel-name">${s.name}</div>
           <div class="carousel-sub">${s.sub}</div>
@@ -1733,7 +1735,6 @@ function _refreshSpaCatCard() {
         <button class="carousel-arrow" onclick="carouselNext('spa-cats')">&#8250;</button>
       </div>
       <div class="carousel-desc">${s.desc}</div>
-      <button class="carousel-book-btn" onclick="selectSpaCategory('${s.id}')">Explore &#8594;</button>
     </div>`;
   const dotsEl = document.getElementById('spa-cats-dots');
   if (dotsEl) dotsEl.innerHTML = SPA_CATEGORIES.map((_, i) =>
@@ -1783,7 +1784,7 @@ function _refreshCarouselCard(id) {
     <div class="carousel-card">
       <div class="carousel-medallion-row">
         <button class="carousel-arrow" onclick="carouselPrev('${id}')">&#8249;</button>
-        <div class="carousel-medallion">
+        <div class="carousel-medallion carousel-medallion--clickable" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${d.category}')">
           <div class="carousel-icon">${s.icon}</div>
           <div class="carousel-name">${ls.name || s.name}</div>
           <div class="carousel-sub">${ls.sub || s.sub}</div>
@@ -1792,7 +1793,6 @@ function _refreshCarouselCard(id) {
       </div>
       <div class="carousel-desc">${ls.desc || s.desc}</div>
       <div class="carousel-price">${s.price}</div>
-      <button class="carousel-book-btn" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${d.category}')">${tr('requestBooking')}</button>
     </div>`;
   const dotsEl = document.getElementById(`${id}-dots`);
   if (dotsEl) dotsEl.innerHTML = d.services.map((_, i) =>
@@ -1818,7 +1818,7 @@ function _refreshProductCard() {
     <div class="carousel-card">
       <div class="carousel-medallion-row">
         <button class="carousel-arrow" onclick="carouselPrev('product-cards')">&#8249;</button>
-        <div class="carousel-medallion">
+        <div class="carousel-medallion carousel-medallion--clickable" onclick="addProductToCart('${p.id}')">
           <div class="carousel-icon">${p.icon}</div>
           <div class="carousel-name">${p.name}</div>
           <div class="carousel-sub">${p.sub}</div>
@@ -1827,7 +1827,6 @@ function _refreshProductCard() {
       </div>
       <div class="carousel-desc">${p.desc}</div>
       <div class="carousel-price">$${p.price}</div>
-      <button class="carousel-book-btn" onclick="addProductToCart('${p.id}')">${tr('addToRoom')}</button>
     </div>`;
   const dotsEl = document.getElementById('product-cards-dots');
   if (dotsEl) dotsEl.innerHTML = PRODUCT_ITEMS.map((_, i) =>
