@@ -611,6 +611,10 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div id="guest-error" class="error-msg">Room number and name required</div>
       <div class="guest-field"><label class="guest-label" id="label-room">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
       <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
+      <div class="field-group">
+        <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">(optional · for booking confirmations)</span></label>
+        <input type="tel" id="guest-phone" placeholder="e.g. 50688887777" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
+      </div>
       <div class="guest-field">
         <label class="guest-label" id="label-email">YOUR EMAIL</label>
         <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com">
@@ -1136,6 +1140,10 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         <option value="administrator">Administrator</option>
       </select>
     </div>
+    <div class="aform-group">
+      <label class="aform-label">WhatsApp Number <span style="opacity:.5;font-size:10px;">(international format e.g. 50688887777)</span></label>
+      <input class="aform-control" id="ns-phone" placeholder="506XXXXXXXX">
+    </div>
     <div class="aform-actions">
       <button class="abtn" onclick="closeAModal('amodal-staff')">Cancel</button>
       <button class="abtn abtn-gold" onclick="saveStaff()">Add Staff</button>
@@ -1453,7 +1461,7 @@ function guestLogin() {
     return;
   }
   emailErrorEl.style.display = 'none';
-  guestSession = { room, name, email };
+  guestSession = { room, name, email, phone: document.getElementById('guest-phone').value.trim() || null };
   document.getElementById('room-display').textContent = `${tr('roomDisplay')} ${room} · ${name}`;
   showScreen('screen-guest');
   renderGuestServices();
@@ -1637,10 +1645,12 @@ async function submitBooking() {
     therapist_preference: therapistPreference,
     notes: notes,
     price: parseFloat((service.price || '$0').replace('$','')) || null,
-    status: 'pending'
+    status: 'pending',
+    guest_phone: guestSession.phone || null
   };
   try {
     await dbPost('booking_requests', body);
+    await notifyStaffWhatsApp(body);
     closeBookingModal();
     showToast('✓ Request sent! We\'ll confirm shortly.');
     loadMyBookings();
@@ -2237,6 +2247,7 @@ async function handleRequest(id, newStatus) {
     handled_by: currentUser.id,
     handled_at: new Date().toISOString()
   });
+  await notifyGuestWhatsApp(req, newStatus);
   // If approved → add to calendar + sync to Cloudbeds
   if (newStatus === 'approved') {
     await addApprovedToCalendar(req);
@@ -3155,7 +3166,14 @@ async function saveStaff() {
   const code = document.getElementById('ns-code').value.trim();
   const role = document.getElementById('ns-role').value;
   if (!name || !email || !code) { alert('All fields required'); return; }
-  await dbPost('staff', { name, email, access_code: code, role, active: true });
+  await dbPost('staff', {
+    name,
+    email,
+    access_code: code,
+    role,
+    active: true,
+    phone: document.getElementById('ns-phone').value.trim() || null
+  });
   await loadStaffList();
   closeAModal('amodal-staff');
   renderStaffTable();
@@ -3201,6 +3219,39 @@ document.getElementById('guest-room').addEventListener('keydown', e => { if(e.ke
 document.getElementById('guest-name').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
 document.getElementById('guest-email').addEventListener('keydown', e => { if(e.key==='Enter') guestLogin(); });
 </script>
+
+async function notifyStaffWhatsApp(booking) {
+  try {
+    const staff = await dbGet('staff', 'active=eq.true');
+    if (!staff || !staff.length) return;
+    const h = booking.requested_time ? formatTime12h(booking.requested_time) : 'TBD';
+    const msg = encodeURIComponent(
+      `🌿 *New Booking — Essense Arenal*\n\n` +
+      `Service: ${booking.service_name}\n` +
+      `Guest: ${booking.guest_name} · Room ${booking.room}\n` +
+      `📅 ${booking.requested_date || 'TBD'} at ${h}\n` +
+      `Duration: ${booking.duration_minutes} min\n` +
+      (booking.therapist_preference ? `Preferred therapist: ${booking.therapist_preference}\n` : '') +
+      (booking.notes ? `Notes: ${booking.notes}\n` : '') +
+      `\nLog in to the admin panel to approve or decline.`
+    );
+    staff.forEach(s => {
+      if (s.phone) window.open(`https://wa.me/${s.phone.replace(/[^0-9]/g,'')}?text=${msg}`, '_blank');
+    });
+  } catch(e) { console.warn('WhatsApp staff notify failed', e); }
+}
+
+async function notifyGuestWhatsApp(req, newStatus) {
+  const guestPhone = req.guest_phone || null;
+  if (!guestPhone) return;
+  const h = req.requested_time ? formatTime12h(req.requested_time) : 'TBD';
+  const msg = encodeURIComponent(
+    newStatus === 'approved'
+      ? `✅ *Essense Arenal — Booking Confirmed!*\n\nHi ${req.guest_name}! Your *${req.service_name}* is confirmed.\n📅 ${req.requested_date || 'TBD'} at ${h}\n\nWe look forward to seeing you. 🌿`
+      : `❌ *Essense Arenal — Booking Update*\n\nHi ${req.guest_name}, unfortunately we can't accommodate your *${req.service_name}* at that time. Please visit the portal to choose another slot. Sorry for the inconvenience. 🌿`
+  );
+  window.open(`https://wa.me/${guestPhone.replace(/[^0-9]/g,'')}?text=${msg}`, '_blank');
+}
 
 <!-- ══════════════════════════════════════════════
   SQL TO RUN IN SUPABASE (SQL Editor → New Query)
