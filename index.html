@@ -166,6 +166,8 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .carousel-price { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; color:#8a6e3a; margin-bottom:1.6rem; }
 .carousel-book-btn { background:linear-gradient(135deg,var(--fern),var(--moss)); border:none; border-radius:2px; padding:.7rem 2.2rem; color:var(--cream); font-family:'Jost',sans-serif; font-size:.62rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
 .carousel-book-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,0.35); }
+.spa-back-btn { background:none; border:1px solid rgba(45,74,45,0.3); color:#2d4a2d; border-radius:20px; padding:6px 16px; font-size:.82rem; letter-spacing:.04em; cursor:pointer; margin-bottom:1rem; display:inline-block; transition:background .2s; }
+.spa-back-btn:hover { background:rgba(45,74,45,0.07); }
 .carousel-dots-row { display:flex; justify-content:center; padding:.5rem 0 .2rem; }
 .carousel-arrow { background:none; border:1px solid rgba(122,170,134,0.28); border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; color:var(--sage); font-size:1.6rem; cursor:pointer; transition:all .25s; line-height:1; flex-shrink:0; }
 .carousel-arrow:hover { background:rgba(122,170,134,0.12); border-color:var(--sage); }
@@ -1629,13 +1631,41 @@ function showGuestTab(tab) {
 }
 
 // Services data
-const SPA_SERVICES = [
-  { id:'holistic-therapy', name:'Holistic Therapy', sub:'Ancient wisdom', desc:'Restore balance from within with our signature rainforest ritual.', price:'$120', icon:'🌿', duration:90 },
-  { id:'signature-massage', name:'Signature Massage', sub:'Deep restoration', desc:'Deeply restorative bodywork tailored to your body\'s needs.', price:'$95', icon:'🤲', duration:60 },
-  { id:'beauty-treatment', name:'Beauty Treatment', sub:'Facials & body', desc:'Volcanic mud, chocolate and natural botanicals.', price:'$80', icon:'💆', duration:60 },
-  { id:'sound-healing', name:'Sound Healing', sub:'Tibetan bowls', desc:'Vibration therapy for deep nervous system reset.', price:'$75', icon:'🔔', duration:60 },
-  { id:'cacao-ceremony', name:'Cacao Ceremony', sub:'Sacred ritual', desc:'Heart-opening ceremony with ceremonial cacao from our farm.', price:'$65', icon:'🍫', duration:90 },
-  { id:'couples-massage', name:'Couples Massage', sub:'For two', desc:'Side-by-side massage experience in our jungle suite.', price:'$180', icon:'🌸', duration:90 },
+const SPA_CATEGORIES = [
+  { id:'cat-therapies', name:'Therapies', sub:'Holistic healing', desc:'Ancient rituals and modern energy therapies for mind-body alignment.', icon:'🌟' },
+  { id:'cat-massages', name:'Massages', sub:'Expert bodywork', desc:'Professional massage techniques to restore and revitalize your body.', icon:'🤲' },
+  { id:'cat-beauty', name:'Beauty Treatments', sub:'Skin & wellness', desc:'Natural beauty rituals using volcanic and botanical ingredients.', icon:'💆' },
+];
+const THERAPIES_SERVICES = [
+  { id:'temazcal', name:'Temazcal / Sweat Lodge', sub:'180 min · $78/pax (min 2)', desc:'Ancient sweat lodge ceremony for deep purification and renewal.', price:'$78/pax', icon:'🔥', duration:180 },
+  { id:'ionic-detox', name:'Ionic Detox', sub:'45 min', desc:'Ionic foot bath that draws out toxins and restores cellular balance.', price:'$48', icon:'⚡', duration:45 },
+  { id:'reiki', name:'Reiki', sub:'60 min', desc:'Universal life energy channeled to clear blockages and restore flow.', price:'$68', icon:'🌟', duration:60 },
+  { id:'guided-meditation', name:'Guided Meditation', sub:'30 min', desc:'Led visualization and breathwork for deep relaxation and clarity.', price:'$25', icon:'🧘', duration:30 },
+  { id:'sound-bath', name:'Sound Bath Relaxation', sub:'60 min', desc:'Tibetan bowls and crystal singing bowls for nervous system reset.', price:'$48 / $14 group', icon:'🔔', duration:60 },
+  { id:'nlp-therapy', name:'NLP / Timeline Therapy', sub:'60 min · min 3 sessions', desc:'Neuro-linguistic programming to reprogram limiting beliefs.', price:'$98/session', icon:'🧠', duration:60 },
+  { id:'forest-therapy', name:'Forest Therapy', sub:'2 hours', desc:'Guided immersion in the rainforest for grounding and renewal.', price:'$48/pax', icon:'🌿', duration:120 },
+];
+const MASSAGES_SERVICES = [
+  { id:'swedish-massage', name:'Swedish Massage', sub:'60 or 90 min', desc:'Classic full-body massage using long flowing strokes for total relaxation.', price:'$48 / $68', icon:'🤲', duration:60 },
+  { id:'deep-tissue', name:'Deep Tissue', sub:'60 or 90 min', desc:'Targeted pressure on deep muscle layers to release chronic tension.', price:'$55 / $78', icon:'💪', duration:60 },
+  { id:'lymphatic-drainage', name:'Lymphatic Drainage', sub:'60 or 90 min', desc:'Gentle rhythmic technique to stimulate lymph flow and reduce inflammation.', price:'$55 / $78', icon:'🌊', duration:60 },
+  { id:'hot-stones', name:'Hot Stones', sub:'90 min', desc:'Heated basalt stones melt tension from muscles for profound relaxation.', price:'$78', icon:'🪨', duration:90 },
+  { id:'reflexology', name:'Reflexology', sub:'60 min', desc:'Targeted pressure on foot reflex zones to activate whole-body healing.', price:'$55', icon:'👣', duration:60 },
+  { id:'tired-legs', name:'Tired Legs Massage', sub:'60 min', desc:'Specialized technique to relieve heaviness and fatigue in the legs.', price:'$55', icon:'🦵', duration:60 },
+  { id:'thai-massage', name:'Thai Massage', sub:'90 min', desc:'Traditional assisted stretching and acupressure on a floor mat.', price:'$85', icon:'🙏', duration:90 },
+  { id:'holistic-massage', name:'Holistic Massage', sub:'90 min', desc:'Intuitive full-body session combining multiple techniques for harmony.', price:'$70', icon:'🌺', duration:90 },
+  { id:'herbal-pindas', name:'Hot Herbal Pindas Massage', sub:'60 or 90 min', desc:'Warm herbal compresses applied to muscles for deep therapeutic relief.', price:'$70 / $100', icon:'🌿', duration:60 },
+  { id:'cupping-therapy', name:'Cupping Therapy', sub:'60 min', desc:'Ancient suction cups lift and release fascia to improve circulation.', price:'$60', icon:'🫧', duration:60 },
+  { id:'lomi-lomi', name:'Lomi Lomi', sub:'90 min', desc:'Hawaiian forearm massage with long continuous strokes for deep restoration.', price:'$83', icon:'🌸', duration:90 },
+  { id:'couples-spa', name:'Couple Experience · Private Spa', sub:'2 hours · $118/person', desc:'Full Body Scrub, Facial Detox, Rejuvenation & Private Spa Circuit for two.', price:'$118/person', icon:'💑', duration:120 },
+];
+const BEAUTY_SERVICES = [
+  { id:'facial-basic', name:'Facial Basic', sub:'60 min', desc:'Deep cleansing, exfoliation and hydration tailored to your skin type.', price:'$58', icon:'✨', duration:60 },
+  { id:'facial-deluxe', name:'Facial Deluxe', sub:'90 min', desc:'Chocolate mask, deep cleansing, scrub, tonification and feet massage.', price:'$78', icon:'💆', duration:90 },
+  { id:'regenerative-body', name:'Regenerative Full Body', sub:'60 or 90 min', desc:'Full body scrub and chocolate wrap for silky, glowing skin.', price:'$68 / $78', icon:'🌟', duration:60 },
+  { id:'essence-special', name:'Essence Special', sub:'90 min', desc:'Full body scrub, facial cleanse, essential oils, aloe vera & chocolate wrap.', price:'$98', icon:'🌿', duration:90 },
+  { id:'nail-spa-1', name:'Nail Spa 1', sub:'90 min', desc:'Manicure with Facial and Volcanic Mud Mask.', price:'$78', icon:'💅', duration:90 },
+  { id:'nail-spa-2', name:'Nail Spa 2', sub:'90 min', desc:'Pedicure with Facial and Volcanic Mud Mask.', price:'$78', icon:'🦶', duration:90 },
 ];
 const TOUR_SERVICES = [
   { id:'volcano-tour', name:'Volcano Tour', sub:'Arenal active', desc:'Guided hike around the Arenal volcano with naturalist guide.', price:'$85', icon:'🌋', duration:180 },
@@ -1657,7 +1687,7 @@ const PRODUCT_ITEMS = [
 let productCart = [];
 
 function renderGuestServices() {
-  renderCards('spa-cards', SPA_SERVICES, tr('spaTab').replace('🌺 ', ''));
+  renderSpaCategories();
   renderCards('tour-cards', TOUR_SERVICES, tr('toursTab').replace('🌋 ', ''));
   renderProductCards();
   renderProductCart();
@@ -1673,6 +1703,59 @@ function renderCards(containerId, services, category) {
   c.innerHTML = `
     <div class="carousel-card-area" id="${containerId}-card"></div>
     <div class="carousel-dots-row"><div class="carousel-dots" id="${containerId}-dots"></div></div>`;
+  _refreshCarouselCard(containerId);
+}
+
+function renderSpaCategories() {
+  const c = document.getElementById('spa-cards');
+  if (!c) return;
+  carouselData['spa-cats'] = { services: SPA_CATEGORIES, idx: 0 };
+  carouselData['spa-cats'].refresh = _refreshSpaCatCard;
+  c.innerHTML = `
+    <div class="carousel-card-area" id="spa-cats-card"></div>
+    <div class="carousel-dots-row"><div class="carousel-dots" id="spa-cats-dots"></div></div>`;
+  _refreshSpaCatCard();
+}
+
+function _refreshSpaCatCard() {
+  const d = carouselData['spa-cats']; if (!d) return;
+  const s = d.services[d.idx];
+  const cardEl = document.getElementById('spa-cats-card');
+  if (cardEl) cardEl.innerHTML = `
+    <div class="carousel-card">
+      <div class="carousel-medallion-row">
+        <button class="carousel-arrow" onclick="carouselPrev('spa-cats')">&#8249;</button>
+        <div class="carousel-medallion">
+          <div class="carousel-icon">${s.icon}</div>
+          <div class="carousel-name">${s.name}</div>
+          <div class="carousel-sub">${s.sub}</div>
+        </div>
+        <button class="carousel-arrow" onclick="carouselNext('spa-cats')">&#8250;</button>
+      </div>
+      <div class="carousel-desc">${s.desc}</div>
+      <button class="carousel-book-btn" onclick="selectSpaCategory('${s.id}')">Explore &#8594;</button>
+    </div>`;
+  const dotsEl = document.getElementById('spa-cats-dots');
+  if (dotsEl) dotsEl.innerHTML = SPA_CATEGORIES.map((_, i) =>
+    `<span class="carousel-dot${i === d.idx ? ' active' : ''}" onclick="carouselGoto('spa-cats',${i})"></span>`).join('');
+}
+
+function selectSpaCategory(catId) {
+  const catMap = {
+    'cat-therapies': { services: THERAPIES_SERVICES, label: 'Therapies' },
+    'cat-massages': { services: MASSAGES_SERVICES, label: 'Massages' },
+    'cat-beauty': { services: BEAUTY_SERVICES, label: 'Beauty Treatments' },
+  };
+  const cat = catMap[catId]; if (!cat) return;
+  const c = document.getElementById('spa-cards');
+  if (!c) return;
+  const containerId = 'spa-services';
+  c.innerHTML = `
+    <button class="spa-back-btn" onclick="renderSpaCategories()">&#8592; Back to categories</button>
+    <div class="carousel-card-area" id="${containerId}-card"></div>
+    <div class="carousel-dots-row"><div class="carousel-dots" id="${containerId}-dots"></div></div>`;
+  carouselData[containerId] = { services: cat.services, category: cat.label, idx: 0 };
+  carouselData[containerId].refresh = () => _refreshCarouselCard(containerId);
   _refreshCarouselCard(containerId);
 }
 
@@ -1810,14 +1893,13 @@ function openBookingModal(service, category) {
   document.getElementById('bm-title').textContent = service.name;
   document.getElementById('bm-sub').textContent = category;
   document.getElementById('bm-date').value = new Date().toISOString().split('T')[0];
-  const therapistServices = ['Signature Massage', 'Holistic Therapy', 'Beauty Treatment', 'Couples Massage'];
   const therapistWrap = document.getElementById('bm-therapist-wrap');
   const therapistSelect = document.getElementById('bm-therapist');
-  const showTherapist = therapistServices.includes(service.name);
+  const showTherapist = ['Massages', 'Beauty Treatments', 'Therapies'].includes(category);
   if (therapistWrap) therapistWrap.style.display = showTherapist ? '' : 'none';
   if (therapistSelect) therapistSelect.value = 'No preference';
   document.getElementById('bm-notes').value = '';
-  bmHasSpaIntake = SPA_SERVICES.some(s => s.id === service.id);
+  bmHasSpaIntake = MASSAGES_SERVICES.some(s => s.id === service.id);
   Object.assign(bmIntake, { medications:'no', injuries:'no', pregnant:'no', chronicPain:'no', allergies:'no', pressure:'medium', oilAllergies:[], areasAvoid:'', goals:'' });
   _bmHideAllSteps();
   document.getElementById('bm-step-1').style.display = '';
