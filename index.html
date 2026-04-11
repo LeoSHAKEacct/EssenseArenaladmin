@@ -1474,13 +1474,14 @@ function showScreen(id) {
 //  GUEST FLOW
 // ══════════════════════════════════════════════
 function guestLogin() {
-  var room = document.getElementById('guest-room') ? document.getElementById('guest-room').value.trim() : '';
-  var name = document.getElementById('guest-name') ? document.getElementById('guest-name').value.trim() : '';
-  if (!room || !name) { var e = document.getElementById('guest-error'); if(e) e.classList.add('show'); return; }
+  var r = document.getElementById("guest-room");
+  var n = document.getElementById("guest-name");
+  var room = r ? r.value.trim() : "";
+  var name = n ? n.value.trim() : "";
   guestSession = { room: room, name: name };
-  var rd = document.getElementById('room-display');
-  if (rd) rd.textContent = 'Room ' + room + ' · ' + name;
-  showScreen('screen-guest');
+  var rd = document.getElementById("room-display");
+  if (rd) rd.textContent = "Room " + room + " - " + name;
+  showScreen("screen-guest");
   renderGuestServices();
   loadMyBookings();
 };
