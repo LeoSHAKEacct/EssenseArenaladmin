@@ -611,27 +611,11 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div id="guest-error" class="error-msg">Room number and name required</div>
       <div class="guest-field"><label class="guest-label" id="label-room">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
       <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
-      <div class="field-group" style="margin-bottom:10px;">
-        <button type="button" onclick="toggleGuestContact('whatsapp')" id="toggle-whatsapp" style="width:100%;background:rgba(122,170,134,0.08);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.7rem 1rem;color:var(--sage);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:500;outline:none;cursor:pointer;margin-bottom:4px;">Add WhatsApp Number</button>
-        <div class="field-group">
-          <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
-          <input type="tel" id="guest-phone" placeholder="e.g. 50688887777">
-        </div>
-        <button type="button" onclick="toggleGuestContact('email')" id="toggle-email" style="width:100%;background:rgba(122,170,134,0.08);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.7rem 1rem;color:var(--sage);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:500;outline:none;cursor:pointer;margin-bottom:4px;">Add Email</button>
-        <!-- Email toggle and input removed as requested -->
+      <div class="field-group">
+        <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
+        <input type="tel" id="guest-phone" placeholder="e.g. 50688887777">
       </div>
-      <div id="guest-email-error" style="display:none; color:#e07070; font-size:11px; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:12px;">Please enter a valid email</div>
-      <script>
-        function toggleGuestContact(type) {
-          if (type === 'whatsapp') {
-            const group = document.getElementById('guest-whatsapp-group');
-            group.style.display = group.style.display === 'none' ? 'block' : 'none';
-          } else if (type === 'email') {
-            const group = document.getElementById('guest-email-group');
-            group.style.display = group.style.display === 'none' ? 'block' : 'none';
-          }
-        }
-      </script>
+      <!-- Email error, input, and toggle scripts removed as requested -->
       <button class="btn-primary" id="guest-enter-btn" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
         <a id="guest-staff-access" onclick="showStaffLogin()">⚿ Staff access</a>
