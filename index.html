@@ -155,11 +155,12 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .section-header p { color:rgba(200,219,200,0.6); font-size:.85rem; font-weight:300; margin-top:.4rem; letter-spacing:.05em; }
 /* Service card carousel */
 .carousel-wrap { position:relative; }
-.carousel-card { background:rgba(10,24,10,0.85); border:1px solid rgba(122,170,134,0.22); border-radius:4px; overflow:hidden; display:flex; flex-direction:column; align-items:center; text-align:center; padding-bottom:2.2rem; transition:border-color .3s; }
+.carousel-card { background:rgba(10,24,10,0.85); border:1px solid rgba(122,170,134,0.22); border-radius:4px; display:flex; flex-direction:column; align-items:center; text-align:center; padding:2.5rem 1.5rem 2.2rem; transition:border-color .3s; }
 .carousel-card:hover { border-color:rgba(122,170,134,0.45); }
-.carousel-icon { font-size:5rem; width:100%; padding:2.8rem 1rem 2rem; background:rgba(0,0,0,0.22); }
-.carousel-name { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--cream); margin:1.6rem 1.5rem .3rem; line-height:1.15; }
-.carousel-sub { font-size:.58rem; letter-spacing:.28em; text-transform:uppercase; color:var(--sage); margin-bottom:1rem; }
+.carousel-medallion { width:280px; height:280px; border-radius:50%; border:1px solid rgba(122,170,134,0.35); background:rgba(4,12,4,0.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.65rem; flex-shrink:0; margin-bottom:2rem; padding:1.8rem; }
+.carousel-icon { font-size:3.8rem; line-height:1; }
+.carousel-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; color:var(--cream); line-height:1.2; }
+.carousel-sub { font-size:.52rem; letter-spacing:.26em; text-transform:uppercase; color:var(--sage); }
 .carousel-desc { font-size:.88rem; color:rgba(200,219,200,0.6); max-width:420px; line-height:1.7; padding:0 2rem; margin-bottom:1.4rem; font-weight:300; }
 .carousel-price { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; color:var(--gold); margin-bottom:1.6rem; }
 .carousel-book-btn { background:linear-gradient(135deg,var(--fern),var(--moss)); border:none; border-radius:2px; padding:.7rem 2.2rem; color:var(--cream); font-family:'Jost',sans-serif; font-size:.62rem; letter-spacing:.25em; text-transform:uppercase; cursor:pointer; transition:all .3s; }
@@ -1563,9 +1564,11 @@ function _refreshCarouselCard(id) {
   const cardEl = document.getElementById(`${id}-card`);
   if (cardEl) cardEl.innerHTML = `
     <div class="carousel-card">
-      <div class="carousel-icon">${s.icon}</div>
-      <div class="carousel-name">${ls.name || s.name}</div>
-      <div class="carousel-sub">${ls.sub || s.sub}</div>
+      <div class="carousel-medallion">
+        <div class="carousel-icon">${s.icon}</div>
+        <div class="carousel-name">${ls.name || s.name}</div>
+        <div class="carousel-sub">${ls.sub || s.sub}</div>
+      </div>
       <div class="carousel-desc">${ls.desc || s.desc}</div>
       <div class="carousel-price">${s.price}</div>
       <button class="carousel-book-btn" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${d.category}')">${tr('requestBooking')}</button>
@@ -1596,9 +1599,11 @@ function _refreshProductCard() {
   const cardEl = document.getElementById('product-cards-card');
   if (cardEl) cardEl.innerHTML = `
     <div class="carousel-card">
-      <div class="carousel-icon">${p.icon}</div>
-      <div class="carousel-name">${p.name}</div>
-      <div class="carousel-sub">${p.sub}</div>
+      <div class="carousel-medallion">
+        <div class="carousel-icon">${p.icon}</div>
+        <div class="carousel-name">${p.name}</div>
+        <div class="carousel-sub">${p.sub}</div>
+      </div>
       <div class="carousel-desc">${p.desc}</div>
       <div class="carousel-price">$${p.price}</div>
       <button class="carousel-book-btn" onclick="addProductToCart('${p.id}')">${tr('addToRoom')}</button>
