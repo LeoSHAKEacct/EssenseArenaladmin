@@ -1476,6 +1476,7 @@ function showScreen(id) {
 // ══════════════════════════════════════════════
 function guestLogin() {
 async function guestLogin() {
+async function guestLogin() {
   const room = document.getElementById('guest-room').value.trim();
   const name = document.getElementById('guest-name').value.trim();
   const err = document.getElementById('guest-error');
@@ -1491,7 +1492,11 @@ async function guestLogin() {
   guestSession = { room, name, phone: fullPhone };
   document.getElementById('room-display').textContent = 'Room ' + room;
   showScreen('screen-guest');
-  loadGuestPortal();
+  if (typeof initGuestPortal === 'function') initGuestPortal();
+  else if (typeof loadGuestPortal === 'function') loadGuestPortal();
+  else if (typeof renderGuestPortal === 'function') renderGuestPortal();
+  loadMyBookings();
+}
 }
 }
 function guestLogout() {
