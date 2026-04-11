@@ -1188,7 +1188,7 @@ const SUPA_URL = 'https://xvndnvhjwlwyrvibbedt.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2bmRudmhqd2x3eXJ2aWJiZWR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0OTk5NTUsImV4cCI6MjA5MTA3NTk1NX0.tWjefeS7wfi9GTf03HlIV6o0n-VEkan-IF9OeIqkOKk';
 const SUPABASE_URL = SUPA_URL;
 const SUPABASE_ANON_KEY = SUPA_KEY;
-const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const supabaseClient = (typeof window !== 'undefined' && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const ADMIN_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 const RESTAURANT_REPLICA_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 
@@ -1833,6 +1833,12 @@ function restoreStaffSession() {
     currentUser = buildUserFromEmail(saved.email, !!saved.editor);
     return true;
   } catch(e) { return false; }
+}
+
+function buildUserFromEmail(email, isEditor) {
+  return staffList.find(s => s.email === email) || { email, role: 'receptionist', name: email };
+}
+} catch(e) { return false; }
 }
 
 function buildUserFromEmail(email, isEditor) {
