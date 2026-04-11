@@ -613,8 +613,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
       <div class="field-group">
         <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
-        <div style="display:flex;gap:8px;">
-          <select id="guest-phone-code" style="background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem .6rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.85rem;font-weight:300;outline:none;min-width:110px;">
+        <div style="display:flex;gap:0;border:1px solid rgba(122,170,134,0.2);border-radius:2px;overflow:hidden;">
+          <select id="guest-phone-code" style="background:rgba(255,255,255,0.06);border:none;border-right:1px solid rgba(122,170,134,0.2);padding:.85rem .8rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;outline:none;cursor:pointer;width:130px;flex-shrink:0;">
             <option value="506">🇨🇷 +506</option>
             <option value="1">🇺🇸 +1</option>
             <option value="52">🇲🇽 +52</option>
@@ -634,8 +634,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
             <option value="86">🇨🇳 +86</option>
             <option value="91">🇮🇳 +91</option>
           </select>
-          <input type="tel" id="guest-phone" placeholder="8888 7777" 
-            style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
+          <input type="tel" id="guest-phone" placeholder="8888 7777"
+            style="flex:1;background:rgba(255,255,255,0.04);border:none;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
         </div>
       </div>
       <!-- Email error, input, and toggle scripts removed as requested -->
