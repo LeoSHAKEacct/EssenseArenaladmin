@@ -611,15 +611,30 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div id="guest-error" class="error-msg">Room number and name required</div>
       <div class="guest-field"><label class="guest-label" id="label-room">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
       <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
-      <div class="field-group">
-        <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">(optional · for booking confirmations)</span></label>
-        <input type="tel" id="guest-phone" placeholder="e.g. 50688887777" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
-      </div>
-      <div class="guest-field">
-        <label class="guest-label" id="label-email">YOUR EMAIL</label>
-        <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com">
+      <div class="field-group" style="margin-bottom:10px;">
+        <button type="button" onclick="toggleGuestContact('whatsapp')" id="toggle-whatsapp" style="width:100%;background:rgba(122,170,134,0.08);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.7rem 1rem;color:var(--sage);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:500;outline:none;cursor:pointer;margin-bottom:4px;">Add WhatsApp Number</button>
+        <div id="guest-whatsapp-group" style="display:none;">
+          <label style="font-size:.9em;color:var(--sage);font-weight:400;">WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.8em;">(for booking confirmations)</span></label>
+          <input type="tel" id="guest-phone" placeholder="e.g. 50688887777" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;margin-bottom:8px;">
+        </div>
+        <button type="button" onclick="toggleGuestContact('email')" id="toggle-email" style="width:100%;background:rgba(122,170,134,0.08);border:1px solid rgba(122,170,134,0.2);border-radius:2px;padding:.7rem 1rem;color:var(--sage);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:500;outline:none;cursor:pointer;margin-bottom:4px;">Add Email</button>
+        <div id="guest-email-group" style="display:none;">
+          <label style="font-size:.9em;color:var(--sage);font-weight:400;">Email</label>
+          <input type="email" id="guest-email" class="guest-input" placeholder="your@email.com" style="margin-bottom:8px;">
+        </div>
       </div>
       <div id="guest-email-error" style="display:none; color:#e07070; font-size:11px; font-family:'DM Mono',monospace; margin-top:4px; margin-bottom:12px;">Please enter a valid email</div>
+      <script>
+        function toggleGuestContact(type) {
+          if (type === 'whatsapp') {
+            const group = document.getElementById('guest-whatsapp-group');
+            group.style.display = group.style.display === 'none' ? 'block' : 'none';
+          } else if (type === 'email') {
+            const group = document.getElementById('guest-email-group');
+            group.style.display = group.style.display === 'none' ? 'block' : 'none';
+          }
+        }
+      </script>
       <button class="btn-primary" id="guest-enter-btn" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
         <a id="guest-staff-access" onclick="showStaffLogin()">⚿ Staff access</a>
@@ -752,6 +767,17 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'6:00 PM')">6 PM</button>
         <button type="button" class="time-slot-btn" onclick="selectTimeSlot(this,'7:00 PM')">7 PM</button>
       </div>
+      <div style="margin-top:12px;">
+        <div style="font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--sage);margin-bottom:8px;">Minutes</div>
+        <div style="display:flex;gap:8px;">
+          <button class="min-chip active" id="min-00" onclick="selectMinute(0)">:00</button>
+          <button class="min-chip" id="min-15" onclick="selectMinute(15)">:15</button>
+          <button class="min-chip" id="min-30" onclick="selectMinute(30)">:30</button>
+          <button class="min-chip" id="min-45" onclick="selectMinute(45)">:45</button>
+        </div>
+      </div>
+      <div style="font-size:.72rem;color:var(--sage);letter-spacing:.08em;margin-top:10px;" id="bm-time-display">Selected: 10:00 AM</div>
+      <input type="hidden" id="bm-minute" value="0">
     </div>
     <div class="field-group" id="bm-therapist-wrap" style="display:none;"><label id="bm-therapist-label">Select your therapist</label>
       <select id="bm-therapist">
@@ -1623,13 +1649,56 @@ function selectTimeSlot(btn, time) {
   document.querySelectorAll('#bm-time-slots .time-slot-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   window.selectedTimeSlot = time;
+  updateTimeDisplay();
+function selectMinute(m) {
+  document.getElementById('bm-minute').value = m;
+  ['00','15','30','45'].forEach(x => document.getElementById('min-'+x).classList.remove('active'));
+  document.getElementById('min-'+String(m).padStart(2,'0')).classList.add('active');
+  updateTimeDisplay();
+}
+
+function updateTimeDisplay() {
+  const hourBtn = document.querySelector('.time-slot-btn.selected, .hour-btn.active, [class*="time"][class*="active"]');
+  let hour = 10;
+  if (hourBtn) {
+    // Try to extract hour from button text or data attribute
+    if (hourBtn.dataset && hourBtn.dataset.hour) {
+      hour = parseInt(hourBtn.dataset.hour);
+    } else {
+      // Try to parse from text (e.g. "10 AM")
+      const txt = hourBtn.textContent.trim();
+      const match = txt.match(/(\d+)/);
+      if (match) hour = parseInt(match[1]);
+      if (/PM/i.test(txt) && hour < 12) hour += 12;
+      if (/AM/i.test(txt) && hour === 12) hour = 0;
+    }
+  }
+  const minute = parseInt(document.getElementById('bm-minute')?.value || 0);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const h12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+  const display = `Selected: ${h12}:${String(minute).padStart(2,'0')} ${ampm}`;
+  const el = document.getElementById('bm-time-display');
+  if (el) el.textContent = display;
+}
 }
 
 async function submitBooking() {
   if (!bookingContext || !guestSession) return;
   const { service, category } = bookingContext;
   const date = document.getElementById('bm-date').value;
-  const time = window.selectedTimeSlot || '10:00 AM';
+  let time = window.selectedTimeSlot || '10:00 AM';
+  // Compose time with minute picker
+  const minute = document.getElementById('bm-minute')?.value || '0';
+  // Try to extract hour from selectedTimeSlot
+  let hour = 10;
+  if (time) {
+    const match = time.match(/(\d+)/);
+    if (match) hour = parseInt(match[1]);
+    if (/PM/i.test(time) && hour < 12) hour += 12;
+    if (/AM/i.test(time) && hour === 12) hour = 0;
+  }
+  // Format as HH:MM
+  time = `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
   const notes = document.getElementById('bm-notes').value;
   const therapistWrap = document.getElementById('bm-therapist-wrap');
   const therapistSelection = document.getElementById('bm-therapist')?.value || 'No preference';
