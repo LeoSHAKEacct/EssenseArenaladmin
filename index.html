@@ -607,38 +607,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         <h1>Essence Arenal</h1>
         <p>Hotel · Spa · Bio Farm</p>
       </div>
-      <p id="guest-landing-subtitle" style="text-align:center;font-size:.8rem;color:rgba(200,219,200,0.5);margin-bottom:1.5rem;font-weight:300;">Guest Portal · Please enter your details</p>
-      <div id="guest-error" class="error-msg">Room number and name required</div>
-      <div class="guest-field"><label class="guest-label" id="label-room">ROOM NUMBER</label><input type="text" id="guest-room" class="guest-input" placeholder="e.g. 12"></div>
-      <div class="guest-field"><label class="guest-label" id="label-name">YOUR NAME</label><input type="text" id="guest-name" class="guest-input" placeholder="First name"></div>
-      <div class="field-group">
-        <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
-        <div style="display:flex;gap:0;border:1px solid rgba(122,170,134,0.2);border-radius:2px;overflow:hidden;">
-          <select id="guest-phone-code" style="background:rgba(255,255,255,0.06);border:none;border-right:1px solid rgba(122,170,134,0.2);padding:.85rem .8rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;outline:none;cursor:pointer;width:105px;flex-shrink:0;">
-            <option value="506">🇨🇷 +506</option>
-            <option value="1">🇺🇸 +1</option>
-            <option value="52">🇲🇽 +52</option>
-            <option value="57">🇨🇴 +57</option>
-            <option value="34">🇪🇸 +34</option>
-            <option value="44">🇬🇧 +44</option>
-            <option value="49">🇩🇪 +49</option>
-            <option value="33">🇫🇷 +33</option>
-            <option value="39">🇮🇹 +39</option>
-            <option value="31">🇳🇱 +31</option>
-            <option value="55">🇧🇷 +55</option>
-            <option value="54">🇦🇷 +54</option>
-            <option value="56">🇨🇱 +56</option>
-            <option value="51">🇵🇪 +51</option>
-            <option value="61">🇦🇺 +61</option>
-            <option value="81">🇯🇵 +81</option>
-            <option value="86">🇨🇳 +86</option>
-            <option value="91">🇮🇳 +91</option>
-          </select>
-          <input type="tel" id="guest-phone" placeholder="8888 7777"
-            style="flex:1;background:rgba(255,255,255,0.04);border:none;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
-        </div>
-      </div>
-      <!-- Email error, input, and toggle scripts removed as requested -->
+      <p id="guest-landing-subtitle" style="text-align:center;font-size:.8rem;color:rgba(200,219,200,0.5);margin-bottom:1.5rem;font-weight:300;">Guest Portal · Welcome</p>
       <button class="btn-primary" id="guest-enter-btn" onclick="guestLogin()">Enter · Bienvenido</button>
       <div class="staff-entry">
         <a id="guest-staff-access" onclick="showStaffLogin()">⚿ Staff access</a>
@@ -756,6 +725,35 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
   <div class="booking-modal">
     <button class="modal-close" onclick="closeBookingModal()">×</button>
     <div class="modal-title" id="bm-title">Book Session</div>
+        <div class="field-group"><label for="bm-room">Room Number</label><input type="text" id="bm-room" required placeholder="e.g. 12"></div>
+        <div class="field-group"><label for="bm-name">Your Name</label><input type="text" id="bm-name" required placeholder="First name"></div>
+        <div class="field-group">
+          <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
+          <div style="display:flex;gap:0;border:1px solid rgba(122,170,134,0.2);border-radius:2px;overflow:hidden;">
+            <select id="bm-phone-code" style="background:rgba(255,255,255,0.06);border:none;border-right:1px solid rgba(122,170,134,0.2);padding:.85rem .8rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;outline:none;cursor:pointer;width:105px;flex-shrink:0;">
+              <option value="506">🇨🇷 +506</option>
+              <option value="1">🇺🇸 +1</option>
+              <option value="52">🇲🇽 +52</option>
+              <option value="57">🇨🇴 +57</option>
+              <option value="34">🇪🇸 +34</option>
+              <option value="44">🇬🇧 +44</option>
+              <option value="49">🇩🇪 +49</option>
+              <option value="33">🇫🇷 +33</option>
+              <option value="39">🇮🇹 +39</option>
+              <option value="31">🇳🇱 +31</option>
+              <option value="55">🇧🇷 +55</option>
+              <option value="54">🇦🇷 +54</option>
+              <option value="56">🇨🇱 +56</option>
+              <option value="51">🇵🇪 +51</option>
+              <option value="61">🇦🇺 +61</option>
+              <option value="81">🇯🇵 +81</option>
+              <option value="86">🇨🇳 +86</option>
+              <option value="91">🇮🇳 +91</option>
+            </select>
+            <input type="tel" id="bm-phone" placeholder="8888 7777"
+              style="flex:1;background:rgba(255,255,255,0.04);border:none;padding:.85rem 1rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.95rem;font-weight:300;outline:none;">
+          </div>
+        </div>
     <div class="modal-sub" id="bm-sub">Spa &amp; Wellness</div>
     <div class="field-group"><label id="bm-label-date">Preferred Date</label><input type="date" id="bm-date"></div>
     <div class="field-group"><label id="bm-label-time">SELECT TIME</label>
@@ -1477,25 +1475,9 @@ function showScreen(id) {
 function guestLogin() {
 async function guestLogin() {
 async function guestLogin() {
-  const room = document.getElementById('guest-room').value.trim();
-  const name = document.getElementById('guest-name').value.trim();
-  const err = document.getElementById('guest-error');
-  if (!room || !name) {
-    err.classList.add('show');
-    err.textContent = 'Room number and name required';
-    return;
-  }
-  err.classList.remove('show');
-  const phoneNumber = document.getElementById('guest-phone')?.value.trim() || '';
-  const phoneCode = document.getElementById('guest-phone-code')?.value || '';
-  const fullPhone = phoneNumber ? phoneCode + phoneNumber.replace(/[^0-9]/g,'') : null;
-  guestSession = { room, name, phone: fullPhone };
-  document.getElementById('room-display').textContent = 'Room ' + room;
+  guestSession = {};
   showScreen('screen-guest');
-  if (typeof initGuestPortal === 'function') initGuestPortal();
-  else if (typeof loadGuestPortal === 'function') loadGuestPortal();
-  else if (typeof renderGuestPortal === 'function') renderGuestPortal();
-  loadMyBookings();
+  renderGuestServices();
 }
 }
 }
@@ -1689,8 +1671,18 @@ function updateTimeDisplay() {
 }
 
 async function submitBooking() {
-  if (!bookingContext || !guestSession) return;
+  if (!bookingContext) return;
   const { service, category } = bookingContext;
+  // Read new required fields
+  const room = document.getElementById('bm-room').value.trim();
+  const name = document.getElementById('bm-name').value.trim();
+  const phoneNumber = document.getElementById('bm-phone')?.value.trim() || '';
+  const phoneCode = document.getElementById('bm-phone-code')?.value || '';
+  const fullPhone = phoneNumber ? phoneCode + phoneNumber.replace(/[^0-9]/g,'') : null;
+  if (!room || !name) {
+    showToast('Room number and name are required.');
+    return;
+  }
   const date = document.getElementById('bm-date').value;
   let time = window.selectedTimeSlot || '10:00 AM';
   // Compose time with minute picker
@@ -1710,8 +1702,8 @@ async function submitBooking() {
   const therapistSelection = document.getElementById('bm-therapist')?.value || 'No preference';
   const therapistPreference = (therapistWrap && therapistWrap.style.display !== 'none') ? therapistSelection : null;
   const body = {
-    room: guestSession.room,
-    guest_name: guestSession.name,
+    room: room,
+    guest_name: name,
     service_type: category,
     service_name: service.name,
     requested_date: date || null,
@@ -1721,7 +1713,7 @@ async function submitBooking() {
     notes: notes,
     price: parseFloat((service.price || '$0').replace('$','')) || null,
     status: 'pending',
-    guest_phone: guestSession.phone || null
+    guest_phone: fullPhone || null
   };
   try {
     await dbPost('booking_requests', body);
