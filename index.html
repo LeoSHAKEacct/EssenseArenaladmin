@@ -1643,6 +1643,7 @@ function selectTimeSlot(btn, time) {
   btn.classList.add('selected');
   window.selectedTimeSlot = time;
   updateTimeDisplay();
+}
 function selectMinute(m) {
   document.getElementById('bm-minute').value = m;
   ['00','15','30','45'].forEach(x => document.getElementById('min-'+x).classList.remove('active'));
