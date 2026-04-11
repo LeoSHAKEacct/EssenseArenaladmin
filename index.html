@@ -1484,11 +1484,6 @@ function guestLogin() {
   showScreen("screen-guest");
   renderGuestServices();
   loadMyBookings();
-};
-  showScreen('screen-guest');
-  renderGuestServices();
-  guestSession = null;
-  showScreen('screen-landing');
 }
 function showGuestTab(tab) {
   document.querySelectorAll('.portal-section').forEach(s => s.classList.remove('active'));
