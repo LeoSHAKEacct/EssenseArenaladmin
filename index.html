@@ -195,6 +195,21 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .bm-step.active .bm-step-label, .bm-step.done .bm-step-label { color:rgba(45,74,45,0.6); }
 .bm-step-line { flex:1; height:1px; background:rgba(45,74,45,0.12); min-width:40px; margin:0 .9rem .85rem; }
 .bm-time-display { font-size:.68rem; color:var(--sage); letter-spacing:.08em; margin-top:7px; }
+/* Intake form */
+.intake-section { margin-bottom:1.5rem; }
+.intake-section-label { font-size:.55rem; letter-spacing:.22em; text-transform:uppercase; color:var(--sage); margin-bottom:.75rem; padding-bottom:.35rem; border-bottom:1px solid rgba(122,170,134,0.12); }
+.intake-yn-row { display:flex; align-items:center; justify-content:space-between; padding:.42rem 0; border-bottom:1px solid rgba(122,170,134,0.06); }
+.intake-yn-row:last-child { border-bottom:none; }
+.intake-yn-label { font-size:.78rem; color:rgba(200,219,200,0.65); font-weight:300; }
+.intake-yn-btns { display:flex; gap:4px; flex-shrink:0; }
+.yn-btn { background:none; border:1px solid rgba(122,170,134,0.2); border-radius:20px; padding:.26rem .78rem; font-family:'Jost',sans-serif; font-size:.62rem; letter-spacing:.08em; color:rgba(200,219,200,0.35); cursor:pointer; transition:all .2s; }
+.yn-btn.active { background:rgba(122,170,134,0.14); border-color:var(--sage); color:var(--sage); }
+.pressure-btns { display:flex; gap:6px; margin-top:.4rem; }
+.pressure-btn { flex:1; background:none; border:1px solid rgba(122,170,134,0.2); border-radius:20px; padding:.48rem .5rem; font-family:'Jost',sans-serif; font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(200,219,200,0.35); cursor:pointer; transition:all .2s; }
+.pressure-btn.active { background:rgba(122,170,134,0.14); border-color:var(--sage); color:var(--sage); }
+.oil-checks { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.4rem; }
+.oil-check-btn { background:none; border:1px solid rgba(122,170,134,0.2); border-radius:20px; padding:.26rem .7rem; font-family:'Jost',sans-serif; font-size:.65rem; letter-spacing:.05em; color:rgba(200,219,200,0.35); cursor:pointer; transition:all .2s; }
+.oil-check-btn.active { background:rgba(122,170,134,0.14); border-color:var(--sage); color:var(--sage); }
 .booking-modal .field-group input,
 .booking-modal .field-group select,
 .booking-modal .field-group textarea { border-radius:12px; }
@@ -754,12 +769,17 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
     <div class="bm-steps">
       <div class="bm-step active" id="bm-step-1-ind">
         <div class="bm-step-num">1</div>
-        <div class="bm-step-label">Your Booking</div>
+        <div class="bm-step-label">Booking</div>
       </div>
       <div class="bm-step-line"></div>
       <div class="bm-step" id="bm-step-2-ind">
         <div class="bm-step-num">2</div>
-        <div class="bm-step-label">Your Details</div>
+        <div class="bm-step-label" id="bm-step-2-label">Details</div>
+      </div>
+      <div class="bm-step-line" id="bm-step-line-3" style="display:none;"></div>
+      <div class="bm-step" id="bm-step-3-ind" style="display:none;">
+        <div class="bm-step-num">3</div>
+        <div class="bm-step-label">Details</div>
       </div>
     </div>
 
@@ -791,8 +811,86 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       </div>
     </div>
 
-    <!-- Step 2: Guest details -->
+    <!-- Step 2: Spa intake form (Spa & Massage only) -->
     <div id="bm-step-2" style="display:none;">
+      <div class="modal-title">Health &amp; Preferences</div>
+      <div class="modal-sub" style="margin-bottom:1.2rem;">Helps us personalise your treatment</div>
+      <div class="intake-section">
+        <div class="intake-section-label">Medical Information</div>
+        <div class="intake-yn-row">
+          <span class="intake-yn-label">Currently taking medications</span>
+          <div class="intake-yn-btns" id="bm-yn-medications">
+            <button type="button" class="yn-btn" data-val="yes" onclick="bmSetYN('medications','yes')">Yes</button>
+            <button type="button" class="yn-btn active" data-val="no" onclick="bmSetYN('medications','no')">No</button>
+          </div>
+        </div>
+        <div class="intake-yn-row">
+          <span class="intake-yn-label">Orthopedic injuries</span>
+          <div class="intake-yn-btns" id="bm-yn-injuries">
+            <button type="button" class="yn-btn" data-val="yes" onclick="bmSetYN('injuries','yes')">Yes</button>
+            <button type="button" class="yn-btn active" data-val="no" onclick="bmSetYN('injuries','no')">No</button>
+          </div>
+        </div>
+        <div class="intake-yn-row">
+          <span class="intake-yn-label">Pregnant</span>
+          <div class="intake-yn-btns" id="bm-yn-pregnant">
+            <button type="button" class="yn-btn" data-val="yes" onclick="bmSetYN('pregnant','yes')">Yes</button>
+            <button type="button" class="yn-btn active" data-val="no" onclick="bmSetYN('pregnant','no')">No</button>
+          </div>
+        </div>
+        <div class="intake-yn-row">
+          <span class="intake-yn-label">Chronic pain</span>
+          <div class="intake-yn-btns" id="bm-yn-chronicPain">
+            <button type="button" class="yn-btn" data-val="yes" onclick="bmSetYN('chronicPain','yes')">Yes</button>
+            <button type="button" class="yn-btn active" data-val="no" onclick="bmSetYN('chronicPain','no')">No</button>
+          </div>
+        </div>
+        <div class="intake-yn-row">
+          <span class="intake-yn-label">Known allergies</span>
+          <div class="intake-yn-btns" id="bm-yn-allergies">
+            <button type="button" class="yn-btn" data-val="yes" onclick="bmSetYN('allergies','yes')">Yes</button>
+            <button type="button" class="yn-btn active" data-val="no" onclick="bmSetYN('allergies','no')">No</button>
+          </div>
+        </div>
+      </div>
+      <div class="intake-section">
+        <div class="intake-section-label">Massage Preferences</div>
+        <div class="field-group">
+          <label>Preferred Pressure</label>
+          <div class="pressure-btns">
+            <button type="button" class="pressure-btn" data-val="light" onclick="bmSetPressure('light')">Light</button>
+            <button type="button" class="pressure-btn active" data-val="medium" onclick="bmSetPressure('medium')">Medium</button>
+            <button type="button" class="pressure-btn" data-val="deep" onclick="bmSetPressure('deep')">Deep</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Oil sensitivities (select any)</label>
+          <div class="oil-checks">
+            <button type="button" class="oil-check-btn" onclick="bmToggleOil(this,'coconut')">Coconut</button>
+            <button type="button" class="oil-check-btn" onclick="bmToggleOil(this,'mineral')">Mineral</button>
+            <button type="button" class="oil-check-btn" onclick="bmToggleOil(this,'almond')">Almond</button>
+            <button type="button" class="oil-check-btn" onclick="bmToggleOil(this,'lavender')">Lavender</button>
+            <button type="button" class="oil-check-btn" onclick="bmToggleOil(this,'jasmine')">Jasmine</button>
+            <button type="button" class="oil-check-btn" onclick="bmToggleOil(this,'eucalyptus')">Eucalyptus</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Areas to avoid</label>
+          <input type="text" id="bm-areas-avoid" placeholder="e.g. lower back, knees">
+        </div>
+        <div class="field-group">
+          <label>Treatment goals</label>
+          <input type="text" id="bm-goals" placeholder="e.g. relaxation, muscle tension relief">
+        </div>
+      </div>
+      <div class="modal-actions" style="justify-content:space-between;">
+        <button class="btn-ghost" onclick="bmGoStep1()">← Back</button>
+        <button class="btn-confirm" onclick="bmGoStep3()">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Guest details -->
+    <div id="bm-step-3" style="display:none;">
       <div class="modal-title">Your Details</div>
       <div class="field-group"><label for="bm-room">Room Number</label><input type="text" id="bm-room" required placeholder="e.g. 12"></div>
       <div class="field-group"><label for="bm-name">Your Name</label><input type="text" id="bm-name" required placeholder="First name"></div>
@@ -824,7 +922,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
         </div>
       </div>
       <div class="modal-actions" style="justify-content:space-between;">
-        <button class="btn-ghost" onclick="bmGoStep1()">← Back</button>
+        <button class="btn-ghost" onclick="bmGoStep3Back()">← Back</button>
         <button class="btn-confirm" id="bm-confirm-btn" onclick="submitBooking()">Confirm Request</button>
       </div>
     </div>
@@ -1719,29 +1817,81 @@ function openBookingModal(service, category) {
   if (therapistWrap) therapistWrap.style.display = showTherapist ? '' : 'none';
   if (therapistSelect) therapistSelect.value = 'No preference';
   document.getElementById('bm-notes').value = '';
+  bmHasSpaIntake = SPA_SERVICES.some(s => s.id === service.id);
+  Object.assign(bmIntake, { medications:'no', injuries:'no', pregnant:'no', chronicPain:'no', allergies:'no', pressure:'medium', oilAllergies:[], areasAvoid:'', goals:'' });
+  _bmHideAllSteps();
   document.getElementById('bm-step-1').style.display = '';
-  document.getElementById('bm-step-2').style.display = 'none';
   _bmUpdateStepIndicator(1);
   document.getElementById('booking-modal').classList.add('open');
   initBookingDrum();
 }
 function closeBookingModal() { document.getElementById('booking-modal').classList.remove('open'); }
+
+let bmHasSpaIntake = false;
+const bmIntake = { medications:'no', injuries:'no', pregnant:'no', chronicPain:'no', allergies:'no', pressure:'medium', oilAllergies:[], areasAvoid:'', goals:'' };
+
+function _bmHideAllSteps() {
+  ['bm-step-1','bm-step-2','bm-step-3'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+}
 function bmGoStep2() {
-  document.getElementById('bm-step-1').style.display = 'none';
-  document.getElementById('bm-step-2').style.display = '';
-  _bmUpdateStepIndicator(2);
+  _bmHideAllSteps();
+  if (bmHasSpaIntake) {
+    document.getElementById('bm-step-2').style.display = '';
+    _bmUpdateStepIndicator(2);
+  } else {
+    document.getElementById('bm-step-3').style.display = '';
+    _bmUpdateStepIndicator(2);
+  }
+}
+function bmGoStep3() {
+  _bmHideAllSteps();
+  document.getElementById('bm-step-3').style.display = '';
+  _bmUpdateStepIndicator(3);
 }
 function bmGoStep1() {
-  document.getElementById('bm-step-2').style.display = 'none';
+  _bmHideAllSteps();
   document.getElementById('bm-step-1').style.display = '';
   _bmUpdateStepIndicator(1);
+}
+function bmGoStep3Back() {
+  _bmHideAllSteps();
+  if (bmHasSpaIntake) {
+    document.getElementById('bm-step-2').style.display = '';
+    _bmUpdateStepIndicator(2);
+  } else {
+    document.getElementById('bm-step-1').style.display = '';
+    _bmUpdateStepIndicator(1);
+  }
 }
 function _bmUpdateStepIndicator(step) {
   const s1 = document.getElementById('bm-step-1-ind');
   const s2 = document.getElementById('bm-step-2-ind');
+  const s3 = document.getElementById('bm-step-3-ind');
+  const line3 = document.getElementById('bm-step-line-3');
+  const label2 = document.getElementById('bm-step-2-label');
   if (!s1 || !s2) return;
+  if (line3) line3.style.display = bmHasSpaIntake ? '' : 'none';
+  if (s3) s3.style.display = bmHasSpaIntake ? '' : 'none';
+  if (label2) label2.textContent = bmHasSpaIntake ? 'Intake' : 'Details';
   s1.className = 'bm-step ' + (step > 1 ? 'done' : 'active');
-  s2.className = 'bm-step ' + (step === 2 ? 'active' : '');
+  s2.className = 'bm-step ' + (step === 2 ? 'active' : step > 2 ? 'done' : '');
+  if (s3) s3.className = 'bm-step ' + (step === 3 ? 'active' : '');
+}
+function bmSetYN(field, val) {
+  bmIntake[field] = val;
+  const c = document.getElementById(`bm-yn-${field}`);
+  if (c) c.querySelectorAll('.yn-btn').forEach(b => b.classList.toggle('active', b.dataset.val === val));
+}
+function bmSetPressure(val) {
+  bmIntake.pressure = val;
+  document.querySelectorAll('.pressure-btn').forEach(b => b.classList.toggle('active', b.dataset.val === val));
+}
+function bmToggleOil(btn, oil) {
+  btn.classList.toggle('active');
+  const idx = bmIntake.oilAllergies.indexOf(oil);
+  if (idx === -1) bmIntake.oilAllergies.push(oil); else bmIntake.oilAllergies.splice(idx, 1);
 }
 // ── Drum roller time picker ───────────────────────
 const BM_HOURS = [
@@ -1830,6 +1980,17 @@ async function submitBooking() {
   const therapistWrap = document.getElementById('bm-therapist-wrap');
   const therapistSelection = document.getElementById('bm-therapist')?.value || 'No preference';
   const therapistPreference = (therapistWrap && therapistWrap.style.display !== 'none') ? therapistSelection : null;
+  const intakeData = bmHasSpaIntake ? {
+    medications: bmIntake.medications,
+    injuries: bmIntake.injuries,
+    pregnant: bmIntake.pregnant,
+    chronic_pain: bmIntake.chronicPain,
+    medical_allergies: bmIntake.allergies,
+    pressure: bmIntake.pressure,
+    oil_sensitivities: bmIntake.oilAllergies.join(', ') || 'none',
+    areas_to_avoid: document.getElementById('bm-areas-avoid')?.value?.trim() || '',
+    treatment_goals: document.getElementById('bm-goals')?.value?.trim() || ''
+  } : null;
   const body = {
     room: room,
     guest_name: name,
@@ -1840,6 +2001,7 @@ async function submitBooking() {
     duration_minutes: service.duration || 60,
     therapist_preference: therapistPreference,
     notes: notes,
+    intake_form: intakeData ? JSON.stringify(intakeData) : null,
     price: parseFloat((service.price || '$0').replace('$','')) || null,
     status: 'pending',
     guest_phone: fullPhone || null
