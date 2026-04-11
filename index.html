@@ -614,7 +614,7 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <div class="field-group">
         <label>WhatsApp <span style="color:rgba(122,170,134,0.5);font-size:.55rem;">· optional · for booking confirmations</span></label>
         <div style="display:flex;gap:0;border:1px solid rgba(122,170,134,0.2);border-radius:2px;overflow:hidden;">
-          <select id="guest-phone-code" style="background:rgba(255,255,255,0.06);border:none;border-right:1px solid rgba(122,170,134,0.2);padding:.85rem .8rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;outline:none;cursor:pointer;width:130px;flex-shrink:0;">
+          <select id="guest-phone-code" style="background:rgba(255,255,255,0.06);border:none;border-right:1px solid rgba(122,170,134,0.2);padding:.85rem .8rem;color:var(--cream);font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;outline:none;cursor:pointer;width:90px;flex-shrink:0;">
             <option value="506">🇨🇷 +506</option>
             <option value="1">🇺🇸 +1</option>
             <option value="52">🇲🇽 +52</option>
@@ -1475,34 +1475,24 @@ function showScreen(id) {
 //  GUEST FLOW
 // ══════════════════════════════════════════════
 function guestLogin() {
+async function guestLogin() {
   const room = document.getElementById('guest-room').value.trim();
   const name = document.getElementById('guest-name').value.trim();
-  const email = document.getElementById('guest-email').value.trim();
-  const errorEl = document.getElementById('guest-error');
-  const emailErrorEl = document.getElementById('guest-email-error');
+  const err = document.getElementById('guest-error');
   if (!room || !name) {
-    errorEl.textContent = tr('requiredNameRoom');
-    errorEl.classList.add('show');
+    err.classList.add('show');
+    err.textContent = 'Room number and name required';
     return;
   }
-  errorEl.classList.remove('show');
-  if (!email.includes('@') || !email.includes('.')) {
-    emailErrorEl.style.display = 'block';
-    return;
-  }
-  emailErrorEl.style.display = 'none';
-  guestSession = {
-    room,
-    name,
-    email,
-    phone: document.getElementById('guest-phone').value.trim()
-      ? document.getElementById('guest-phone-code').value + document.getElementById('guest-phone').value.replace(/[^0-9]/g,'')
-      : null
-  };
-  document.getElementById('room-display').textContent = `${tr('roomDisplay')} ${room} · ${name}`;
+  err.classList.remove('show');
+  const phoneNumber = document.getElementById('guest-phone')?.value.trim() || '';
+  const phoneCode = document.getElementById('guest-phone-code')?.value || '';
+  const fullPhone = phoneNumber ? phoneCode + phoneNumber.replace(/[^0-9]/g,'') : null;
+  guestSession = { room, name, phone: fullPhone };
+  document.getElementById('room-display').textContent = 'Room ' + room;
   showScreen('screen-guest');
-  renderGuestServices();
-  loadMyBookings();
+  loadGuestPortal();
+}
 }
 function guestLogout() {
   guestSession = null;
