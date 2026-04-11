@@ -1716,7 +1716,6 @@ async function submitBooking() {
     guest_phone: fullPhone || null
   };
   try {
-    await dbPost('booking_requests', body);
     await notifyStaffWhatsApp(body);
     closeBookingModal();
     showToast('✓ Request sent! We\'ll confirm shortly.');
@@ -1809,17 +1808,14 @@ function buildUserFromEmail(email, isEditor = false) {
     role: isAdmin ? 'administrator' : (isGuestMgmt ? 'guest_management' : 'staff')
   };
 }
-
 function tryLogin() {
   const email = document.getElementById('staff-email').value.trim().toLowerCase();
   const code = document.getElementById('staff-code').value.trim();
   const errorEl = document.getElementById('staff-error');
-
   if (!email.includes('@') || code !== '777') {
     errorEl.style.display = 'block';
     return;
   }
-
   errorEl.style.display = 'none';
 
   localStorage.setItem('essense_last_email', email);
@@ -1842,6 +1838,7 @@ function restoreStaffSession() {
     if (!saved || typeof saved !== 'object' || !saved.email) return false;
     currentUser = buildUserFromEmail(saved.email, !!saved.editor);
     return true;
+  </script>
   } catch (e) {
     return false;
   }
@@ -1894,17 +1891,14 @@ async function pollNewPendingRequests() {
     console.warn('Request notification poll failed:', e?.message || e);
   } finally {
     lastRequestCheckAt = new Date().toISOString();
-    localStorage.setItem(REQUEST_NOTIFICATION_TS_KEY, lastRequestCheckAt);
   }
 }
 
 function startRequestNotifications() {
-  stopRequestNotifications();
   if ('Notification' in window && Notification.permission === 'default') {
     Notification.requestPermission().catch(() => {});
   }
   const savedTs = localStorage.getItem(REQUEST_NOTIFICATION_TS_KEY);
-  lastRequestCheckAt = savedTs || new Date().toISOString();
   localStorage.setItem(REQUEST_NOTIFICATION_TS_KEY, lastRequestCheckAt);
   requestWatchTimer = setInterval(pollNewPendingRequests, REQUEST_POLL_MS);
 }
