@@ -1474,7 +1474,16 @@ function showScreen(id) {
 //  GUEST FLOW
 // ══════════════════════════════════════════════
 function guestLogin() {
-  guestSession = {};
+  var room = document.getElementById('guest-room') ? document.getElementById('guest-room').value.trim() : '';
+  var name = document.getElementById('guest-name') ? document.getElementById('guest-name').value.trim() : '';
+  if (!room || !name) { var e = document.getElementById('guest-error'); if(e) e.classList.add('show'); return; }
+  guestSession = { room: room, name: name };
+  var rd = document.getElementById('room-display');
+  if (rd) rd.textContent = 'Room ' + room + ' · ' + name;
+  showScreen('screen-guest');
+  renderGuestServices();
+  loadMyBookings();
+};
   showScreen('screen-guest');
   renderGuestServices();
   guestSession = null;
