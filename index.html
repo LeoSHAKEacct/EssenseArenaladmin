@@ -1193,7 +1193,7 @@ const ADMIN_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 const RESTAURANT_REPLICA_EMAILS = ['info@essencearenal.com', 'nbotefur@gmail.com'];
 
 // Restaurant workflow data
-let restaurantMenu = JSON.parse(localStorage.getItem('restaurant_menu') || '[]');
+let restaurantMenu = [];
 let restaurantTables = JSON.parse(localStorage.getItem('restaurant_tables') || JSON.stringify(
   [1,2,3,4,5,6,7,8,9].map(i => ({ id: i, occupied: false, guests: 0 }))
 ));
