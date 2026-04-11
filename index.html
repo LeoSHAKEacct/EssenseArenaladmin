@@ -158,9 +158,10 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .carousel-card { background:#e8dfc8; border:1px solid rgba(122,170,134,0.22); border-radius:4px; display:flex; flex-direction:column; align-items:center; text-align:center; padding:2.5rem 1rem 2.2rem; transition:border-color .3s; }
 .carousel-card:hover { border-color:rgba(122,170,134,0.55); }
 .carousel-medallion-row { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
-.carousel-medallion { width:clamp(200px,calc(100vw - 160px),280px); height:clamp(200px,calc(100vw - 160px),280px); border-radius:50%; border:1px solid rgba(122,170,134,0.35); background:#0d4a5a; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.65rem; flex-shrink:0; padding:1.8rem; transition:transform .22s ease, filter .22s ease; }
+.carousel-medallion { width:clamp(200px,calc(100vw - 160px),280px); height:clamp(200px,calc(100vw - 160px),280px); border-radius:50%; border:1px solid rgba(122,170,134,0.35); background:#1a5f6e; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.65rem; flex-shrink:0; padding:1.8rem; transition:transform .22s ease, filter .22s ease; }
 .carousel-medallion--clickable { cursor:pointer; }
 .carousel-medallion--clickable:hover { transform:scale(1.06); filter:brightness(1.18); }
+.carousel-medallion--rose { background:#7a3a4a; }
 .carousel-icon { font-size:3.8rem; line-height:1; }
 .carousel-name { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; color:var(--cream); line-height:1.2; }
 .carousel-sub { font-size:.52rem; letter-spacing:.26em; text-transform:uppercase; color:var(--sage); }
@@ -1755,7 +1756,7 @@ function selectSpaCategory(catId) {
     <button class="spa-back-btn" onclick="renderSpaCategories()">&#8592; Back to categories</button>
     <div class="carousel-card-area" id="${containerId}-card"></div>
     <div class="carousel-dots-row"><div class="carousel-dots" id="${containerId}-dots"></div></div>`;
-  carouselData[containerId] = { services: cat.services, category: cat.label, idx: 0 };
+  carouselData[containerId] = { services: cat.services, category: cat.label, idx: 0, medallionClass: 'carousel-medallion--rose' };
   carouselData[containerId].refresh = () => _refreshCarouselCard(containerId);
   _refreshCarouselCard(containerId);
 }
@@ -1784,7 +1785,7 @@ function _refreshCarouselCard(id) {
     <div class="carousel-card">
       <div class="carousel-medallion-row">
         <button class="carousel-arrow" onclick="carouselPrev('${id}')">&#8249;</button>
-        <div class="carousel-medallion carousel-medallion--clickable" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${d.category}')">
+        <div class="carousel-medallion carousel-medallion--clickable ${d.medallionClass||''}" onclick="openBookingModal(${JSON.stringify(s).replace(/"/g,'&quot;')}, '${d.category}')">
           <div class="carousel-icon">${s.icon}</div>
           <div class="carousel-name">${ls.name || s.name}</div>
           <div class="carousel-sub">${ls.sub || s.sub}</div>
