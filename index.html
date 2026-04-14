@@ -171,6 +171,17 @@ body { overflow: hidden; font-family: 'Jost', sans-serif; background: #FAF6EE; c
 .carousel-book-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(0,0,0,0.35); }
 .spa-back-btn { background:rgba(122,170,134,0.12); border:1.5px solid var(--sage); color:var(--sage); border-radius:24px; padding:.55rem 1.4rem; font-size:.82rem; font-family:'Jost',sans-serif; letter-spacing:.08em; font-weight:500; cursor:pointer; margin-bottom:1.2rem; display:inline-flex; align-items:center; gap:.4rem; transition:background .2s, color .2s; }
 .spa-back-btn:hover { background:rgba(122,170,134,0.25); color:#5a9a6a; }
+/* Spa category grid */
+.spa-categories-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; padding:24px; }
+.spa-cat-card { background:var(--sand); border:2px solid transparent; border-radius:16px; padding:24px 16px; text-align:center; cursor:pointer; transition:all .2s ease; }
+.spa-cat-card:hover { border-color:#1a5f6e; }
+.spa-cat-card.active { background:#1a5f6e; border-color:#1a5f6e; }
+.spa-cat-card .cat-icon { font-size:2.2rem; display:block; margin-bottom:.5rem; }
+.spa-cat-card .cat-name { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:400; color:var(--forest); margin-bottom:.25rem; transition:color .2s; }
+.spa-cat-card.active .cat-name { color:#fff; }
+.spa-cat-card .cat-sub { font-size:.5rem; letter-spacing:.22em; text-transform:uppercase; color:var(--sage); transition:color .2s; }
+.spa-cat-card.active .cat-sub { color:rgba(255,255,255,.7); }
+.spa-cat-options { padding:0 24px 24px; }
 .carousel-dots-row { display:flex; justify-content:center; padding:.5rem 0 .2rem; }
 .carousel-arrow { background:#1a2e1a; border:none; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:1.6rem; cursor:pointer; transition:all .25s; line-height:1; flex-shrink:0; }
 .carousel-arrow:hover { background:rgba(122,170,134,0.12); border-color:var(--sage); }
@@ -713,7 +724,8 @@ button, .abtn, .nav-tab, .admin-tab, .book-btn, .btn-primary, .btn-gold, .btn-gh
       <h2 id="spa-header-title">Spa &amp; <em>Wellness</em></h2>
       <p id="spa-header-sub">Nestled in the rainforest · Choose your experience</p>
     </div>
-    <div class="carousel-wrap" id="spa-cards"></div>
+    <div id="spa-cards"></div>
+    <div id="spaCatOptions" class="spa-cat-options" style="display:none;"></div>
   </div>
 
   <!-- ROOM SERVICE -->
@@ -1718,34 +1730,14 @@ function renderCards(containerId, services, category) {
 function renderSpaCategories() {
   const c = document.getElementById('spa-cards');
   if (!c) return;
-  carouselData['spa-cats'] = { services: SPA_CATEGORIES, idx: 0 };
-  carouselData['spa-cats'].refresh = _refreshSpaCatCard;
-  c.innerHTML = `
-    <div class="carousel-card-area" id="spa-cats-card"></div>
-    <div class="carousel-dots-row"><div class="carousel-dots" id="spa-cats-dots"></div></div>`;
-  _refreshSpaCatCard();
-}
-
-function _refreshSpaCatCard() {
-  const d = carouselData['spa-cats']; if (!d) return;
-  const s = d.services[d.idx];
-  const cardEl = document.getElementById('spa-cats-card');
-  if (cardEl) cardEl.innerHTML = `
-    <div class="carousel-card">
-      <div class="carousel-medallion-row">
-        <button class="carousel-arrow" onclick="carouselPrev('spa-cats')">&#8249;</button>
-        <div class="carousel-medallion carousel-medallion--clickable" onclick="selectSpaCategory('${s.id}')">
-          <div class="carousel-icon">${s.icon}</div>
-          <div class="carousel-name">${s.name}</div>
-          <div class="carousel-sub">${s.sub}</div>
-        </div>
-        <button class="carousel-arrow" onclick="carouselNext('spa-cats')">&#8250;</button>
-      </div>
-      <div class="carousel-desc">${s.desc}</div>
-    </div>`;
-  const dotsEl = document.getElementById('spa-cats-dots');
-  if (dotsEl) dotsEl.innerHTML = SPA_CATEGORIES.map((_, i) =>
-    `<span class="carousel-dot${i === d.idx ? ' active' : ''}" onclick="carouselGoto('spa-cats',${i})"></span>`).join('');
+  const opts = document.getElementById('spaCatOptions');
+  if (opts) { opts.style.display = 'none'; opts.innerHTML = ''; }
+  c.innerHTML = `<div class="spa-categories-grid">${SPA_CATEGORIES.map(s => `
+    <div class="spa-cat-card" data-cat="${s.id}" onclick="selectSpaCategory('${s.id}')">
+      <span class="cat-icon">${s.icon}</span>
+      <div class="cat-name">${s.name}</div>
+      <div class="cat-sub">${s.sub}</div>
+    </div>`).join('')}</div>`;
 }
 
 function selectSpaCategory(catId) {
@@ -1755,16 +1747,20 @@ function selectSpaCategory(catId) {
     'cat-beauty': { services: BEAUTY_SERVICES, label: 'Beauty Treatments' },
   };
   const cat = catMap[catId]; if (!cat) return;
-  const c = document.getElementById('spa-cards');
-  if (!c) return;
+  document.querySelectorAll('.spa-cat-card').forEach(c => c.classList.remove('active'));
+  const activeCard = document.querySelector(`.spa-cat-card[data-cat="${catId}"]`);
+  if (activeCard) activeCard.classList.add('active');
+  const opts = document.getElementById('spaCatOptions');
+  if (!opts) return;
   const containerId = 'spa-services';
-  c.innerHTML = `
-    <button class="spa-back-btn" onclick="renderSpaCategories()">&#8592; Back to categories</button>
+  opts.innerHTML = `
     <div class="carousel-card-area" id="${containerId}-card"></div>
     <div class="carousel-dots-row"><div class="carousel-dots" id="${containerId}-dots"></div></div>`;
+  opts.style.display = '';
   carouselData[containerId] = { services: cat.services, category: cat.label, idx: 0, medallionClass: 'carousel-medallion--rose' };
   carouselData[containerId].refresh = () => _refreshCarouselCard(containerId);
   _refreshCarouselCard(containerId);
+  opts.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function carouselPrev(id) {
